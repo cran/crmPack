@@ -4,10 +4,12 @@
 \alias{MinimalInformative}
 \title{Construct a minimally informative prior}
 \usage{
-MinimalInformative(dosegrid, threshmin = 0.2, threshmax = 0.3, ...)
+MinimalInformative(dosegrid, refDose, threshmin = 0.2, threshmax = 0.3, ...)
 }
 \arguments{
 \item{dosegrid}{the dose grid}
+
+\item{refDose}{the reference dose}
 
 \item{threshmin}{Any toxicity probability above this threshold would
 be very unlikely (5\%) at the minimum dose (default: 0.2)}

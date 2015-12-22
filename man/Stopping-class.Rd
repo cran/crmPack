@@ -15,7 +15,8 @@ The virtual class for stopping rules
 \code{\linkS4class{StoppingMinPatients}},
 \code{\linkS4class{StoppingTargetProb}}
 \code{\linkS4class{StoppingMTDdistribution}},
-\code{\linkS4class{StoppingTargetBiomarker}}
+\code{\linkS4class{StoppingTargetBiomarker}},
+\code{\linkS4class{StoppingHighestDose}}
 }
 \keyword{classes}
 

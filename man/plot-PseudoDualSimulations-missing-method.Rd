@@ -19,7 +19,7 @@ to plot from}
 \item{\dots}{not used}
 }
 \value{
-A single \code{\link[ggplot2]{ggplot2}} object if a single plot is
+A single \code{\link[ggplot2]{ggplot}} object if a single plot is
 asked for, otherwise a \code{\link{gridExtra}{gTree}} object.
 }
 \description{
@@ -115,7 +115,7 @@ design <- DualResponsesSamplesDesign(nextBest=mynextbest,
                                      stopping=myStopping,
                                      increments=myIncrements)
 ##options for MCMC
-options<-McmcOptions(burnin=100,step=2,samples=200)
+options<-McmcOptions(burnin=10,step=1,samples=20)
 ##The simulations
 ##For illustration purpose only 1 simulation is produced (nsim=1). 
 mySim<-simulate(design,

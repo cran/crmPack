@@ -13,7 +13,8 @@
 mcmc(data, model, options, ...)
 
 \S4method{mcmc}{GeneralData,GeneralModel,McmcOptions}(data, model, options,
-  program = c("JAGS", "OpenBUGS", "WinBUGS"), verbose = FALSE, ...)
+  program = c("JAGS", "OpenBUGS", "WinBUGS"), verbose = FALSE,
+  fromPrior = data@nObs == 0L, ...)
 
 \S4method{mcmc}{Data,LogisticNormal,McmcOptions}(data, model, options,
   verbose = FALSE, ...)
@@ -36,6 +37,9 @@ mcmc(data, model, options, ...)
 \dQuote{OpenBUGS} or \dQuote{WinBUGS}}
 
 \item{verbose}{shall progress bar and messages be printed? (not default)}
+
+\item{fromPrior}{sample from the prior only? Defaults to checking if nObs is
+0. For some models it might be necessary to specify it manually here though.}
 
 \item{\dots}{unused}
 }

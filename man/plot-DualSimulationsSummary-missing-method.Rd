@@ -20,7 +20,7 @@ to plot from}
 \item{\dots}{not used}
 }
 \value{
-A single \code{\link[ggplot2]{ggplot2}} object if a single plot is
+A single \code{\link[ggplot2]{ggplot}} object if a single plot is
 asked for, otherwise a \code{\link{gridExtra}{gTree}} object.
 }
 \description{

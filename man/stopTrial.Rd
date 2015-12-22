@@ -6,15 +6,16 @@
 \alias{stopTrial,StoppingAll,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingAny,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingCohortsNearDose,numeric,ANY,ANY,Data-method}
+\alias{stopTrial,StoppingGstarCIRatio,ANY,Samples,ModelTox,DataDual-method}
 \alias{stopTrial,StoppingGstarCIRatio,ANY,missing,ModelTox,DataDual-method}
-\alias{stopTrial,StoppingGstarsamplesCIRatio,ANY,Samples,ModelTox,DataDual-method}
+\alias{stopTrial,StoppingHighestDose,numeric,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingList,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingMTDdistribution,numeric,Samples,Model,ANY-method}
 \alias{stopTrial,StoppingMinCohorts,ANY,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingMinPatients,ANY,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingPatientsNearDose,numeric,ANY,ANY,Data-method}
+\alias{stopTrial,StoppingTDCIRatio,ANY,Samples,ModelTox,ANY-method}
 \alias{stopTrial,StoppingTDCIRatio,ANY,missing,ModelTox,ANY-method}
-\alias{stopTrial,StoppingTDsamplesCIRatio,ANY,Samples,ModelTox,ANY-method}
 \alias{stopTrial,StoppingTargetBiomarker,numeric,Samples,DualEndpoint,ANY-method}
 \alias{stopTrial,StoppingTargetProb,numeric,Samples,Model,ANY-method}
 \title{Stop the trial?}
@@ -53,15 +54,17 @@ stopTrial(stopping, dose, samples, model, data, ...)
   \S4method{stopTrial}{StoppingTargetBiomarker,numeric,Samples,DualEndpoint,ANY}(stopping,
   dose, samples, model, data, ...)
 
+\S4method{stopTrial}{StoppingHighestDose,numeric,ANY,ANY,Data}(stopping, dose,
+  samples, model, data, ...)
 
-  \S4method{stopTrial}{StoppingTDsamplesCIRatio,ANY,Samples,ModelTox,ANY}(stopping,
-  dose, samples, model, data, ...)
+\S4method{stopTrial}{StoppingTDCIRatio,ANY,Samples,ModelTox,ANY}(stopping, dose,
+  samples, model, data, ...)
 
 \S4method{stopTrial}{StoppingTDCIRatio,ANY,missing,ModelTox,ANY}(stopping, dose,
   samples, model, data, ...)
 
 
-  \S4method{stopTrial}{StoppingGstarsamplesCIRatio,ANY,Samples,ModelTox,DataDual}(stopping,
+  \S4method{stopTrial}{StoppingGstarCIRatio,ANY,Samples,ModelTox,DataDual}(stopping,
   dose, samples, model, data, TDderive, Effmodel, Effsamples, Gstarderive, ...)
 
 
@@ -128,7 +131,9 @@ dose
 
 \item \code{stopping = StoppingTargetBiomarker,dose = numeric,samples = Samples,model = DualEndpoint,data = ANY}: Stop based on probability of targeting biomarker
 
-\item \code{stopping = StoppingTDsamplesCIRatio,dose = ANY,samples = Samples,model = ModelTox,data = ANY}: Stop based on 'StoppingTDsamplesCIRatio' class when
+\item \code{stopping = StoppingHighestDose,dose = numeric,samples = ANY,model = ANY,data = Data}: Stop when the highest dose is reached
+
+\item \code{stopping = StoppingTDCIRatio,dose = ANY,samples = Samples,model = ModelTox,data = ANY}: Stop based on 'StoppingTDCIRatio' class when
 reaching the target ratio of the upper to the lower 95% credibility
 interval of the estimate (TDtargetEndOfTrial). This is a stopping rule which incorporate only
 DLE responses and DLE samples are given
@@ -138,7 +143,7 @@ when reaching the target ratio of the upper to the lower 95% credibility
 interval of the estimate (TDtargetEndOfTrial). This is a stopping rule which incorporate only
 DLE responses and no DLE samples are involved
 
-\item \code{stopping = StoppingGstarsamplesCIRatio,dose = ANY,samples = Samples,model = ModelTox,data = DataDual}: Stop based on reaching the target ratio of the upper to the lower 95% credibility
+\item \code{stopping = StoppingGstarCIRatio,dose = ANY,samples = Samples,model = ModelTox,data = DataDual}: Stop based on reaching the target ratio of the upper to the lower 95% credibility
 interval of the estimate (the minimum of Gstar and TDtargetEndOfTrial). This is a stopping rule which
 incorporate DLE and efficacy responses and DLE and efficacy samples are also used.
 
@@ -692,7 +697,71 @@ stopTrial(stopping=myStopping,
           model=model,
           data=data)
 
-##define the stopping rules based on the 'StoppingTDsamplesCIRatio' class
+# Create the data
+data <- Data(x=c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10, 20, 20, 20, 40, 40, 40,
+                 80, 80, 80),
+             y=c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+             cohort=c(0, 1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8),
+             doseGrid=
+               c(0.1, 0.5, 1.5, 3, 6,
+                 seq(from=10, to=80, by=2)))
+
+# Initialize the CRM model used to model the data
+model <- LogisticLogNormal(mean=c(-0.85, 1),
+                           cov=
+                             matrix(c(1, -0.5, -0.5, 1),
+                                    nrow=2),
+                           refDose=56)
+
+# Set-up some MCMC parameters and generate samples from the posterior
+options <- McmcOptions(burnin=100,
+                       step=2,
+                       samples=2000)
+set.seed(94)
+samples <- mcmc(data, model, options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed
+myIncrements <- IncrementsRelative(intervals=c(0, 20),
+                                   increments=c(1, 0.33))
+nextMaxDose <- maxDose(myIncrements,
+                       data=data)
+
+# Define the rule which will be used to select the next best dose
+# based on the class 'NextBestNCRM'
+myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
+                           overdose=c(0.35, 1),
+                           maxOverdoseProb=0.25)
+
+# Calculate the next best dose
+doseRecommendation <- nextBest(myNextBest,
+                               doselimit=nextMaxDose,
+                               samples=samples, model=model, data=data)
+
+# Define the stopping rule such that the study would be stopped if there is at least 
+# 0.5 posterior probability that [0.2 =< Prob(DLT | next-best-dose) <= 0.35] 
+stopTarget <- StoppingTargetProb(target=c(0.2, 0.35),
+                                 prob=0.5)
+
+## now use the StoppingHighestDose rule:
+stopHigh <-
+  StoppingHighestDose() &
+  StoppingPatientsNearDose(nPatients=3, percentage=0) &
+  StoppingTargetProb(target=c(0, 0.2),
+                     prob=0.5)
+
+## and combine everything:
+myStopping <- stopTarget | stopHigh
+
+# Then evaluate if to stop the trial
+stopTrial(stopping=myStopping, 
+          dose=doseRecommendation$value,
+          samples=samples,
+          model=model,
+          data=data)
+
+
+
+##define the stopping rules based on the 'StoppingTDCIRatio' class
 ##Using only DLE responses with samples
 ## we need a data object with doses >= 1:
 data<-Data(x=c(25,50,50,75,150,200,225,300),
@@ -702,10 +771,13 @@ data<-Data(x=c(25,50,50,75,150,200,225,300),
 ##model can be specified of 'Model' or 'ModelTox' class
 ##For example, the 'logisticIndepBeta' class model
 model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
+##define MCMC options
+##for illustration purpose we use 10 burn-in and generate 50 samples
+options<-McmcOptions(burnin=10,step=2,samples=50)
 ##samples of 'Samples' class
 samples<-mcmc(data,model,options)
-##define the 'StoppingTDsamplesCIRatio' class
-myStopping <- StoppingTDsamplesCIRatio(targetRatio=5,
+##define the 'StoppingTDCIRatio' class
+myStopping <- StoppingTDCIRatio(targetRatio=5,
                                        targetEndOfTrial=0.3)
 ##Find the next Recommend dose using the nextBest method (plesae refer to nextbest examples)
 tdNextBest<-NextBestTDsamples(targetDuringTrial=0.35,targetEndOfTrial=0.3,
@@ -744,7 +816,7 @@ RecommendDose<-nextBest(tdNextBest,doselimit=max(data@doseGrid),model=model,data
 stopTrial(stopping=myStopping,dose=RecommendDose$nextdose,
           model=model,data=data)
 ## RecommendDose$nextdose refers to the next dose obtained in RecommendDose
-##define the stopping rules based on the 'StoppingGstarsamplesCIRatio' class
+##define the stopping rules based on the 'StoppingGstarCIRatio' class
 ##Using both DLE and efficacy responses
 ## we need a data object with doses >= 1:
 data <-DataDual(x=c(25,50,25,50,75,300,250,150),
@@ -759,13 +831,14 @@ DLEmodel<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,30
 ##Effmodel must be  of 'ModelEff' class
 ##For example, the 'Effloglog' class model
 Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=0.025,b=1),data=data)
-
+##for illustration purpose we use 10 burn-in and generate 50 samples
+options<-McmcOptions(burnin=10,step=2,samples=50)
 ##DLE and efficacy samples must be of 'Samples' class
 DLEsamples<-mcmc(data,DLEmodel,options)
 Effsamples<-mcmc(data,Effmodel,options)
 
-##define the 'StoppingGstarsamplesCIRatio' class
-myStopping <- StoppingGstarsamplesCIRatio(targetRatio=5,
+##define the 'StoppingGstarCIRatio' class
+myStopping <- StoppingGstarCIRatio(targetRatio=5,
                                           targetEndOfTrial=0.3)
 ##Find the next Recommend dose using the nextBest method (plesae refer to nextbest examples)
 mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,

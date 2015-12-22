@@ -117,7 +117,6 @@ DLTmodel@phi1
 ###################################################
 ### code chunk number 17: min-inf
 ###################################################
-set.seed(432)
 coarseGrid <- c(0.1, 10, 30, 60, 100)
 minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   refDose=50,
@@ -125,7 +124,8 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmax=0.3,
                                   control=
                                   list(threshold.stop=0.03,
-                                       maxit=200))
+                                       maxit=200),
+                                  seed=432)
 
 
 ###################################################
@@ -412,10 +412,9 @@ myStopping <- (myStopping1 & myStopping2) | myStopping3
 ###################################################
 ### code chunk number 55: rules2-bits
 ###################################################
-myStopping4 <- StoppingTDsamplesCIRatio(targetRatio=5,
+myStopping4 <- StoppingTDCIRatio(targetRatio=5,
                                         targetEndOfTrial=0.3)
-myStopping5 <- StoppingTDCIRatio(targetRatio = 5,
-                                 targetEndOfTrial=0.3)
+
 
 
 ###################################################
@@ -431,7 +430,7 @@ stopTrial(stopping=myStopping, dose=doseRecommendation$value,
 stopTrial(stopping= myStopping4, dose=doseRecDLTSamples$nextdose,
           samples=DLTpostsamples,model=newDLTmodel,data=data3)
 
-stopTrial(stopping= myStopping5, dose=doseRecDLT$nextdose,
+stopTrial(stopping= myStopping4, dose=doseRecDLT$nextdose,
           model=newDLTmodel,data=data3)
 
 
@@ -452,7 +451,7 @@ design <- Design(model=model,
 ###################################################
 DLTdesign <-TDDesign(model=DLTmodel,
                      nextBest=TDNextBest,
-                     stopping=myStopping5,
+                     stopping=myStopping4,
                      increments=myIncrements1,
                      cohortSize=mySize,
                      data=data1,
@@ -1102,12 +1101,10 @@ doseRecGainSamples$plot
 ###################################################
 ### code chunk number 136: StoppingGstarCIratio
 ###################################################
-myStopping7 <- StoppingGstarsamplesCIRatio(targetRatio = 5,
-                                           targetEndOfTrial=0.3)
-myStopping8 <- StoppingGstarCIRatio(targetRatio=5,
+myStopping7 <- StoppingGstarCIRatio(targetRatio = 5,
                                     targetEndOfTrial=0.3)
 
-myStopping9 <- myStopping7 | StoppingMinPatients(72)
+myStopping8 <- myStopping7 | StoppingMinPatients(72)
 
 
 
@@ -1115,7 +1112,7 @@ myStopping9 <- myStopping7 | StoppingMinPatients(72)
 ### code chunk number 137: StopTrial-stoppingGstar
 ###################################################
 
-stopTrial(stopping=myStopping8,dose=doseRecGain$nextdose,model=newDLTmodel,
+stopTrial(stopping=myStopping7,dose=doseRecGain$nextdose,model=newDLTmodel,
           data=data4, Effmodel=newEffmodel)
 
 stopTrial(stopping=myStopping7,
@@ -1138,7 +1135,7 @@ design1 <- DualResponsesDesign(nextBest=GainNextBest,
                                model=DLTmodel,
                                Effmodel=Effmodel,
                                data=data2,
-                               stopping=myStopping8,
+                               stopping=myStopping7,
                                increments=myIncrements1,
                                cohortSize=mySize,
                                startingDose=25)
@@ -1147,7 +1144,7 @@ design2 <- DualResponsesSamplesDesign(nextBest=GainsamplesNextBest,
                                       model=DLTmodel,
                                       Effmodel=Effmodel,
                                       data=data2,
-                                      stopping=myStopping9,
+                                      stopping=myStopping8,
                                       increments=myIncrements1,
                                       cohortSize=mySize,
                                       startingDose=25)
@@ -1160,7 +1157,7 @@ design3 <- DualResponsesSamplesDesign(nextBest=GainsamplesNextBest,
                                       model=DLTmodel,
                                       Effmodel=Effmodel2,
                                       data=data2,
-                                      stopping=myStopping9,
+                                      stopping=myStopping8,
                                       increments=myIncrements1,
                                       cohortSize=mySize,
                                       startingDose=25)
