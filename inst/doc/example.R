@@ -123,7 +123,7 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmin=0.2,
                                   threshmax=0.3,
                                   control=
-                                  list(threshold.stop=0.03,
+                                 list(threshold.stop=0.03,
                                        maxit=200),
                                   seed=432)
 
@@ -955,7 +955,7 @@ data4<-DataDual(x=c(25,50,50,75,100,100,225,300),
 ###################################################
 ### code chunk number 116: modelEff
 ###################################################
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=0.025,b=1),data=data2)
+Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data2)
 
 
 ###################################################
