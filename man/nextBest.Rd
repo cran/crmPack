@@ -39,15 +39,15 @@ nextBest(nextBest, doselimit, samples, model, data, ...)
 
 
   \S4method{nextBest}{NextBestTD,numeric,missing,LogisticIndepBeta,Data}(nextBest,
-  doselimit, samples, model, data, ...)
+  doselimit, model, data, SIM = FALSE, ...)
 
 
   \S4method{nextBest}{NextBestMaxGain,numeric,missing,ModelTox,DataDual}(nextBest,
-  doselimit, model, data, Effmodel, ...)
+  doselimit, model, data, Effmodel, SIM = FALSE, ...)
 
 
   \S4method{nextBest}{NextBestMaxGainSamples,numeric,Samples,ModelTox,DataDual}(nextBest,
-  doselimit, samples, model, data, Effmodel, Effsamples, ...)
+  doselimit, samples, model, data, Effmodel, Effsamples, SIM = FALSE, ...)
 }
 \arguments{
 \item{nextBest}{The rule, an object of class \code{\linkS4class{NextBest}}}
@@ -61,6 +61,8 @@ recommendation calculation, and a corresponding warning is given.}
 \item{model}{The model input, an object of class \code{\linkS4class{Model}}}
 
 \item{data}{The data input, an object of class \code{\linkS4class{Data}}}
+
+\item{SIM}{internal command to notify if this method is used within simulations. Default as FALSE}
 
 \item{Effmodel}{the efficacy model of \code{\linkS4class{ModelEff}} class object}
 
@@ -103,12 +105,12 @@ class rule. This a method based only on the DLE responses and for
 class rule. This a method based only on the DLE responses and for
 \code{\linkS4class{LogisticIndepBeta}} model class object without DLE samples
 
-\item \code{nextBest = NextBestMaxGain,doselimit = numeric,samples = missing,model = ModelTox,data = DataDual}: for slots \code{nextBest},\code{doselimit} and \code{data}. This is
+\item \code{nextBest = NextBestMaxGain,doselimit = numeric,samples = missing,model = ModelTox,data = DataDual}: for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is
 a function to find the next best dose based on the 'NextBestMaxGain'
 class rule. This a method based on the DLE responses and efficacy responses without DLE and
 efficacy samples.
 
-\item \code{nextBest = NextBestMaxGainSamples,doselimit = numeric,samples = Samples,model = ModelTox,data = DataDual}: for slots \code{nextBest},\code{doselimit} and \code{data}. This is
+\item \code{nextBest = NextBestMaxGainSamples,doselimit = numeric,samples = Samples,model = ModelTox,data = DataDual}: for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is
 a function to find the next best dose based on the 'NextBestMaxGainSamples'
 class rule. This a method based on the DLE responses and efficacy responses with DLE and
 efficacy samples. Effmodel must be of class \code{\linkS4class{Effloglog}} or

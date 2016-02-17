@@ -16,8 +16,8 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 0.1.7
-Date: 2015-11-09
+Version: 0.1.8
+Date: 2016-02-17
 Copyright: F. Hoffmann-La Roche Ltd
 Depends: R (>= 3.0.0), ggplot2, graphics
 Imports: methods, grid, gridExtra, GenSA, mvtnorm, parallel,
@@ -30,6 +30,6 @@ Collate: 'helpers.R' 'Data-class.R' 'Data-methods.R' 'Rules-class.R'
         'Rules-methods.R' 'Design-methods.R' 'fromQuantiles.R'
         'Samples-methods.R' 'Simulations-methods.R' 'crmPack-package.R'
 NeedsCompilation: no
-Packaged: 2016-01-25 16:44:19 UTC; sabanesd
+Packaged: 2016-02-17 10:28:17 UTC; sabanesd
 Repository: CRAN
-Date/Publication: 2016-01-26 00:35:13
+Date/Publication: 2016-02-17 12:08:35

@@ -959,6 +959,15 @@ setMethod("stopTrial",
               ## evaluate the individual stopping rules
               ## in the list
               individualResults <-
+                if(missing(samples))
+                {
+                  lapply(stopping@stopList,
+                         stopTrial,
+                         dose=dose,
+                         model=model,
+                         data=data,
+                         ...)
+                } else {
                   lapply(stopping@stopList,
                          stopTrial,
                          dose=dose,
@@ -966,6 +975,7 @@ setMethod("stopTrial",
                          model=model,
                          data=data,
                          ...)
+                }
 
               ## summarize to obtain overall result
               overallResult <- stopping@summary(as.logical(individualResults))
@@ -998,6 +1008,15 @@ setMethod("stopTrial",
               ## evaluate the individual stopping rules
               ## in the list
               individualResults <-
+                if(missing(samples))
+                {
+                  lapply(stopping@stopList,
+                         stopTrial,
+                         dose=dose,
+                         model=model,
+                         data=data,
+                         ...)
+                } else {
                   lapply(stopping@stopList,
                          stopTrial,
                          dose=dose,
@@ -1005,6 +1024,7 @@ setMethod("stopTrial",
                          model=model,
                          data=data,
                          ...)
+                }
 
               ## summarize to obtain overall result
               overallResult <- all(as.logical(individualResults))
@@ -1037,6 +1057,15 @@ setMethod("stopTrial",
               ## evaluate the individual stopping rules
               ## in the list
               individualResults <-
+                if(missing(samples))
+                {
+                  lapply(stopping@stopList,
+                         stopTrial,
+                         dose=dose,
+                         model=model,
+                         data=data,
+                         ...)
+                } else {
                   lapply(stopping@stopList,
                          stopTrial,
                          dose=dose,
@@ -1044,6 +1073,7 @@ setMethod("stopTrial",
                          model=model,
                          data=data,
                          ...)
+                }
 
               ## summarize to obtain overall result
               overallResult <- any(as.logical(individualResults))
@@ -1736,12 +1766,12 @@ setMethod("nextBest",
               
               ##Find the index of next dose in the doseGrid
               ##next dose is the dose level closest below the TDtargetDuringTrialEstimate
-              index <- max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              index <- suppressWarnings(max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               ret <- data@doseGrid[dosesOK][index]
               
               
               ##Find the dose level (in doseGrid) closest below the TDtargetEndOfTrialEstimate
-              index1 <- max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              index1 <- suppressWarnings(max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               ret1 <- data@doseGrid[dosesOK][index1]
               
               
@@ -1810,6 +1840,7 @@ setMethod("nextBest",
 ##' class rule. This a method based only on the DLE responses and for 
 ##' \code{\linkS4class{LogisticIndepBeta}} model class object without DLE samples
 ##' 
+##' @param SIM internal command to notify if this method is used within simulations. Default as FALSE 
 ##' @importFrom ggplot2 ggplot  xlab ylab xlim aes geom_vline
 ##' geom_text
 ##' 
@@ -1825,7 +1856,7 @@ setMethod("nextBest",
                       model="LogisticIndepBeta",
                       data="Data"),
           def=
-            function(nextBest, doselimit, model, data, ...){
+            function(nextBest, doselimit, model, data, SIM=FALSE,...){
               ##Find the target prob During Trial
               targetDuringTrial<- nextBest@targetDuringTrial
               ##Find the target prob End of Trial
@@ -1856,12 +1887,13 @@ setMethod("nextBest",
               
               ##Find the index of next dose in the doseGrid
               ##next dose is the dose level closest below the TDtargetEstimate
-              index <- max(which((TDDfourdg- data@doseGrid[dosesOK]) >= 0))
+              
+              index <- suppressWarnings(max(which((TDDfourdg- data@doseGrid[dosesOK]) >= 0)))
               ret <- data@doseGrid[dosesOK][index]
               
               
               ##Find the dose level (in doseGrid) closest below the TD30Estimate
-              index <- max(which((TDEfourdg - data@doseGrid[dosesOK]) >= 0))
+              index <- suppressWarnings(max(which((TDEfourdg - data@doseGrid[dosesOK]) >= 0)))
               retTDE <- data@doseGrid[dosesOK][index]
               
               plotData <- data.frame(dose=data@doseGrid,
@@ -1880,16 +1912,23 @@ setMethod("nextBest",
                 ylab(paste("Probability of DLE")) + ylim(c(0,1)) + xlim(c(0,max(data@doseGrid))) +
                 geom_line(colour=I("red"), size=1.5)
               
+              
               if ((TDDfourdg < min(data@doseGrid))|(TDDfourdg > max(data@doseGrid))) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste(paste("TD",targetDuringTrial*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))} else {plot1 <- plot1+
+                print(paste(paste("TD",targetDuringTrial*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
+                } else {plot1<- plot1}
+               } else {plot1 <- plot1+
                   geom_point(data=data.frame(x=TDtargetDuringTrialEstimate,y=targetDuringTrial),aes(x=x,y=y),colour="orange", shape=15, size=8) +
                   annotate("text",label=paste(paste("TD",mylabel),"Estimate"),x=TDtargetDuringTrialEstimate+1,y=targetDuringTrial-0.2,size=5,colour="orange")}
               
               
               if ((TDEfourdg < min(data@doseGrid))|(TDEfourdg > max(data@doseGrid))) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste(paste("TD",targetEndOfTrial*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))} else {plot1 <- plot1+
+                print(paste(paste("TD",targetEndOfTrial*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
+                } else {plot1 <- plot1}
+              } else {plot1 <- plot1+
                   geom_point(data=data.frame(x=TDtargetEndOfTrialEstimate,y=0.3),aes(x=x,y=y),colour="violet", shape=16, size=8) +
                   annotate("text",label=paste(paste("TD",label2),"Estimate"),x=TDtargetEndOfTrialEstimate+1,y=targetEndOfTrial-0.1,size=5,colour="violet")}
               
@@ -1926,13 +1965,13 @@ setMethod("nextBest",
 ## ------------------------------------------------------------------------------------
 ## the nextBest method based on DLE and efficacy responses without DLE and efficacy samples
 ## -------------------------------------------------------------------------- ----------
-##' @describeIn nextBest for slots \code{nextBest},\code{doselimit} and \code{data}. This is 
+##' @describeIn nextBest for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is 
 ##' a function to find the next best dose based on the 'NextBestMaxGain'
 ##' class rule. This a method based on the DLE responses and efficacy responses without DLE and 
 ##' efficacy samples. 
 ##' 
 ##' @param Effmodel the efficacy model of \code{\linkS4class{ModelEff}} class object
-##' 
+##'
 ##' @importFrom ggplot2 ggplot xlab ylab xlim aes geom_vline
 ##' geom_text
 ##' 
@@ -1948,7 +1987,7 @@ setMethod("nextBest",
                       model="ModelTox",
                       data="DataDual"),
           def=
-            function(nextBest,doselimit,model,data,Effmodel,...){
+            function(nextBest,doselimit,model,data,Effmodel,SIM=FALSE,...){
               
               stopifnot(is(Effmodel, "ModelEff"))
               
@@ -1972,10 +2011,10 @@ setMethod("nextBest",
                 -gain(DOSE,DLEmodel=model,Effmodel=Effmodel)
               }
               ##Find the dose which gives the maximum gain
-              Gstar<-(optim(min(data@doseGrid),Gainfun, method = "BFGS")$par)
+              Gstar<-(optim(min(data@doseGrid),Gainfun, method = "L-BFGS-B", lower=min(data@doseGrid),upper=max(data@doseGrid))$par)
               ##Find the maximum gain value
               
-              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "BFGS")$value)
+              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B", lower=min(data@doseGrid),upper=max(data@doseGrid))$value)
               ## be sure which doses are ok with respect to maximum
               ## possible dose
               
@@ -1986,28 +2025,28 @@ setMethod("nextBest",
               
               ##Find the dose level in doseGrid closest below nextdose
               
-              index <- max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              index <- suppressWarnings(max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               ret <- data@doseGrid[dosesOK][index]
               
               ##Find the dose level in doseGrid closest below TDtargetEndOfTrial
               
-              indexE <- max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              indexE <- suppressWarnings(max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               retE <- data@doseGrid[indexE]
               
               ##Find the dose level in doseGrid closest below TDtargetDuringTrial
               
-              indexD <- max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              indexD <- suppressWarnings(max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               retD <- data@doseGrid[indexD]
               
               ##Find the dose level in doseGrid closest below Gstar
               
-              Gstarindex <- max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              Gstarindex <- suppressWarnings(max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               Gstarret <- data@doseGrid[Gstarindex]
@@ -2039,16 +2078,21 @@ setMethod("nextBest",
               
               
               if ((signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid))|(signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid))) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))} else {
+                print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
+                } else {plot1 <- plot1} 
+              } else {
                   plot1 <-plot1 + geom_point(data=data.frame(x=TDtargetEndOfTrialEstimate,y=EndOfTrialtargetprob),aes(x=x,y=y),colour="violet", shape=16, size=8) +
                     annotate("text",label=paste(paste("TD",EndOfTrialtargetprob*100),"Estimate"),x=TDtargetEndOfTrialEstimate-3,y=0.2,size=5,colour="violet")}
               
               
               
               if ((signif(Gstar,4) < min(data@doseGrid))|(signif(Gstar,4) > max(data@doseGrid))) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))} else {plot1 <- plot1 + 
+                print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))} else {plot1 <- plot1} 
+              } else {plot1 <- plot1 + 
                   geom_point(data=data.frame(x=Gstar,y=MaxGain),aes(x=x,y=y),colour="green3", shape=17, size=8) +
                   annotate("text",label="Max Gain Estimate",x=Gstar,y=MaxGain-0.1,size=5,colour="green3")}
               
@@ -2058,8 +2102,11 @@ setMethod("nextBest",
               
               
               if ((signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid))|(signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid))) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))} else {
+                print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
+              } else {plot1 <- plot1}
+            }  else {
                   plot1 <- plot1+
                     geom_point(data=data.frame(x=signif(TDtargetDuringTrialEstimate,4),y=DuringTrialtargetprob),aes(x=x,y=y),colour="orange", shape=15, size=8) +
                     annotate("text",label=paste(paste("TD",DuringTrialtargetprob*100),"Estimate"),x=TDtargetDuringTrialEstimate+25,
@@ -2071,12 +2118,12 @@ setMethod("nextBest",
               
               plot1 <- plot1 +
                 geom_vline(xintercept=maxdoselimit, colour="brown", lwd=1.1) +
-                annotate("text",label="Max",x=maxdoselimit-2,y=1,size=5,colour="brown")
+                annotate("text",label="Max",x=maxdoselimit-2,y=max(gdata$y),size=5,colour="brown")
               
               
               plot1 <-plot1 +
                 geom_vline(xintercept=ret, colour="purple", lwd=1.1) +
-                annotate("text",label="Next", x=ret+1, y=1.2,size=5,color="purple")
+                annotate("text",label="Next", x=ret+1, y=max(gdata$y)-0.05,size=5,color="purple")
               
               
               ## return next best dose and plot
@@ -2094,12 +2141,13 @@ setMethod("nextBest",
 ## =====================================================================================
 ## the nextBest method based on DLE and efficacy responses with DLE and efficacy samples
 ## -------------------------------------------------------------------------- ----------
-##' @describeIn nextBest for slots \code{nextBest},\code{doselimit} and \code{data}. This is 
+##' @describeIn nextBest for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is 
 ##' a function to find the next best dose based on the 'NextBestMaxGainSamples'
 ##' class rule. This a method based on the DLE responses and efficacy responses with DLE and 
 ##' efficacy samples. Effmodel must be of class \code{\linkS4class{Effloglog}} or  
 ##' \code{\linkS4class{EffFlexi}}.
 ##' @param Effsamples the efficacy samples of \code{\linkS4class{Samples}} class object
+##' 
 ##' @importFrom ggplot2 ggplot geom_histogram xlab ylab xlim aes geom_vline
 ##' geom_text
 ##' @example examples/Rules-method-nextbest_MaxGainSamples.R
@@ -2112,7 +2160,7 @@ setMethod("nextBest",
                       data="DataDual"),
           
           def=
-            function(nextBest,doselimit,samples,model,data,Effmodel,Effsamples,...){
+            function(nextBest,doselimit,samples,model,data,Effmodel,Effsamples,SIM=FALSE,...){
               
               if(is(Effmodel, "Effloglog")) 
                 {
@@ -2220,28 +2268,28 @@ setMethod("nextBest",
               
               ##Find the dose level in doseGrid closest below nextdose
               
-              index <- max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              index <- suppressWarnings(max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               ret <- data@doseGrid[dosesOK][index]
               
               ##Find the dose level in doseGrid closest below TDtargetEndOfTrial
               
-              indexE <- max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              indexE <- suppressWarnings(max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               retE <- data@doseGrid[indexE]
               
               ##Find the dose level in doseGrid closest below TDtargetDuringTrial
               
-              indexD <- max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              indexD <- suppressWarnings(max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               retD <- data@doseGrid[indexD]
               
               ##Find the dose level in doseGrid closest below Gstar
               
-              Gstarindex <- max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0))
+              Gstarindex <- suppressWarnings(max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               
               
               Gstarret <- data@doseGrid[Gstarindex]
@@ -2274,24 +2322,33 @@ setMethod("nextBest",
                 ylab("Posterior density")
               
               if (signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
+                if (SIM==FALSE){
                 plot1<-plot1 
-                print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))} else {
+                print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
+                } else {plot1 <- plot1}
+              } else {
                   plot1 <- plot1+
                     geom_vline(xintercept=TDtargetDuringTrialEstimate, colour="orange", lwd=1.1) +
                     annotate("text",label=paste(paste("TD",DuringTrialtargetprob*100),"Estimate"),
                              x=TDtargetDuringTrialEstimate,y=0,hjust=-0.1, vjust = -20,size=5,colour="orange")}
               
               if (signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
+                if (SIM==FALSE){
                 plot1<-plot1 
-                print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))} else {
+                print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
+                } else {plot1 <- plot1}
+              } else {
                   plot1 <- plot1+
                     geom_vline(xintercept=TDtargetEndOfTrialEstimate, colour="violet", lwd=1.1) +
                     annotate("text",label=paste(paste("TD",EndOfTrialtargetprob*100),"Estimate"),
                              x=TDtargetEndOfTrialEstimate,y=0,hjust=-0.1, vjust = -25,size=5,colour="violet")}
               
               if (signif(Gstar,4) < min(data@doseGrid)|signif(Gstar,4) > max(data@doseGrid)) {
+                if (SIM==FALSE){
                 plot1<-plot1
-                print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))} else {           
+                print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))
+                } else {plot1 <- plot1}
+              } else {           
                   plot1 <- plot1+
                     geom_vline(xintercept=Gstar, colour="green", lwd=1.1) +
                     annotate("text",label=" Gstar Estimate",
@@ -2422,28 +2479,28 @@ setMethod("nextBest",
                 
                 ##Find the dose level in doseGrid closest below nextdose
                 
-                index <- max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0))
+                index <- suppressWarnings(max(which((signif(nextdose,digits=4) - data@doseGrid[dosesOK]) >= 0)))
                 
                 
                 ret <- data@doseGrid[dosesOK][index]
                 
                 ##Find the dose level in doseGrid closest below TDtargetEndOfTrial
                 
-                indexE <- max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+                indexE <- suppressWarnings(max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
                 
                 
                 retE <- data@doseGrid[indexE]
                 
                 ##Find the dose level in doseGrid closest below TDtargetDuringTrial
                 
-                indexD <- max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0))
+                indexD <- suppressWarnings(max(which((signif(TDtargetDuringTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
                 
                 
                 retD <- data@doseGrid[indexD]
                 
                 ##Find the dose level in doseGrid closest below Gstar
                 
-                Gstarindex <- max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0))
+                Gstarindex <- suppressWarnings(max(which((signif(Gstar,digits=4) - data@doseGrid[dosesOK]) >= 0)))
                 
                 
                 Gstarret <- data@doseGrid[Gstarindex]
@@ -2476,28 +2533,37 @@ setMethod("nextBest",
                   ylab("Posterior density")
                 
                 if (signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
-                  plot1<-plot1 
-                  print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))} else {
+                  if (SIM==FALSE){
+                  plot1<-plot1
+                  print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
+                  } else {plo1 <- plot1}
+                } else {
                     plot1 <- plot1+
                       geom_vline(xintercept=TDtargetDuringTrialEstimate, colour="orange", lwd=1.1) +
                       annotate("text",label=paste(paste("TD",DuringTrialtargetprob*100),"Estimate"),
                                x=TDtargetDuringTrialEstimate,y=0,hjust=-0.1, vjust = -20,size=5,colour="orange")}
                 
                 if (signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
+                  if (SIM==FALSE){
                   plot1<-plot1 
-                  print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))} else {
+                  print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
+                  } else {plot1 <- plot1}
+                } else {
                     plot1 <- plot1+
                       geom_vline(xintercept=TDtargetEndOfTrialEstimate, colour="violet", lwd=1.1) +
                       annotate("text",label=paste(paste("TD",EndOfTrialtargetprob*100),"Estimate"),
                                x=TDtargetEndOfTrialEstimate,y=0,hjust=-0.1, vjust = -25,size=5,colour="violet")}
                 
                 if (signif(Gstar,4) < min(data@doseGrid)|signif(Gstar,4) > max(data@doseGrid)) {
+                  if (SIM==FALSE){
                   plot1<-plot1
-                  print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))} else {           
+                  print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))
+                  } else {plot1 <- plot1}
+                } else {           
                     plot1 <- plot1+
                       geom_vline(xintercept=Gstar, colour="green", lwd=1.1) +
                       annotate("text",label=" Gstar Estimate",
-                               x=Gstar,y=0,hjust=-0.1, vjust = -25,size=5,colour="green")}
+                               x=Gstar,y=0,hjust=+0.6, vjust = -25,size=5,colour="green")}
                 
                 
                 if (doselimit > max(data@doseGrid)){maxdoselimit<-max(data@doseGrid)} else {maxdoselimit <-doselimit}
@@ -2577,7 +2643,7 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste("Ratio =",ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              text <- paste("95% CI is (",CI[1], "," , CI[2], "), Ratio =",ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
               return(structure(doStop,
@@ -2628,7 +2694,7 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste("Ratio =", ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              text <- paste("95% CI is (",CI[1], "," , CI[2], "), Ratio =", ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
               return(structure(doStop,
@@ -2727,7 +2793,8 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller and its ratio =", 
+              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller with 95% CI (", CI[1], ",", CI[2], 
+                            ") and its ratio =", 
                             ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
@@ -2767,8 +2834,8 @@ setMethod("stopTrial",
               Gainfun<-function(DOSE){
                 -gain(DOSE,DLEmodel=model,Effmodel=Effmodel)
               }
-              Gstar<-(optim(min(data@doseGrid),Gainfun,method = "BFGS")$par)
-              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "BFGS")$value)
+              Gstar<-(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B",lower=min(data@doseGrid),upper=max(data@doseGrid))$par)
+              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B",lower=min(data@doseGrid),upper=max(data@doseGrid))$value)
               logGstar <- log(Gstar)
               
               
@@ -2776,7 +2843,7 @@ setMethod("stopTrial",
                 chooseTD <- FALSE
                 ##From paper
                 
-                meanEffGstar <- Effmodel@theta1+Effmodel@theta2*logGstar
+                meanEffGstar <- Effmodel@theta1+Effmodel@theta2*log(logGstar)
                 
                 denom <- (model@phi2)*(meanEffGstar)*(1+logGstar*model@phi2)
                 
@@ -2787,6 +2854,16 @@ setMethod("stopTrial",
                 dgtheta1 <- -(logGstar*model@phi2)/denom
                 
                 dgtheta2 <- -(logGstar*exp(model@phi1+model@phi2*logGstar)*model@phi2*log(logGstar)-1-exp(model@phi1+model@phi2*logGstar))/denom
+                
+                #DLEPRO <- exp(model@phi1+model@phi2*logGstar)
+                
+                #dgphi1 <- Effmodel@theta2*DLEPRO - logGstar*model@phi2*meanEffGstar*DLEPRO
+                
+                #dgphi2 <- logGstar*DLEPRO *(Effmodel@theta2-(meanEffGstar)+model@phi2)
+                
+                #dgtheta1 <- -logGstar*DLEPRO*model@phi2
+                
+                #dgtheta2 <- 1+DLEPRO-logGstar*DLEPRO*model@phi2*log(logGstar)
                 
                 deltaG <- matrix(c(dgphi1,dgphi2,dgtheta1,dgtheta2),4,1)
                 
@@ -2828,8 +2905,8 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller and its ratio =", 
-                            ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller with 95% CI (", CI[1], ",", CI[2], 
+                            ") and its ratio =", ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
               return(structure(doStop,
