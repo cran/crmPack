@@ -1,6 +1,6 @@
 0e2fa220876270dda9af58e04e4a2bcb *ChangeLog
-5a1a17aaf5172e58703385759061e41c *DESCRIPTION
-d9da00e926d33e9570353d098b96aa6d *NAMESPACE
+bce3414fb227c3106ecfe05019b78696 *DESCRIPTION
+044f0e7b3abcfb243c50dbe19ddbf69d *NAMESPACE
 aad8482dbb00b73ac45f46a5139b4752 *R/Data-class.R
 f0c5279229f0c6dafd141584827aa991 *R/Data-methods.R
 7b6039ddeec775f947502228cfcaea4a *R/Design-class.R
@@ -17,7 +17,7 @@ eafb6908dc8a91e711edfc7dfd2bb203 *R/Simulations-class.R
 533cc7ab4571f45cb2048f85b13a08cc *R/Simulations-methods.R
 ac47b3a13191c0538b92a2f864e5edfd *R/crmPack-package.R
 8142da85cc87f8f9582dbaf18a6bb230 *R/fromQuantiles.R
-304871566f1000da28fc57453eb20470 *R/helpers.R
+b8e091c0870139b97bf113d5077a6d96 *R/helpers.R
 322d869b44c90630518ff054875514bc *R/mcmc.R
 82f478604c255c666d8cd7136aabcf24 *R/writeModel.R
 d711ecb4dadc1caa19fbf1faf65b7f4c *build/vignette.rds
@@ -25,7 +25,7 @@ e174f775fbf14177a6da76df59ce77ff *inst/NEWS
 149163c1bd70c7601ac801584c136f41 *inst/crmPack.pdf
 024554ebe77e6df8f110e2c18656606a *inst/doc/example.R
 546cadbd41e3f3094d3f74e49dc7d54a *inst/doc/example.Rnw
-88dab3eee8964472d3fbee84e6a05484 *inst/doc/example.pdf
+d387c1af4d7b6d0d15f3a76b761c2984 *inst/doc/example.pdf
 96fb793eb1949f0b9a47db8a930b434e *man/AllModels-class.Rd
 72b6950fbfe171601981bc5455505983 *man/CohortSize-class.Rd
 7455a75a923ef087994cf21a471f0d39 *man/CohortSizeConst-class.Rd
@@ -207,6 +207,7 @@ d010654d9477602c50f962350dfd81ff *man/maxDose.Rd
 49ccb6ba92bd4689be621380dd14819d *man/maxSize.Rd
 4629a7df0f4d3d4860c3aa0ec9e66146 *man/mcmc.Rd
 9cecb67acb140369f4a99b48224b881d *man/minSize.Rd
+92358a6c90b34127452a02e300453291 *man/multiplot.Rd
 2b7632aa135a851da6d36ee6f2875537 *man/nextBest.Rd
 a4c625c05f71a77e13aa2cc111cb46f0 *man/noOverlap.Rd
 4249d44728f0c0bf5ab9ca7439e65ec3 *man/or-Stopping-Stopping.Rd
@@ -230,7 +231,6 @@ ba509b2081baac74895963ac66322ca4 *man/plot-Samples-DualEndpoint-method.Rd
 8cd1815c7605024e38e13f54138f03fa *man/plot-Samples-ModelEff-method.Rd
 f321eca1a43e5619f276e68c9d5e5901 *man/plot-Samples-ModelTox-method.Rd
 a92acf2ff95bbc767d7c8a770ae9c7f3 *man/plot-SimulationsSummary-missing-method.Rd
-480dd3040d30c4ef5860c06a19fb5226 *man/plot.arrange.Rd
 029c099cff32cf30a74d60783e93669c *man/plot.gtable.Rd
 8a277b96f1b2057d6d4c7a024c416547 *man/plotDualResponses.Rd
 17770dc460d46c6d0f5a1701aaaa250b *man/plotGain.Rd
