@@ -236,7 +236,7 @@ setMethod("nextBest",
                            aes(x=x, y=y),
                            stat="identity",
                            position="identity",
-                           width=1,
+                           width=min(diff(data@doseGrid)) / 2,
                            colour="darkgreen",
                            fill="darkgreen") +
                                xlab("Dose") +
@@ -280,7 +280,7 @@ setMethod("nextBest",
                            aes(x=x, y=y),
                            stat="identity",
                            position="identity",
-                           width=1,
+                           width=min(diff(data@doseGrid)) / 2,
                            colour="red",
                            fill="red") +
                                xlab("Dose") +
@@ -550,7 +550,7 @@ setMethod("nextBest",
                            aes(x=x, y=y),
                            stat="identity",
                            position="identity",
-                           width=1,
+                           width=min(diff(data@doseGrid)) / 2,
                            colour="darkgreen",
                            fill="darkgreen") +
                                xlab("Dose") +
@@ -594,7 +594,7 @@ setMethod("nextBest",
                            aes(x=x, y=y),
                            stat="identity",
                            position="identity",
-                           width=1,
+                           width=min(diff(data@doseGrid)) / 2,
                            colour="red",
                            fill="red") +
                                xlab("Dose") +
@@ -925,19 +925,23 @@ setMethod("|",
 ##' @keywords methods
 setGeneric("stopTrial",
            def=
-           function(stopping, dose, samples, model, data, ...){
+             function(stopping, dose, samples, model, data, ...){
                ## if the recommended next dose is NA,
                ## stop in any case.
                if(is.na(dose))
                {
-                   return(structure(TRUE,
-                                    message="Recommended next best dose is NA"))
+                 return(structure(TRUE,
+                                  message="Recommended next best dose is NA"))
+               } else if(data@placebo && dose == min(data@doseGrid))
+               {
+                 return(structure(TRUE,
+                                  message="Recommended next best dose is placebo dose"))
                }
-
+               
                ## there should be no default method,
                ## therefore just forward to next method!
                standardGeneric("stopTrial")
-           },
+             },
            valueClass="logical")
 
 
@@ -1757,8 +1761,8 @@ setMethod("nextBest",
               
               ## then derive the prior/posterior mean of the above two samples
               
-              TDtargetDuringTrialEstimate <- nextBest@derive(TDsamples=TDtargetDuringTrialSamples)
-              TDtargetEndOfTrialEstimate <- nextBest@derive(TDsamples=TDtargetEndOfTrialSamples)
+              TDtargetDuringTrialEstimate <- as.numeric(nextBest@derive(TDsamples=TDtargetDuringTrialSamples))
+              TDtargetEndOfTrialEstimate <- as.numeric(nextBest@derive(TDsamples=TDtargetEndOfTrialSamples))
               
               ## be sure which doses are ok with respect to maximum
               ## possible dose
@@ -1773,6 +1777,11 @@ setMethod("nextBest",
               ##Find the dose level (in doseGrid) closest below the TDtargetEndOfTrialEstimate
               index1 <- suppressWarnings(max(which((signif(TDtargetEndOfTrialEstimate,digits=4) - data@doseGrid[dosesOK]) >= 0)))
               ret1 <- data@doseGrid[dosesOK][index1]
+              
+              CITDEOT <- as.numeric(quantile(TDtargetEndOfTrialSamples, probs=c(0.025,0.975)))
+              
+              ##The ratio of the upper to the lower 95% credibility interval
+              ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
               
               
               ## produce plot
@@ -1829,8 +1838,9 @@ setMethod("nextBest",
                           TDtargetDuringTrialEstimate=TDtargetDuringTrialEstimate,
                           targetEndOfTrial=nextBest@targetEndOfTrial,
                           TDtargetEndOfTrialEstimate=TDtargetEndOfTrialEstimate,
-                          
                           TDtargetEndOfTrialAtDoseGrid=ret1,
+                          CITDEOT=CITDEOT,
+                          ratioTDEOT=ratioTDEOT,
                           plot=plot1))
             })
 ## -------------------------------------------------------------------------------
@@ -1896,6 +1906,23 @@ setMethod("nextBest",
               index <- suppressWarnings(max(which((TDEfourdg - data@doseGrid[dosesOK]) >= 0)))
               retTDE <- data@doseGrid[dosesOK][index]
               
+              
+              ##Find the variance of the log of the TDtargetEndOfTrial(eta)
+              M1 <- matrix(c(-1/(model@phi2), - (log(targetEndOfTrial/(1-targetEndOfTrial))-model@phi1)/(model@phi2)^2),1,2)
+              M2 <- model@Pcov
+              
+              varEta <- M1%*%M2%*%t(M1)
+              
+              ##Find the upper and lower limit of the 95% credibility interval
+              CITDEOT <- c()
+              CITDEOT[2] <- exp(log(TDtargetEndOfTrialEstimate) + 1.96* sqrt(varEta))
+              CITDEOT[1] <- exp(log(TDtargetEndOfTrialEstimate) - 1.96* sqrt(varEta))
+              
+              ##The ratio of the upper to the lower 95% credibility interval
+              ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
+              
+              
+              
               plotData <- data.frame(dose=data@doseGrid,
                                      probDLE=prob(dose=data@doseGrid,
                                                   model=model))
@@ -1912,8 +1939,13 @@ setMethod("nextBest",
                 ylab(paste("Probability of DLE")) + ylim(c(0,1)) + xlim(c(0,max(data@doseGrid))) +
                 geom_line(colour=I("red"), size=1.5)
               
+              #if(data@placebo) {
+                #n <- length(data@doseGrid)
+                #LowestDose <- sort(data@doseGrid)[2]} else {
+                  LowestDose <- min(data@doseGrid)
+                #}
               
-              if ((TDDfourdg < min(data@doseGrid))|(TDDfourdg > max(data@doseGrid))) {
+              if ((TDDfourdg < LowestDose)|(TDDfourdg > max(data@doseGrid))) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste(paste("TD",targetDuringTrial*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
@@ -1923,7 +1955,7 @@ setMethod("nextBest",
                   annotate("text",label=paste(paste("TD",mylabel),"Estimate"),x=TDtargetDuringTrialEstimate+1,y=targetDuringTrial-0.2,size=5,colour="orange")}
               
               
-              if ((TDEfourdg < min(data@doseGrid))|(TDEfourdg > max(data@doseGrid))) {
+              if ((TDEfourdg < LowestDose)|(TDEfourdg > max(data@doseGrid))) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste(paste("TD",targetEndOfTrial*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
@@ -1931,7 +1963,7 @@ setMethod("nextBest",
               } else {plot1 <- plot1+
                   geom_point(data=data.frame(x=TDtargetEndOfTrialEstimate,y=0.3),aes(x=x,y=y),colour="violet", shape=16, size=8) +
                   annotate("text",label=paste(paste("TD",label2),"Estimate"),x=TDtargetEndOfTrialEstimate+1,y=targetEndOfTrial-0.1,size=5,colour="violet")}
-              
+            
               if (doselimit > max(data@doseGrid)) {maxdoselimit <- max(data@doseGrid)} else {maxdoselimit<-doselimit}
               
               plot1 <- plot1 +
@@ -1958,6 +1990,8 @@ setMethod("nextBest",
                           targetEndOfTrial=targetEndOfTrial,
                           TDtargetEndOfTrialEstimate=TDtargetEndOfTrialEstimate,
                           TDtargetEndOfTrialatdoseGrid=retTDE,
+                          CITDEOT=CITDEOT,
+                          ratioTDEOT=ratioTDEOT,
                           plot=plot1))
             })
 
@@ -2010,11 +2044,17 @@ setMethod("nextBest",
               Gainfun<-function(DOSE){
                 -gain(DOSE,DLEmodel=model,Effmodel=Effmodel)
               }
+              
+              #if(data@placebo) {
+                #n <- length(data@doseGrid)
+                #LowestDose <- sort(data@doseGrid)[2]} else {
+                  LowestDose <- min(data@doseGrid)
+                #}
               ##Find the dose which gives the maximum gain
-              Gstar<-(optim(min(data@doseGrid),Gainfun, method = "L-BFGS-B", lower=min(data@doseGrid),upper=max(data@doseGrid))$par)
+              Gstar<-(optim(LowestDose,Gainfun, method = "L-BFGS-B", lower=LowestDose,upper=max(data@doseGrid))$par)
               ##Find the maximum gain value
               
-              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B", lower=min(data@doseGrid),upper=max(data@doseGrid))$value)
+              MaxGain<--(optim(LowestDose,Gainfun,method = "L-BFGS-B", lower=LowestDose,upper=max(data@doseGrid))$value)
               ## be sure which doses are ok with respect to maximum
               ## possible dose
               
@@ -2051,6 +2091,60 @@ setMethod("nextBest",
               
               Gstarret <- data@doseGrid[Gstarindex]
               
+              logGstar <- log(Gstar)
+              
+              
+              
+              ##From paper (Yeung et. al 2015)
+              
+              meanEffGstar <- Effmodel@theta1+Effmodel@theta2*log(logGstar)
+              
+              denom <- (model@phi2)*(meanEffGstar)*(1+logGstar*model@phi2)
+              
+              dgphi1 <- -(meanEffGstar*logGstar*model@phi2-Effmodel@theta2)/denom
+              
+              dgphi2 <- -((meanEffGstar)*logGstar+meanEffGstar*(logGstar)^2*model@phi2-Effmodel@theta2*logGstar)/denom
+              
+              dgtheta1 <- -(logGstar*model@phi2)/denom
+              
+              dgtheta2 <- -(logGstar*exp(model@phi1+model@phi2*logGstar)*model@phi2*log(logGstar)-1-exp(model@phi1+model@phi2*logGstar))/denom
+              
+              deltaG <- matrix(c(dgphi1,dgphi2,dgtheta1,dgtheta2),4,1)
+              
+              
+              ##Find the variance of the log Gstar
+              ##First find the covariance matrix of all the parameters, phi1, phi2, theta1 and theta2
+              ## such that phi1 and phi2 and independent of theta1 and theta2
+              emptyMatrix <- matrix(0,2,2)
+              covBETA <-  cbind(rbind(model@Pcov,emptyMatrix),rbind(emptyMatrix,Effmodel@Pcov))
+              varlogGstar <- t(deltaG)%*%covBETA%*%deltaG
+              
+              
+              
+              ##Find the upper and lower limit of the 95% credibility interval of Gstar
+              CIGstar <-c()
+              CIGstar[2] <- exp(logGstar + 1.96* sqrt(varlogGstar))
+              CIGstar[1] <- exp(logGstar - 1.96* sqrt(varlogGstar))
+              
+              ##The ratio of the upper to the lower 95% credibility interval
+              ratioGstar <- as.numeric(CIGstar[2]/CIGstar[1])
+              
+              
+              
+              ##Find the variance of the log of the TDtargetEndOfTrial(eta)
+              M1 <- matrix(c(-1/(model@phi2), - (log(EndOfTrialtargetprob/(1-EndOfTrialtargetprob))-model@phi1)/(model@phi2)^2),1,2)
+              M2 <- model@Pcov
+              
+              varEta <- M1%*%M2%*%t(M1)
+              
+              ##Find the upper and lower limit of the 95% credibility interval of
+              ##TDtargetEndOfTrial
+              CITDEOT <- c()
+              CITDEOT[2] <- exp(log(TDtargetEndOfTrialEstimate) + 1.96* sqrt(varEta))
+              CITDEOT[1] <- exp(log(TDtargetEndOfTrialEstimate) - 1.96* sqrt(varEta))
+              
+              ##The ratio of the upper to the lower 95% credibility interval
+              ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
               
               plotData<-data.frame(dose=rep(data@doseGrid,3),
                                    values=c(prob(dose=data@doseGrid,
@@ -2077,7 +2171,7 @@ setMethod("nextBest",
               
               
               
-              if ((signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid))|(signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid))) {
+              if ((signif(TDtargetEndOfTrialEstimate,4) < LowestDose) |(signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid))) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
@@ -2088,7 +2182,7 @@ setMethod("nextBest",
               
               
               
-              if ((signif(Gstar,4) < min(data@doseGrid))|(signif(Gstar,4) > max(data@doseGrid))) {
+              if ((signif(Gstar,4) < LowestDose) |(signif(Gstar,4) > max(data@doseGrid))) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))} else {plot1 <- plot1} 
@@ -2096,12 +2190,10 @@ setMethod("nextBest",
                   geom_point(data=data.frame(x=Gstar,y=MaxGain),aes(x=x,y=y),colour="green3", shape=17, size=8) +
                   annotate("text",label="Max Gain Estimate",x=Gstar,y=MaxGain-0.1,size=5,colour="green3")}
               
-              
               mylabel=format(DuringTrialtargetprob,digits=2)
               
               
-              
-              if ((signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid))|(signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid))) {
+              if ((signif(TDtargetDuringTrialEstimate,4) < LowestDose) |(signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid))) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
@@ -2136,6 +2228,10 @@ setMethod("nextBest",
                           TDtargetEndOfTrialAtDoseGrid=retE,
                           GstarEstimate=Gstar,
                           GstarAtDoseGrid=Gstarret,
+                          CITDEOT=CITDEOT,
+                          ratioTDEOT=ratioTDEOT,
+                          CIGstar=CIGstar,
+                          ratioGstar=ratioGstar,
                           plot=plot1))
             })
 ## =====================================================================================
@@ -2201,12 +2297,12 @@ setMethod("nextBest",
               ## Find the TDtarget Estimate for During Trial and End of trial
               
               
-              TDtargetEndOfTrialEstimate <- nextBest@TDderive(TDtargetEndOfTrialSamples)
+              TDtargetEndOfTrialEstimate <- as.numeric(nextBest@TDderive(TDtargetEndOfTrialSamples))
               ## Ensure the estimate is within dose range
               #TDtargetEndOfTrialEstimate <- min(TDtargetEndOfTrialEstimate,max(data@doseGrid))
               
               
-              TDtargetDuringTrialEstimate<-nextBest@TDderive(TDtargetDuringTrialSamples)
+              TDtargetDuringTrialEstimate<-as.numeric(nextBest@TDderive(TDtargetDuringTrialSamples))
               
               ## Ensure the estimate is within dose range
               #TDtargetDuringTrialEstimate <- min(TDtargetDuringTrialEstimate,max(data@doseGrid))
@@ -2253,8 +2349,8 @@ setMethod("nextBest",
               IndexG <- apply(GainSamples,1,which.max)
               GstarSamples <- data@doseGrid[IndexG]
               
-              ##Obtain the Gstar estimate which is the 50th percentile of the Gstar samples
-              Gstar <- nextBest@Gstarderive(GstarSamples)
+              ##Obtain the Gstar estimate which is the nth percentile of the Gstar samples
+              Gstar <- as.numeric(nextBest@Gstarderive(GstarSamples))
               ##Ensure the estimate is within dose range
               
               #Gstar <- min(Gstar,max(data@doseGrid))
@@ -2294,6 +2390,13 @@ setMethod("nextBest",
               
               Gstarret <- data@doseGrid[Gstarindex]
               
+              ##Find the 95% credibility interval of Gstar and its ratio of the upper to the lower limit
+              CIGstar <- as.numeric(quantile(GstarSamples, probs=c(0.025,0.975)))
+              ratioGstar <- as.numeric(CIGstar[2]/CIGstar[1])
+              
+              ##Find the 95% credibility interval of TDtargetEndOfTrial and its ratio of the upper to the lower limit
+              CITDEOT <- as.numeric(quantile(TDtargetEndOfTrialSamples, probs=c(0.025,0.975)))
+              ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
               
               
               plotData<-data.frame(dose=rep(data@doseGrid,3),
@@ -2321,7 +2424,14 @@ setMethod("nextBest",
                 xlab("Gstar")+ xlim(c(0,max(data@doseGrid)))+
                 ylab("Posterior density")
               
-              if (signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
+              #if(data@placebo) {
+                #n <- length(data@doseGrid)
+                #LowestDose <- sort(data@doseGrid)[2]} else {
+                  LowestDose <- min(data@doseGrid)
+                #}
+              
+              
+              if (signif(TDtargetDuringTrialEstimate,4) < LowestDose |signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
                 if (SIM==FALSE){
                 plot1<-plot1 
                 print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
@@ -2332,7 +2442,7 @@ setMethod("nextBest",
                     annotate("text",label=paste(paste("TD",DuringTrialtargetprob*100),"Estimate"),
                              x=TDtargetDuringTrialEstimate,y=0,hjust=-0.1, vjust = -20,size=5,colour="orange")}
               
-              if (signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
+              if (signif(TDtargetEndOfTrialEstimate,4) < LowestDose |signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
                 if (SIM==FALSE){
                 plot1<-plot1 
                 print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
@@ -2343,7 +2453,7 @@ setMethod("nextBest",
                     annotate("text",label=paste(paste("TD",EndOfTrialtargetprob*100),"Estimate"),
                              x=TDtargetEndOfTrialEstimate,y=0,hjust=-0.1, vjust = -25,size=5,colour="violet")}
               
-              if (signif(Gstar,4) < min(data@doseGrid)|signif(Gstar,4) > max(data@doseGrid)) {
+              if (signif(Gstar,4) < LowestDose |signif(Gstar,4) > max(data@doseGrid)) {
                 if (SIM==FALSE){
                 plot1<-plot1
                 print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))
@@ -2385,6 +2495,10 @@ setMethod("nextBest",
                           TDtargetEndOfTrialAtDoseGrid=retE,
                           GstarEstimate=Gstar,
                           GstarAtDoseGrid=Gstarret,
+                          CITDEOT=CITDEOT,
+                          ratioTDEOT=ratioTDEOT,
+                          CIGstar=CIGstar,
+                          ratioGstar=ratioGstar,
                           plot=plot1))
               } else if(is(Effmodel, "EffFlexi")) {
               
@@ -2424,12 +2538,12 @@ setMethod("nextBest",
                 ## Find the TDtarget Estimate for During Trial and End of trial
                 
                 
-                TDtargetEndOfTrialEstimate <- nextBest@TDderive(TDtargetEndOfTrialSamples)
+                TDtargetEndOfTrialEstimate <- as.numeric(nextBest@TDderive(TDtargetEndOfTrialSamples))
                 ## Ensure the estimate is within dose range
                 #TDtargetEndOfTrialEstimate <- min(TDtargetEndOfTrialEstimate,max(data@doseGrid))
                 
                 
-                TDtargetDuringTrialEstimate<-nextBest@TDderive(TDtargetDuringTrialSamples)
+                TDtargetDuringTrialEstimate<-as.numeric(nextBest@TDderive(TDtargetDuringTrialSamples))
                 
                 ## Ensure the estimate is within dose range
                 #TDtargetDuringTrialEstimate <- min(TDtargetDuringTrialEstimate,max(data@doseGrid))
@@ -2465,7 +2579,7 @@ setMethod("nextBest",
                 GstarSamples <- data@doseGrid[IndexG]
                 
                 ##Obtain the Gstar estimate which is the 50th percentile of the Gstar samples
-                Gstar <- nextBest@Gstarderive(GstarSamples)
+                Gstar <- as.numeric(nextBest@Gstarderive(GstarSamples))
                 ##Ensure the estimate is within dose range
                 
                 #Gstar <- min(Gstar,max(data@doseGrid))
@@ -2505,6 +2619,13 @@ setMethod("nextBest",
                 
                 Gstarret <- data@doseGrid[Gstarindex]
                 
+                ##Find the 95% credibility interval of Gstar and its ratio of the upper to the lower limit
+                CIGstar <- as.numeric(quantile(GstarSamples, probs=c(0.025,0.975)))
+                ratioGstar <- as.numeric(CIGstar[2]/CIGstar[1])
+                
+                ##Find the 95% credibility interval of TDtargetEndOfTrial and its ratio of the upper to the lower limit
+                CITDEOT <- as.numeric(quantile(TDtargetEndOfTrialSamples, probs=c(0.025,0.975)))
+                ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
                 
                 
                 plotData<-data.frame(dose=rep(data@doseGrid,3),
@@ -2532,7 +2653,14 @@ setMethod("nextBest",
                   xlab("Gstar")+ xlim(c(0,max(data@doseGrid)))+
                   ylab("Posterior density")
                 
-                if (signif(TDtargetDuringTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
+                #if(data@placebo) {
+                  #n <- length(data@doseGrid)
+                  #LowestDose <- sort(data@doseGrid)[2]} else {
+                    LowestDose <- min(data@doseGrid)
+                  #}
+                
+                
+                if (signif(TDtargetDuringTrialEstimate,4) < LowestDose |signif(TDtargetDuringTrialEstimate,4) > max(data@doseGrid)) {
                   if (SIM==FALSE){
                   plot1<-plot1
                   print(paste(paste("Estimated TD",DuringTrialtargetprob*100),paste("=",paste(TDtargetDuringTrialEstimate," not within dose Grid"))))
@@ -2543,7 +2671,7 @@ setMethod("nextBest",
                       annotate("text",label=paste(paste("TD",DuringTrialtargetprob*100),"Estimate"),
                                x=TDtargetDuringTrialEstimate,y=0,hjust=-0.1, vjust = -20,size=5,colour="orange")}
                 
-                if (signif(TDtargetEndOfTrialEstimate,4) < min(data@doseGrid)|signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
+                if (signif(TDtargetEndOfTrialEstimate,4) < LowestDose |signif(TDtargetEndOfTrialEstimate,4) > max(data@doseGrid)) {
                   if (SIM==FALSE){
                   plot1<-plot1 
                   print(paste(paste("Estimated TD",EndOfTrialtargetprob*100),paste("=",paste(TDtargetEndOfTrialEstimate," not within dose Grid"))))
@@ -2554,7 +2682,7 @@ setMethod("nextBest",
                       annotate("text",label=paste(paste("TD",EndOfTrialtargetprob*100),"Estimate"),
                                x=TDtargetEndOfTrialEstimate,y=0,hjust=-0.1, vjust = -25,size=5,colour="violet")}
                 
-                if (signif(Gstar,4) < min(data@doseGrid)|signif(Gstar,4) > max(data@doseGrid)) {
+                if (signif(Gstar,4) < LowestDose |signif(Gstar,4) > max(data@doseGrid)) {
                   if (SIM==FALSE){
                   plot1<-plot1
                   print(paste("Estimated Gstar=",paste(Gstar," not within dose Grid")))
@@ -2592,10 +2720,14 @@ setMethod("nextBest",
                             TDtargetDuringTrialEstimate=TDtargetDuringTrialEstimate,
                             TDtargetDuringTrialAtDoseGrid=retD,
                             DLEEndOfTrialtarget=EndOfTrialtargetprob,
-                            TDtargetEndEstimate=TDtargetEndOfTrialEstimate,
+                            TDtargetEndOfTrialEstimate=TDtargetEndOfTrialEstimate,
                             TDtargetEndOfTrialAtDoseGrid=retE,
                             GstarEstimate=Gstar,
                             GstarAtDoseGrid=Gstarret,
+                            CITDEOT=CITDEOT,
+                            ratioTDEOT=ratioTDEOT,
+                            CIGstar=CIGstar,
+                            ratioGstar=ratioGstar,
                             plot=plot1))
                 
             } else stop("Effmodel needs to be of class Effloglog or EffFlexi")
@@ -2634,7 +2766,7 @@ setMethod("stopTrial",
                                                 samples=samples)
               
               ##Find the upper and lower limit of the 95% credibility interval
-              CI <- quantile(TDtargetEndOfTrialSamples, prob=c(0.025,0.975))
+              CI <- quantile(TDtargetEndOfTrialSamples, probs=c(0.025,0.975))
               
               ##The ratio of the upper to the lower 95% credibility interval
               ratio <- as.numeric(CI[2]/CI[1])
@@ -2643,7 +2775,7 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste("95% CI is (",CI[1], "," , CI[2], "), Ratio =",ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              text <- paste("95% CI is (",round(CI[1],4), "," , round(CI[2],4), "), Ratio =",round(ratio,4), "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
               return(structure(doStop,
@@ -2694,7 +2826,7 @@ setMethod("stopTrial",
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste("95% CI is (",CI[1], "," , CI[2], "), Ratio =", ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              text <- paste("95% CI is (",round(CI[1],4), "," , round(CI[2],4), "), Ratio =", round(ratio,4), "is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
               ##return both
               return(structure(doStop,
@@ -2773,38 +2905,48 @@ setMethod("stopTrial",
               ##Find the Gstar estimate
               
               Gstar <- Gstarderive(GstarSamples)
+              ##Find the 95% credibility interval of Gstar and its ratio of the upper to the lower limit
+              CIGstar <- quantile(GstarSamples, probs=c(0.025,0.975))
+              ratioGstar <- as.numeric(CIGstar[2]/CIGstar[1])
               
-              ## Find which is smaller (TDtargetEndOfTrialEstimate or Gstar)
+              ##Find the 95% credibility interval of TDtargetEndOfTrial and its ratio of the upper to the lower limit
+              CITDEOT <- quantile(TDtargetEndOfTrialSamples, probs=c(0.025,0.975)) 
+              ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
+
+            ## Find which is smaller (TDtargetEndOfTrialEstimate or Gstar)
               
               if (TDtargetEndOfTrialEstimate <= Gstar){
                 
-                ##Find the upper and lower limit of the 95% credibility interval
-                CI <- quantile(TDtargetEndOfTrialSamples, prob=c(0.025,0.975)) 
+                ##Find the upper and lower limit of the 95% credibility interval and its ratio of the smaller
+                CI <- CITDEOT 
+                ratio <- ratioTDEOT
                 chooseTD <- TRUE} else {
                   
-                  CI <- quantile(GstarSamples, prob=c(0.025,0.975))
+                  CI <- CIGstar
+                  ratio <- ratioGstar
                   chooseTD <- FALSE}
-              
-              ##The ratio of the upper to the lower 95% credibility interval
-              ratio <- as.numeric(CI[2]/CI[1]) 
-              
-              
               
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
               ##generate messgae
-              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller with 95% CI (", CI[1], ",", CI[2], 
+              text1 <- paste("Gstar estimate is", round(Gstar,4), "with 95% CI (", round(CIGstar[1],4), ",", round(CIGstar[2],4), 
                             ") and its ratio =", 
-                            ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+                            round(ratioGstar,4))
+              text2 <- paste("TDtargetEndOfTrial estimate is ", round(TDtargetEndOfTrialEstimate,4), 
+                            "with 95% CI (", round(CITDEOT[1],4),",",round(CITDEOT[2],4), ") and its ratio=", 
+                            round(ratioTDEOT,4))
+              text3 <- paste(ifelse(chooseTD,"TDatrgetEndOfTrial estimate","Gstar estimate"), "is smaller with ratio =", 
+                            round(ratio,4), " which is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
+              text <- c(text1,text2,text3)
               ##return both
               return(structure(doStop,
-                               messgae=text))
+                               message=text))
             })
 
 ## -----------------------------------------------------------------------------------------------
 ## Stopping based on a target ratio of the upper to the lower 95% credibility interval
-## ------------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------------
 ##' @describeIn stopTrial Stop based on reaching the target ratio of the upper to the lower 95% credibility 
 ##' interval of the estimate (the minimum of Gstar and TDtargetEndOfTrial). This is a stopping rule which 
 ##' incorporate DLE and efficacy responses without DLE and efficacy samples involved.
@@ -2834,14 +2976,20 @@ setMethod("stopTrial",
               Gainfun<-function(DOSE){
                 -gain(DOSE,DLEmodel=model,Effmodel=Effmodel)
               }
-              Gstar<-(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B",lower=min(data@doseGrid),upper=max(data@doseGrid))$par)
-              MaxGain<--(optim(min(data@doseGrid),Gainfun,method = "L-BFGS-B",lower=min(data@doseGrid),upper=max(data@doseGrid))$value)
+              
+              #if(data@placebo) {
+                #n <- length(data@doseGrid)
+                #LowestDose <- sort(data@doseGrid)[2]} else {
+                  LowestDose <- min(data@doseGrid)
+                #}
+              
+              Gstar<-(optim(LowestDose,Gainfun,method = "L-BFGS-B",lower=LowestDose,upper=max(data@doseGrid))$par)
+              MaxGain<--(optim(LowestDose,Gainfun,method = "L-BFGS-B",lower=LowestDose,upper=max(data@doseGrid))$value)
               logGstar <- log(Gstar)
               
               
-              if (Gstar <= TDtargetEndOfTrial){
-                chooseTD <- FALSE
-                ##From paper
+             
+                ##From paper (Yeung et. al 2015)
                 
                 meanEffGstar <- Effmodel@theta1+Effmodel@theta2*log(logGstar)
                 
@@ -2877,14 +3025,13 @@ setMethod("stopTrial",
                 
                 
                 
-                ##Find the upper and lower limit of the 95% credibility interval
-                CI <- c()
-                CI[2] <- exp(logGstar + 1.96* sqrt(varlogGstar))
-                CI[1] <- exp(logGstar - 1.96* sqrt(varlogGstar))
+                ##Find the upper and lower limit of the 95% credibility interval of Gstar
+                CIGstar <-c()
+                CIGstar[2] <- exp(logGstar + 1.96* sqrt(varlogGstar))
+                CIGstar[1] <- exp(logGstar - 1.96* sqrt(varlogGstar))
                 
                 ##The ratio of the upper to the lower 95% credibility interval
-                ratio <- as.numeric(CI[2]/CI[1]) } else {
-                  chooseTD <- TRUE 
+                ratioGstar <- as.numeric(CIGstar[2]/CIGstar[1]) 
                   
                   ##Find the variance of the log of the TDtargetEndOfTrial(eta)
                   M1 <- matrix(c(-1/(model@phi2), - (log(targetEndOfTrial/(1-targetEndOfTrial))-model@phi1)/(model@phi2)^2),1,2)
@@ -2892,22 +3039,39 @@ setMethod("stopTrial",
                   
                   varEta <- M1%*%M2%*%t(M1)
                   
-                  ##Find the upper and lower limit of the 95% credibility interval
-                  CI <- c()
-                  CI[2] <- exp(log(TDtargetEndOfTrial) + 1.96* sqrt(varEta))
-                  CI[1] <- exp(log(TDtargetEndOfTrial) - 1.96* sqrt(varEta))
-                  
+                  ##Find the upper and lower limit of the 95% credibility interval of
+                  ##TDtargetEndOfTrial
+                  CITDEOT <- c()
+                  CITDEOT[2] <- exp(log(TDtargetEndOfTrial) + 1.96* sqrt(varEta))
+                  CITDEOT[1] <- exp(log(TDtargetEndOfTrial) - 1.96* sqrt(varEta))
                   ##The ratio of the upper to the lower 95% credibility interval
-                  ratio <- as.numeric(CI[2]/CI[1])
-                } 
-              
-              
+                  ratioTDEOT <- as.numeric(CITDEOT[2]/CITDEOT[1])
+                 
+              if (Gstar <= TDtargetEndOfTrial)
+              {chooseTD <- FALSE
+              CI <- c()
+              CI[2] <- CIGstar[2]
+              CI[1] <- CIGstar[1]
+              ratio <- ratioGstar} else {chooseTD <- TRUE
+              CI <- c()
+              CI[2] <- CITDEOT[2]
+              CI[1] <- CITDEOT[1]
+              ratio <- ratioTDEOT
+              }
               ##so can we stop? 
               doStop <- ratio <= stopping@targetRatio
-              ##generate messgae
-              text <- paste(ifelse(chooseTD,"TD30 estimate","Gstar estimate"), "is smaller with 95% CI (", CI[1], ",", CI[2], 
-                            ") and its ratio =", ratio, "is " , ifelse(doStop,"is less than or equal to","greater than"),
+              ##generate message
+              
+              text1 <- paste("Gstar estimate is", round(Gstar,4), "with 95% CI (", round(CIGstar[1],4), ",", round(CIGstar[2],4), 
+                            ") and its ratio =", 
+                            round(ratioGstar,4))
+              text2 <- paste("TDtargetEndOfTrial estimate is ", round(TDtargetEndOfTrial,4), 
+                            "with 95% CI (", round(CITDEOT[1],4),",", round(CITDEOT[2],4), ") and its ratio=", 
+                            round(ratioTDEOT,4))
+              text3 <- paste(ifelse(chooseTD,"TDatrgetEndOfTrial estimate","Gstar estimate"), "is smaller with ratio =", 
+                            round(ratio,4), "which is " , ifelse(doStop,"is less than or equal to","greater than"),
                             "targetRatio =", stopping@targetRatio)
+              text <- c(text1,text2,text3)
               ##return both
               return(structure(doStop,
                                message=text))

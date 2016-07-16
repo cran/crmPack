@@ -4,7 +4,7 @@ License: GPL (>= 2)
 Title: Object-Oriented Implementation of CRM Designs
 LazyLoad: yes
 Author: Daniel Sabanes Bove <sabanesd@roche.com>,
-    Wai Yin Yeung <w.yeung1@lancaster.ac.uk>,
+    Wai Yin Yeung <winnie.yeung@roche.com>,
     Giuseppe Palermo <giuseppe.palermo@roche.com>,
     Thomas Jaki <jaki.thomas@gmail.com>
 Description: Implements a wide range of model-based dose
@@ -16,8 +16,8 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 0.1.9
-Date: 2016-02-29
+Version: 0.2.0
+Date: 2016-07-01
 Copyright: F. Hoffmann-La Roche Ltd
 Depends: R (>= 3.0.0), ggplot2 (>= 2.0.0), graphics
 Imports: methods, grid, gridExtra, GenSA, mvtnorm, parallel,
@@ -29,7 +29,8 @@ Collate: 'helpers.R' 'Data-class.R' 'Data-methods.R' 'Rules-class.R'
         'mcmc.R' 'Simulations-class.R' 'Model-methods.R'
         'Rules-methods.R' 'Design-methods.R' 'fromQuantiles.R'
         'Samples-methods.R' 'Simulations-methods.R' 'crmPack-package.R'
+RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-02-29 13:25:31 UTC; sabanesd
+Packaged: 2016-07-15 14:02:07 UTC; sabanesd
 Repository: CRAN
-Date/Publication: 2016-02-29 18:39:36
+Date/Publication: 2016-07-16 23:06:48

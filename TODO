@@ -1,0 +1,49 @@
+BUGFIXES:
+
+- make it possible to sample from prior for DualEndpointRW model,
+  see report by Giuseppe in devel/dualEndpointRWbug.R
+  
+- merge in fixes from the Stash / Daniel's local branch.
+
+- why do new stopping rules for dual endpoint models not work with "and"/"or"
+  operators?
+
+----------------------------------------------------------------
+IMPROVEMENTS:
+
+- also optimize refDose for quantile->logistic functions
+
+- make sure that it is clear in the documentation that the log transformation
+  only applies to the slope (beta) and not to the intercept (alpha)
+  
+- the minimalInformative function should already produce a graph comparing the
+  required and the resulting quantiles, instead of the user having to do it.
+
+- record number of times the model is overruled in the simulations (Uli Beyer
+request)
+
+- mixture prior: add documentation in vignette
+
+- allow different x values (doses) to be specified in simulate() to be passed to fit()
+
+----------------------------------------------------------------
+NEW FEATURES:
+
+- add slide production with ReporteRs package examples (to demo folder?)
+
+- be able to run simulations on a cluster
+
+- allow placebos in the cohorts for CNS
+
+- production of Word output tables from simulation summaries
+
+- minimal informative prior construction for other model(s)
+
+- other prior in the Kadane model -> how?
+
+- historical data prior,
+  pseudodata prior
+
+- implement one-parameter CRM with skeleton probabilities?
+  -> perhaps also with random effects per doses (proposed by David)
+

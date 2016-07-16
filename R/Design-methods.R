@@ -976,19 +976,41 @@ setMethod("examine",
                       thisSize <- size(cohortSize=object@cohortSize,
                                        dose=thisDose,
                                        data=baseData)
+                      
+                      if(baseData@placebo)
+                        thisSize.PL <- size(cohortSize=object@PLcohortSize,
+                                            dose=thisDose,
+                                            data=baseData)
 
                       ## for all possible number of DLTs:
                       for(numDLTs in 0:thisSize)
                       {
                           ## update data with corresponding DLT vector
-                          thisData <-
-                              update(object=baseData,
+                          if(baseData@placebo){
+                            thisData <- update(object=baseData,
+                                               x=baseData@doseGrid[1],
+                                               y=rep(0,thisSize.PL))
+                            
+                            thisData <-
+                              update(object=thisData,
                                      x=thisDose,
                                      y=
-                                         rep(x=c(0, 1),
-                                             times=
-                                                 c(thisSize - numDLTs,
-                                                   numDLTs)))
+                                       rep(x=c(0, 1),
+                                           times=
+                                             c(thisSize - numDLTs,
+                                               numDLTs)),
+                                     newCohort=FALSE)
+                            
+                          }else{
+                            thisData <-
+                                update(object=baseData,
+                                       x=thisDose,
+                                       y=
+                                           rep(x=c(0, 1),
+                                               times=
+                                                   c(thisSize - numDLTs,
+                                                     numDLTs)))
+                          }
 
                           ## what is the dose limit?
                           doselimit <- maxDose(object@increments,
@@ -1027,10 +1049,24 @@ setMethod("examine",
                       }
 
                       ## change base data
-                      baseData <-
+                      if(baseData@placebo){
+                        baseData <-
+                          update(object=baseData,
+                                 x=baseData@doseGrid[1],
+                                 y=rep(0, thisSize.PL))
+                        
+                        baseData <-
                           update(object=baseData,
                                  x=thisDose,
-                                 y=rep(0, thisSize))
+                                 y=rep(0, thisSize),
+                                 newCohort=FALSE)
+                        
+                      }else{
+                        baseData <-
+                            update(object=baseData,
+                                   x=thisDose,
+                                   y=rep(0, thisSize))
+                      }
 
                       ## what is the new dose according to table?
                       newDose <- as.numeric(subset(tail(ret, thisSize + 1),
@@ -1243,6 +1279,12 @@ setMethod("simulate",
                 ## start the simulated data with the provided one
                 thisData <- object@data
                 
+                # In case there are placebo
+                if(thisData@placebo)
+                  ## what is the probability for tox. at placebo?
+                  thisProb.PL <- thisTruth(object@data@doseGrid[1])
+                
+                
                 ## shall we stop the trial?
                 ## First, we want to continue with the starting dose.
                 ## This variable is updated after each cohort in the loop.
@@ -1264,6 +1306,13 @@ setMethod("simulate",
                                    dose=thisDose,
                                    data=thisData)
                   
+                  ## In case there are placebo
+                  if(thisData@placebo)
+                    thisSize.PL <- size(cohortSize=object@PLcohortSize,
+                                        dose=thisDose,
+                                        data=thisData)
+                  
+                  
                   
                   ## simulate DLTs: depends on whether we
                   ## separate the first patient or not.
@@ -1273,6 +1322,12 @@ setMethod("simulate",
                     thisDLTs <- rbinom(n=1L,
                                        size=1L,
                                        prob=thisProb)
+                    
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=1L,
+                                            size=1L,
+                                            prob=thisProb.PL)
+                    
                     ## if there is no DLT:
                     if(thisDLTs == 0)
                     {
@@ -1281,18 +1336,42 @@ setMethod("simulate",
                                     rbinom(n=thisSize - 1L,
                                            size=1L,
                                            prob=thisProb))
+                      
+                      if( thisData@placebo && (thisSize.PL > 1L) )
+                        thisDLTs.PL <- c(thisDLTs.PL,
+                                         rbinom(n=thisSize.PL - 1L,
+                                                size=1L,
+                                                prob=thisProb.PL))
                     }
                   } else {
                     ## we can directly dose all patients
                     thisDLTs <- rbinom(n=thisSize,
                                        size=1L,
-                                       prob=thisProb)    
+                                       prob=thisProb)  
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=thisSize.PL,
+                                            size=1L,
+                                            prob=thisProb.PL)
                   }
+                  
+                  ## update the data with this placebo (if any) cohort and then with active dose
+                  if(thisData@placebo){
+                    thisData <- update(object=thisData,
+                                       x=object@data@doseGrid[1],
+                                       y=thisDLTs.PL)
+                    
+                    ## update the data with active dose
+                    thisData <- update(object=thisData,
+                                       x=thisDose,
+                                       y=thisDLTs,
+                                       newCohort=FALSE)
+                  } else {
                   
                   ## update the data with this cohort
                   thisData <- update(object=thisData,
                                      x=thisDose,
                                      y=thisDLTs)
+                  }
                   
                   ##Update the model with thisData
                   thisModel <- update(object@model,
@@ -1324,6 +1403,10 @@ setMethod("simulate",
                   
                   thisTDtargetEndOfTrial<- NEXT$TDtargetEndOfTrialEstimate
                   
+                  thisratioTDEOT <- NEXT$ratioTDEOT
+                  
+                  thisCITDEOT <- list(lower=NEXT$CITDEOT[1],
+                                      upper=NEXT$CITDEOT[2])
                   
                   
                   thisTDtargetEndOfTrialatdoseGrid <- NEXT$TDtargetEndOfTrialAtDoseGrid
@@ -1351,6 +1434,9 @@ setMethod("simulate",
                        TDtargetDuringTrial=thisTDtargetDuringTrial,
                        TDtargetEndOfTrial=thisTDtargetEndOfTrial,
                        TDtargetEndOfTrialatdoseGrid=thisTDtargetEndOfTrialatdoseGrid,
+                       TDtargetDuringTrialatdoseGrid=thisDose,
+                       CITDEOT=thisCITDEOT,
+                       ratioTDEOT= thisratioTDEOT,
                        fit=
                          subset(thisFit,
                                 select=c(middle, lower, upper)),
@@ -1376,9 +1462,34 @@ setMethod("simulate",
               
               ## setup the list for the simulated data objects
               dataList <- lapply(resultList, "[[", "data")
+            
+              ##set up list for the final TD during Trial Estimate
+              TDtargetDuringTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrial"))
+              
+              ##set up list for the final TD End of Trial Estimate
+              TDtargetEndOfTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrial"))
+              
+              ## set up list for the final TD during Trial estimate at dose Grid
+              TDtargetDuringTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrialatdoseGrid"))
+              
+              ## set up list for the final TD End Of Trial estimate at dose Grid
+              TDtargetEndOfTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialatdoseGrid"))
+              
               
               ## the vector of the final dose recommendations
               recommendedDoses <- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialatdoseGrid"))
+              
+              ##Set up the list for the final 95% CI obtained
+              CIList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final ratios obtained
+              ratioList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
+              
+              ##Set up the list for the final TDEOT 95% CI obtained
+              CITDEOTList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final TDEOT ratios obtained
+              ratioTDEOTList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
               
               ## setup the list for the final fits
               fitList <- lapply(resultList, "[[", "fit")
@@ -1390,6 +1501,14 @@ setMethod("simulate",
               ret <- PseudoSimulations(data=dataList,
                                  doses=recommendedDoses,
                                  fit=fitList,
+                                 FinalTDtargetDuringTrialEstimates=TDtargetDuringTrialList,
+                                 FinalTDtargetEndOfTrialEstimates=TDtargetEndOfTrialList,
+                                 FinalTDtargetDuringTrialAtDoseGrid=TDtargetDuringTrialDoseGridList,
+                                 FinalTDtargetEndOfTrialAtDoseGrid=TDtargetEndOfTrialDoseGridList,
+                                 FinalCIs=CIList,
+                                 FinalRatios=ratioList,
+                                 FinalTDEOTCIs=CITDEOTList,
+                                 FinalTDEOTRatios=ratioTDEOTList,
                                  stopReasons=stopReasons,
                                  seed=RNGstate)
               
@@ -1481,6 +1600,11 @@ setMethod("simulate",
                 ## start the simulated data with the provided one
                 thisData <- object@data
                 
+                # In case there are placebo
+                if(thisData@placebo)
+                  ## what is the probability for tox. at placebo?
+                  thisProb.PL <- thisTruth(object@data@doseGrid[1])
+                
                 ## shall we stop the trial?
                 ## First, we want to continue with the starting dose.
                 ## This variable is updated after each cohort in the loop.
@@ -1501,6 +1625,12 @@ setMethod("simulate",
                                    dose=thisDose,
                                    data=thisData)
                   
+                  ## In case there are placebo
+                  if(thisData@placebo)
+                    thisSize.PL <- size(cohortSize=object@PLcohortSize,
+                                        dose=thisDose,
+                                        data=thisData)
+                  
                   ## simulate DLTs: depends on whether we
                   ## separate the first patient or not.
                   if(firstSeparate && (thisSize > 1L))
@@ -1509,6 +1639,12 @@ setMethod("simulate",
                     thisDLTs <- rbinom(n=1L,
                                        size=1L,
                                        prob=thisProb)
+                    
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=1L,
+                                            size=1L,
+                                            prob=thisProb.PL)
+                    
                     ## if there is no DLT:
                     if(thisDLTs == 0)
                     {
@@ -1517,19 +1653,44 @@ setMethod("simulate",
                                     rbinom(n=thisSize - 1L,
                                            size=1L,
                                            prob=thisProb))
+                      
+                      if( thisData@placebo && (thisSize.PL > 1L) )
+                        thisDLTs.PL <- c(thisDLTs.PL,
+                                         rbinom(n=thisSize.PL - 1L,
+                                                size=1L,
+                                                prob=thisProb.PL))
                     }
                   } else {
                     ## we can directly dose all patients
                     thisDLTs <- rbinom(n=thisSize,
                                        size=1L,
                                        prob=thisProb)
+                    
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=thisSize.PL,
+                                            size=1L,
+                                            prob=thisProb.PL) 
+                    
                   }
+                  
+                  ## update the data with this placebo (if any) cohort and then with active dose
+                  if(thisData@placebo){
+                    thisData <- update(object=thisData,
+                                       x=object@data@doseGrid[1],
+                                       y=thisDLTs.PL)
+                    
+                    ## update the data with active dose
+                    thisData <- update(object=thisData,
+                                       x=thisDose,
+                                       y=thisDLTs,
+                                       newCohort=FALSE)
+                  } else {
                   
                   ## update the data with this cohort
                   thisData <- update(object=thisData,
                                      x=thisDose,
                                      y=thisDLTs)
-                  
+                  }
                   
                   ##Update model estimates with thisData
                   thisModel <- update(object@model,
@@ -1554,6 +1715,11 @@ setMethod("simulate",
                   
                   thisTDtargetEndOfTrialatdoseGrid <- NEXT$TDtargetEndOfTrialatdoseGrid
                   
+                  thisCITDEOT <- list(lower=NEXT$CITFEOT[1],
+                                      upper=NEXT$CITFEOT[2])
+                  
+                  thisratioTDEOT <- NEXT$ratioTDEOT
+                  
                   
                   ## evaluate stopping rules
                   stopit <- stopTrial(object@stopping,
@@ -1575,6 +1741,9 @@ setMethod("simulate",
                        TDtargetDuringTrial=thisTDtargetDuringTrial,
                        TDtargetEndOfTrial=thisTDtargetEndOfTrial,
                        TDtargetEndOfTrialatdoseGrid=thisTDtargetEndOfTrialatdoseGrid,
+                       TDtargetDuringTrialatdoseGrid=thisDose,
+                       CITDEOT=thisCITDEOT,
+                       ratioTDEOT= thisratioTDEOT,
                        fit=thisFit,
                        stop=
                          attr(stopit,
@@ -1599,9 +1768,34 @@ setMethod("simulate",
               ## setup the list for the simulated data objects
               dataList <- lapply(resultList, "[[", "data")
               
+              
+              ##set up list for the final TD during Trial Estimate
+              TDtargetDuringTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrial"))
+              
+              ##set up list for the final TD End of Trial Estimate
+              TDtargetEndOfTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrial"))
+              
+              ## set up list for the final TD during Trial estimate at dose Grid
+              TDtargetDuringTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrialatdoseGrid"))
+              
+              ## set up list for the final TD End Of Trial estimate at dose Grid
+              TDtargetEndOfTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialatdoseGrid"))
+              
+              
               ## the vector of the final dose recommendations
               recommendedDoses <- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialatdoseGrid"))
               
+              ##Set up the list for the final 95% CI obtained
+              CIList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final ratios obtained
+              ratioList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
+              
+              ##Set up the list for the final TDEOT 95% CI obtained
+              CITDEOTList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final TDEOT ratios obtained
+              ratioTDEOTList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
               ##set up the list for the final fits
               
               fitList <- lapply(resultList,"[[", "fit")
@@ -1612,7 +1806,15 @@ setMethod("simulate",
               ## return the results in the Simulations class object
               ret <- PseudoSimulations(data=dataList,
                                        doses=recommendedDoses,
-                                      fit=fitList,
+                                       fit=fitList,
+                                       FinalTDtargetDuringTrialEstimates=TDtargetDuringTrialList,
+                                       FinalTDtargetEndOfTrialEstimates=TDtargetEndOfTrialList,
+                                       FinalTDtargetDuringTrialAtDoseGrid=TDtargetDuringTrialDoseGridList,
+                                       FinalTDtargetEndOfTrialAtDoseGrid=TDtargetEndOfTrialDoseGridList,
+                                       FinalCIs=CIList,
+                                       FinalRatios=ratioList,
+                                       FinalTDEOTCIs=CITDEOTList,
+                                       FinalTDEOTRatios=ratioTDEOTList,
                                        stopReasons=stopReasons,
                                        seed=RNGstate)
               
@@ -1734,6 +1936,13 @@ setMethod("simulate",
                 ##start the simulated data with the provided one
                 thisData <- object@data
                 
+                if(thisData@placebo){
+                  ## what is the probability for tox. at placebo?  
+                  thisProb.PL <- thisTruthDLE(object@data@doseGrid[1])
+                  
+                  ## what is the mean efficacy at placebo?
+                  thisMeanEff.PL <- thisTruthEff(object@data@doseGrid[1])
+                }
                 
                 ## shall we stop the trial?
                 ## First, we want to continue with the starting dose.
@@ -1749,12 +1958,21 @@ setMethod("simulate",
                 {
                   ## what is the probability for tox. at this dose?
                   thisDLEProb <- thisTruthDLE(thisDose)
-                  thisEff<-thisTruthEff(thisDose)
+                  thisMeanEff<-thisTruthEff(thisDose)
                   
                   ## what is the cohort size at this dose?
                   thisSize <- size(cohortSize=object@cohortSize,
                                    dose=thisDose,
                                    data=thisData)
+                  
+                  
+                  ## In case there are placebo
+                  ## what is the cohort size at this dose for Placebo?
+                  if(thisData@placebo)
+                    thisSize.PL <- size(cohortSize=object@PLcohortSize,
+                                        dose=thisDose,
+                                        data=thisData)
+                  
                   
                   ## simulate DLTs: depends on whether we
                   ## separate the first patient or not.
@@ -1764,9 +1982,21 @@ setMethod("simulate",
                     thisDLTs <- rbinom(n=1L,
                                        size=1L,
                                        prob=thisDLEProb)
+                    
+                    
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=1L,
+                                            size=1L,
+                                            prob=thisProb.PL)
+                    
                     thisEff <- rnorm(n=1L,
-                                     mean=thisEff,
+                                     mean=thisMeanEff,
                                      sd=sqrt(trueSigma2))
+                    
+                    if (thisData@placebo)
+                      thisEff.PL <- rnorm(n=1L,
+                                    mean=thisMeanEff.PL,
+                                    sd=sqrt(trueSigma2))
                     
                     ## if there is no DLT:
                     if(thisDLTs == 0)
@@ -1776,10 +2006,23 @@ setMethod("simulate",
                                     rbinom(n=thisSize - 1L,
                                            size=1L,
                                            prob=thisDLEProb))
+                      
                       thisEff<-c(thisEff,
                                  rnorm(n=thisSize - 1L,
-                                       mean=thisEff,
+                                       mean=thisMeanEff,
                                        sd=sqrt(trueSigma2)))
+                      
+                      if( thisData@placebo && (thisSize.PL > 1L) ) {
+                        thisDLTs.PL <- c(thisDLTs.PL,
+                                         rbinom(n=thisSize.PL - 1L,
+                                                size=1L,
+                                                prob=thisProb.PL))
+                       thisEff.PL <- c(thisMeanEff.PL,
+                                       rnorm(n=thisSize.PL-1L,
+                                             mean=thisMeanEff,
+                                             sd=sqrt(trueSigma2)))
+                      }
+                      
                     }
                   } else {
                     ## we can directly dose all patients
@@ -1787,11 +2030,33 @@ setMethod("simulate",
                                        size=1L,
                                        prob=thisDLEProb)
                     thisEff <- rnorm(n=thisSize,
-                                     mean=thisEff,
+                                     mean=thisMeanEff,
                                      sd=sqrt(trueSigma2))
+                    
+                    if (thisData@placebo){
+                           thisDLTs.PL <- rbinom(n=thisSize.PL,
+                                                 size=1L,
+                                                 prob=thisProb.PL)
+                           thisEff.PL <- rnorm(n=thisSize.PL,
+                                               mean=thisMeanEff,
+                                               sd=sqrt(trueSigma2))
+                    }
                   }
                   
-                  
+                  ## update the data with this placebo (if any) cohort and then with active dose
+                  if(thisData@placebo){
+                    thisData <- update(object=thisData,
+                                       x=object@data@doseGrid[1],
+                                       y=thisDLTs.PL,
+                                       w=thisEff.PL)
+                    
+                    ## update the data with active dose
+                    thisData <- update(object=thisData,
+                                       x=thisDose,
+                                       y=thisDLTs,
+                                       w=thisEff,
+                                       newCohort=FALSE)
+                  } else {               
                   
                   ## update the data with this cohort
                   thisData <- update(object=thisData,
@@ -1799,7 +2064,7 @@ setMethod("simulate",
                                      y=thisDLTs,
                                      w=thisEff)
                   
-                  
+                  }
                   ##Update model estimate in DLE and Eff models
                   thisDLEModel <- update(object=object@model,
                                          data=thisData)
@@ -1843,6 +2108,25 @@ setMethod("simulate",
                   
                   Recommend<- min(thisTDtargetEndOfTrialAtDoseGrid,thisGstarAtDoseGrid)
                   
+                  ##Find the 95 % CI and its ratio (upper to the lower of this 95% CI of each of the estimates)
+                  
+                  thisCITDEOT <- list(lower=NEXT$CITDEOT[1],
+                                      upper=NEXT$CITDEOT[2])
+                  
+                  thisratioTDEOT <- NEXT$ratioTDEOT
+                  
+                  thisCIGstar <- list(lower=NEXT$CIGstar[1],
+                                      upper=NEXT$CIGstar[2])
+                  
+                  thisratioGstar <- NEXT$ratioGstar
+                  ## Find the optimal dose
+                  OptimalDose <- min(thisGstar,thisTDtargetEndOfTrial)
+                  
+                  if (OptimalDose==thisGstar){
+                    thisratio <- thisratioGstar
+                    thisCI<- thisCIGstar
+                  } else { thisratio <- thisratioTDEOT
+                           thisCI <- thisCITDEOT}
                   
                   ## evaluate stopping rules
                   stopit <- stopTrial(object@stopping,
@@ -1874,6 +2158,14 @@ setMethod("simulate",
                                    Gstar=thisGstar,
                                    GstarAtDoseGrid=thisGstarAtDoseGrid,
                                    Recommend=Recommend,
+                                   OptimalDose=OptimalDose,
+                                   OptimalDoseAtDoseGrid=Recommend,
+                                   ratio=thisratio,
+                                   CI=thisCI,
+                                   ratioGstar=thisratioGstar,
+                                   CIGstar=thisCIGstar,
+                                   ratioTDEOT=thisratioTDEOT,
+                                   CITDEOT=thisCITDEOT,
                                    fitDLE=thisDLEFit,
                                    fitEff=thisEffFit,
                                    sigma2est=thisSigma2,
@@ -1906,6 +2198,51 @@ setMethod("simulate",
               ## the vector of the final dose recommendations
               recommendedDoses <- as.numeric(sapply(resultList, "[[", "Recommend"))
               
+              
+              ##set up list for the final TD during Trial Estimate
+              TDtargetDuringTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrial"))
+              
+              ##set up list for the final TD End of Trial Estimate
+              TDtargetEndOfTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrial"))
+              
+              ## set up list for the final TD during Trial estimate at dose Grid
+              TDtargetDuringTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrialAtDoseGrid"))
+              
+              ## set up list for the final TD End Of Trial estimate at dose Grid
+              TDtargetEndOfTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialAtDoseGrid"))
+              
+              ##set up list for the final Gstar estimates
+              GstarList <- as.numeric(sapply(resultList,"[[","Gstar"))
+              
+              ##set up list for the final Gstar estimates at dose grid
+              GstarAtDoseGridList <- as.numeric(sapply(resultList,"[[","GstarAtDoseGrid"))
+              
+              ##set up list for final optimal dose estimates
+              OptimalDoseList <- as.numeric(sapply(resultList,"[[","OptimalDose"))
+              
+              ##set up list for final optimal dose estimates at dose Grid
+              OptimalDoseAtDoseGridList <- as.numeric(sapply(resultList,"[[","Recommend"))
+              
+              ##Set up the list for the final 95% CI obtained
+              CIList <- lapply(resultList,"[[","CI")
+              
+              ##Set up the list for the final ratios obtained
+              ratioList<- as.numeric(sapply(resultList, "[[", "ratio"))
+              
+              ##Set up the list for the final 95% CI of the TDtarget End Of Trial obtained
+              CITDEOTList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final ratios of the TDtarget End Of Trial obtained
+              ratioTDEOTList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
+              
+              ##Set up the list for the final 95% CI of the Gstar obtained
+              CIGstarList <- lapply(resultList,"[[","CIGstar")
+              
+              ##Set up the list for the final ratios of the Gstar obtained
+              ratioGstarList<- as.numeric(sapply(resultList, "[[", "ratioGstar"))
+              
+              
+              
               ##set up the list for the final fits
               fitDLEList <- lapply(resultList,"[[","fitDLE")
               fitEffList <- lapply(resultList,"[[","fitEff")
@@ -1920,6 +2257,20 @@ setMethod("simulate",
               ## return the results in the Simulations class object
               ret <- PseudoDualSimulations(data=dataList,
                                            doses=recommendedDoses,
+                                           FinalTDtargetDuringTrialEstimates=TDtargetDuringTrialList,
+                                           FinalTDtargetEndOfTrialEstimates=TDtargetEndOfTrialList,
+                                           FinalTDtargetDuringTrialAtDoseGrid=TDtargetDuringTrialDoseGridList,
+                                           FinalTDtargetEndOfTrialAtDoseGrid=TDtargetEndOfTrialDoseGridList,
+                                           FinalCIs=CIList,
+                                           FinalRatios=ratioList,
+                                           FinalGstarEstimates=GstarList,
+                                           FinalGstarAtDoseGrid=GstarAtDoseGridList,
+                                           FinalGstarCIs=CIGstarList,
+                                           FinalGstarRatios=ratioGstarList,
+                                           FinalTDEOTCIs=CITDEOTList,
+                                           FinalTDEOTRatios=ratioTDEOTList,
+                                           FinalOptimalDose=OptimalDoseList,
+                                           FinalOptimalDoseAtDoseGrid= OptimalDoseAtDoseGridList,
                                            fit=fitDLEList,
                                            fitEff=fitEffList,
                                            sigma2est=sigma2Estimates,
@@ -2073,7 +2424,7 @@ setMethod("simulate",
                     ## what is the probability for tox. at this dose?
                     thisDLEProb <- thisTruthDLE(thisDose)
                     thisDoseIndex <- which(thisDose==thisData@doseGrid)
-                    thisEff <- thisTruthEff[thisDoseIndex]
+                    thisMeanEff <- thisTruthEff[thisDoseIndex]
                     
                     
                     
@@ -2082,6 +2433,10 @@ setMethod("simulate",
                                      dose=thisDose,
                                      data=thisData)
                     
+                    if(thisData@placebo)
+                      thisSize.PL <- size(cohortSize=object@PLcohortSize,
+                                          dose=thisDose,
+                                          data=thisData)
                     
                     ## simulate DLTs: depends on whether we
                     ## separate the first patient or not.
@@ -2092,9 +2447,19 @@ setMethod("simulate",
                                          size=1L,
                                          prob=thisDLEProb)
                       
+                      if(thisData@placebo)
+                        thisDLTs.PL <- rbinom(n=1L,
+                                              size=1L,
+                                              prob=thisProb.PL)
+                      
                       thisEff <- rnorm(n=1L,
-                                       mean=thisEff,
+                                       mean=thisMeanEff,
                                        sd=sqrt(trueSigma2))
+                      
+                      if (thisData@placebo)
+                        thisEff.PL <- rnorm(n=1L,
+                                            mean=thisMeanEff.PL,
+                                            sd=sqrt(trueSigma2))
                       
                       ## if there is no DLT:
                       if(thisDLTs == 0)
@@ -2106,8 +2471,18 @@ setMethod("simulate",
                                              prob=thisDLEProb))
                         thisEff<-c(thisEff,
                                    rnorm(n=thisSize - 1L,
-                                         mean=thisEff,
+                                         mean=thisMeanEff,
                                          sd=sqrt(trueSigma2)))
+                        if( thisData@placebo && (thisSize.PL > 1L) ) {
+                          thisDLTs.PL <- c(thisDLTs.PL,
+                                           rbinom(n=thisSize.PL - 1L,
+                                                  size=1L,
+                                                  prob=thisProb.PL))
+                          thisEff.PL <- c(thisMeanEff.PL,
+                                          rnorm(n=thisSize.PL-1L,
+                                                mean=thisMeanEff,
+                                                sd=sqrt(trueSigma2)))
+                        }
                       }
                     } else {
                       ## we can directly dose all patients
@@ -2116,15 +2491,40 @@ setMethod("simulate",
                                          prob=thisDLEProb)
                       
                       thisEff <- rnorm(n=thisSize,
-                                       mean=thisEff,
-                                       sd=sqrt(trueSigma2))  
+                                       mean=thisMeanEff,
+                                       sd=sqrt(trueSigma2))
+                      if (thisData@placebo){
+                        thisDLTs.PL <- rbinom(n=thisSize.PL,
+                                              size=1L,
+                                              prob=thisProb.PL)
+                        thisEff.PL <- rnorm(n=thisSize.PL,
+                                            mean=thisMeanEff,
+                                            sd=sqrt(trueSigma2))
+                      }
                     }
                     
-                    ## update the data with this cohort
-                    thisData <- update(object=thisData,
-                                       x=thisDose,
-                                       y=thisDLTs,
-                                       w=thisEff)
+                    ## update the data with this placebo (if any) cohort and then with active dose
+                    if(thisData@placebo){
+                      thisData <- update(object=thisData,
+                                         x=object@data@doseGrid[1],
+                                         y=thisDLTs.PL,
+                                         w=thisEff.PL)
+                      
+                      ## update the data with active dose
+                      thisData <- update(object=thisData,
+                                         x=thisDose,
+                                         y=thisDLTs,
+                                         w=thisEff,
+                                         newCohort=FALSE)
+                    } else {               
+                      
+                      ## update the data with this cohort
+                      thisData <- update(object=thisData,
+                                         x=thisDose,
+                                         y=thisDLTs,
+                                         w=thisEff)
+                      
+                    }
                     
                     ##Update model estimate in DLE model
                     thisDLEModel <- update(object=object@model,
@@ -2181,6 +2581,25 @@ setMethod("simulate",
                     
                     Recommend<- min(thisTDtargetEndOfTrialAtDoseGrid,thisGstarAtDoseGrid)
                     
+                    ##Find the 95 % CI and its ratio (upper to the lower of this 95% CI of each of the estimates)
+                    
+                    thisCITDEOT <- list(lower=NEXT$CITDEOT[1],
+                                        upper=NEXT$CITDEOT[2])
+                    
+                    thisratioTDEOT <- NEXT$ratioTDEOT
+                    thisCIGstar <- list(lower=NEXT$CIGstar[1],
+                                        upper=NEXT$CIGstar[2])
+                    
+                    thisratioGstar <- NEXT$ratioGstar
+                    ## Find the optimal dose
+                    OptimalDose <- min(thisGstar,thisTDtargetEndOfTrial)
+                    
+                    if (OptimalDose==thisGstar){
+                      thisratio <- thisratioGstar
+                      thisCI<- thisCIGstar
+                    } else { thisratio <- thisratioTDEOT
+                    thisCI <- thisCITDEOT}
+                    
                     
                     ## evaluate stopping rules
                     stopit <- stopTrial(object@stopping,
@@ -2216,6 +2635,14 @@ setMethod("simulate",
                          Gstar=thisGstar,
                          GstarAtDoseGrid=thisGstarAtDoseGrid,
                          Recommend=Recommend,
+                         OptimalDose=OptimalDose,
+                         OptimalDoseAtDoseGrid=Recommend,
+                         ratio=thisratio,
+                         CI=thisCI,
+                         ratioGstar=thisratioGstar,
+                         CIGstar=thisCIGstar,
+                         ratioTDEOT=thisratioTDEOT,
+                         CITDEOT=thisCITDEOT,
                          fitDLE=subset(thisDLEFit,
                                        select=
                                          c(middle,lower,upper)),
@@ -2265,6 +2692,47 @@ setMethod("simulate",
                 ## the vector of sigma2betaW estimates
                 sigma2betaWEstimates <- as.numeric(sapply(resultList, "[[", "sigma2betaWest"))
                 
+                ##set up list for the final TD during Trial Estimate
+                TDtargetDuringTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrial"))
+                
+                ##set up list for the final TD End of Trial Estimate
+                TDtargetEndOfTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrial"))
+                
+                ## set up list for the final TD during Trial estimate at dose Grid
+                TDtargetDuringTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrialAtDoseGrid"))
+                
+                ## set up list for the final TD End Of Trial estimate at dose Grid
+                TDtargetEndOfTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialAtDoseGrid"))
+                
+                ##set up list for the final Gstar estimates
+                GstarList <- as.numeric(sapply(resultList,"[[","Gstar"))
+                
+                ##set up list for the final Gstar estimates at dose grid
+                GstarAtDoseGridList <- as.numeric(sapply(resultList,"[[","GstarAtDoseGrid"))
+                
+                ##set up list for final optimal dose estimates
+                OptimalDoseList <- as.numeric(sapply(resultList,"[[","OptimalDose"))
+                
+                ##set up list for final optimal dose estimates at dose Grid
+                OptimalDoseAtDoseGridList <- as.numeric(sapply(resultList,"[[","Recommend"))
+                
+                ##Set up the list for the final 95% CI obtained
+                CIList <- lapply(resultList,"[[","CI")
+                
+                ##Set up the list for the final ratios obtained
+                ratioList<- as.numeric(sapply(resultList, "[[", "ratio"))
+                
+                ##Set up the list for the final 95% CI of the TDtarget End Of Trial obtained
+                CITDEOTList <- lapply(resultList,"[[","CITDEOT")
+                
+                ##Set up the list for the final ratios of the TDtarget End Of Trial obtained
+                ratioTDEOTList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
+                
+                ##Set up the list for the final 95% CI of the Gstar obtained
+                CIGstarList <- lapply(resultList,"[[","CIGstar")
+                
+                ##Set up the list for the final ratios of the Gstar obtained
+                ratioGstarList<- as.numeric(sapply(resultList, "[[", "ratioGstar"))
                 
                 ## the reasons for stopping
                 stopReasons <- lapply(resultList, "[[", "stop")
@@ -2272,6 +2740,20 @@ setMethod("simulate",
                 ## return the results in the Simulations class object
                 ret <- PseudoDualFlexiSimulations(data=dataList,
                                                   doses=recommendedDoses,
+                                                  FinalTDtargetDuringTrialEstimates=TDtargetDuringTrialList,
+                                                  FinalTDtargetEndOfTrialEstimates=TDtargetEndOfTrialList,
+                                                  FinalTDtargetDuringTrialAtDoseGrid=TDtargetDuringTrialDoseGridList,
+                                                  FinalTDtargetEndOfTrialAtDoseGrid=TDtargetEndOfTrialDoseGridList,
+                                                  FinalCIs=CIList,
+                                                  FinalRatios=ratioList,
+                                                  FinalGstarEstimates=GstarList,
+                                                  FinalGstarAtDoseGrid=GstarAtDoseGridList,
+                                                  FinalGstarCIs=CIGstarList,
+                                                  FinalGstarRatios=ratioGstarList,
+                                                  FinalTDEOTCIs=CITDEOTList,
+                                                  FinalTDEOTRatios=ratioTDEOTList,
+                                                  FinalOptimalDose=OptimalDoseList,
+                                                  FinalOptimalDoseAtDoseGrid= OptimalDoseAtDoseGridList,
                                                   fit=fitDLEList,
                                                   fitEff=fitEffList,
                                                   sigma2est=sigma2Estimates,
@@ -2356,7 +2838,7 @@ setMethod("simulate",
                 {
                   ## what is the probability for tox. at this dose?
                   thisDLEProb <- thisTruthDLE(thisDose)
-                  thisEff<-thisTruthEff(thisDose)
+                  thisMeanEff<-thisTruthEff(thisDose)
                   
                   ## what is the cohort size at this dose?
                   thisSize <- size(cohortSize=object@cohortSize,
@@ -2371,9 +2853,20 @@ setMethod("simulate",
                     thisDLTs <- rbinom(n=1L,
                                        size=1L,
                                        prob=thisDLEProb)
+                    
+                    if(thisData@placebo)
+                      thisDLTs.PL <- rbinom(n=1L,
+                                            size=1L,
+                                            prob=thisProb.PL)
+                    
                     thisEff <- rnorm(n=1L,
-                                     mean=thisEff,
+                                     mean=thisMeanEff,
                                      sd=sqrt(trueSigma2))
+                    
+                    if (thisData@placebo)
+                      thisEff.PL <- rnorm(n=1L,
+                                          mean=thisMeanEff.PL,
+                                          sd=sqrt(trueSigma2))
                     
                     ## if there is no DLT:
                     if(thisDLTs == 0)
@@ -2385,8 +2878,21 @@ setMethod("simulate",
                                            prob=thisDLEProb))
                       thisEff<-c(thisEff,
                                  rnorm(n=thisSize - 1L,
-                                       mean=thisEff,
+                                       mean=thisMeanEff,
                                        sd=sqrt(trueSigma2)))
+                      
+                      
+                      if( thisData@placebo && (thisSize.PL > 1L) ) {
+                        thisDLTs.PL <- c(thisDLTs.PL,
+                                         rbinom(n=thisSize.PL - 1L,
+                                                size=1L,
+                                                prob=thisProb.PL))
+                        thisEff.PL <- c(thisMeanEff.PL,
+                                        rnorm(n=thisSize.PL-1L,
+                                              mean=thisMeanEff,
+                                              sd=sqrt(trueSigma2)))
+                      }
+                      
                     }
                   } else {
                     ## we can directly dose all patients
@@ -2394,17 +2900,43 @@ setMethod("simulate",
                                        size=1L,
                                        prob=thisDLEProb)
                     thisEff <- rnorm(n=thisSize,
-                                     mean=thisEff,
+                                     mean=thisMeanEff,
                                      sd=sqrt(trueSigma2))
+                    
+                    if (thisData@placebo){
+                      thisDLTs.PL <- rbinom(n=thisSize.PL,
+                                            size=1L,
+                                            prob=thisProb.PL)
+                      thisEff.PL <- rnorm(n=thisSize.PL,
+                                          mean=thisMeanEff,
+                                          sd=sqrt(trueSigma2))
+                    }
                   }
                   
                   
                   
-                  ## update the data with this cohort
-                  thisData <- update(object=thisData,
-                                     x=thisDose,
-                                     y=thisDLTs,
-                                     w=thisEff)
+                  ## update the data with this placebo (if any) cohort and then with active dose
+                  if(thisData@placebo){
+                    thisData <- update(object=thisData,
+                                       x=object@data@doseGrid[1],
+                                       y=thisDLTs.PL,
+                                       w=thisEff.PL)
+                    
+                    ## update the data with active dose
+                    thisData <- update(object=thisData,
+                                       x=thisDose,
+                                       y=thisDLTs,
+                                       w=thisEff,
+                                       newCohort=FALSE)
+                  } else {               
+                    
+                    ## update the data with this cohort
+                    thisData <- update(object=thisData,
+                                       x=thisDose,
+                                       y=thisDLTs,
+                                       w=thisEff)
+                    
+                  }
                   
                   
                   ##Update model estimate in DLE and Eff models
@@ -2459,6 +2991,25 @@ setMethod("simulate",
                   
                   
                   Recommend<- min(thisTDtargetEndOfTrialAtDoseGrid,thisGstarAtDoseGrid)
+                  ##Find the 95 % CI and its ratio (upper to the lower of this 95% CI of each of the estimates)
+                  
+                  thisCITDEOT <- list(lower=NEXT$CITDEOT[1],
+                                      upper=NEXT$CITDEOT[2])
+                  
+                  thisratioTDEOT <- NEXT$ratioTDEOT
+                  
+                  thisCIGstar <- list(lower=NEXT$CIGstar[1],
+                                      upper=NEXT$CIGstar[2])
+                  
+                  thisratioGstar <- NEXT$ratioGstar
+                  ## Find the optimal dose
+                  OptimalDose <- min(thisGstar,thisTDtargetEndOfTrial)
+                  
+                  if (OptimalDose==thisGstar){
+                    thisratio <- thisratioGstar
+                    thisCI<- thisCIGstar
+                  } else { thisratio <- thisratioTDEOT
+                  thisCI <- thisCITDEOT}
                   
                   
                   ## evaluate stopping rules
@@ -2493,6 +3044,14 @@ setMethod("simulate",
                                    Gstar=thisGstar,
                                    GstarAtDoseGrid=thisGstarAtDoseGrid,
                                    Recommend=Recommend,
+                                   OptimalDose=OptimalDose,
+                                   OptimalDoseAtDoseGrid=Recommend,
+                                   ratio=thisratio,
+                                   CI=thisCI,
+                                   ratioGstar=thisratioGstar,
+                                   CIGstar=thisCIGstar,
+                                   ratioTDEOT=thisratioTDEOT,
+                                   CITDEOT=thisCITDEOT,
                                    fitDLE=subset(thisDLEFit,
                                                  select=
                                                    c(middle,lower,upper)),
@@ -2529,6 +3088,48 @@ setMethod("simulate",
               ## the vector of the final dose recommendations
               recommendedDoses <- as.numeric(sapply(resultList, "[[", "Recommend"))
               
+              ##set up list for the final TD during Trial Estimate
+              TDtargetDuringTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrial"))
+              
+              ##set up list for the final TD End of Trial Estimate
+              TDtargetEndOfTrialList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrial"))
+              
+              ## set up list for the final TD during Trial estimate at dose Grid
+              TDtargetDuringTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetDuringTrialAtDoseGrid"))
+              
+              ## set up list for the final TD End Of Trial estimate at dose Grid
+              TDtargetEndOfTrialDoseGridList<- as.numeric(sapply(resultList, "[[", "TDtargetEndOfTrialAtDoseGrid"))
+              
+              ##set up list for the final Gstar estimates
+              GstarList <- as.numeric(sapply(resultList,"[[","Gstar"))
+              
+              ##set up list for the final Gstar estimates at dose grid
+              GstarAtDoseGridList <- as.numeric(sapply(resultList,"[[","GstarAtDoseGrid"))
+              
+              ##set up list for final optimal dose estimates
+              OptimalDoseList <- as.numeric(sapply(resultList,"[[","OptimalDose"))
+              
+              ##set up list for final optimal dose estimates at dose Grid
+              OptimalDoseAtDoseGridList <- as.numeric(sapply(resultList,"[[","Recommend"))
+              
+              ##Set up the list for the final 95% CI obtained
+              CIList <- lapply(resultList,"[[","CI")
+              
+              ##Set up the list for the final ratios obtained
+              ratioList<- as.numeric(sapply(resultList, "[[", "ratio"))
+              
+              ##Set up the list for the final 95% CI of the TDtarget End Of Trial obtained
+              CITDEOTList <- lapply(resultList,"[[","CITDEOT")
+              
+              ##Set up the list for the final ratios of the TDtarget End Of Trial obtained
+              ratioTDEOTList<- as.numeric(sapply(resultList, "[[", "ratioTDEOT"))
+              
+              ##Set up the list for the final 95% CI of the Gstar obtained
+              CIGstarList <- lapply(resultList,"[[","CIGstar")
+              
+              ##Set up the list for the final ratios of the Gstar obtained
+              ratioGstarList<- as.numeric(sapply(resultList, "[[", "ratioGstar"))
+              
               ##set up the list for the final fits for both DLE and efficacy
               fitDLEList <- lapply(resultList,"[[","fitDLE")
               fitEffList <- lapply(resultList,"[[","fitEff") 
@@ -2541,6 +3142,20 @@ setMethod("simulate",
               ## return the results in the Simulations class object
               ret <- PseudoDualSimulations(data=dataList,
                                            doses=recommendedDoses,
+                                           FinalTDtargetDuringTrialEstimates=TDtargetDuringTrialList,
+                                           FinalTDtargetEndOfTrialEstimates=TDtargetEndOfTrialList,
+                                           FinalTDtargetDuringTrialAtDoseGrid=TDtargetDuringTrialDoseGridList,
+                                           FinalTDtargetEndOfTrialAtDoseGrid=TDtargetEndOfTrialDoseGridList,
+                                           FinalCIs=CIList,
+                                           FinalRatios=ratioList,
+                                           FinalGstarEstimates=GstarList,
+                                           FinalGstarAtDoseGrid=GstarAtDoseGridList,
+                                           FinalGstarCIs=CIGstarList,
+                                           FinalGstarRatios=ratioGstarList,
+                                           FinalTDEOTCIs=CITDEOTList,
+                                           FinalTDEOTRatios=ratioTDEOTList,
+                                           FinalOptimalDose=OptimalDoseList,
+                                           FinalOptimalDoseAtDoseGrid=OptimalDoseAtDoseGridList,
                                            fit=fitDLEList,
                                            fitEff=fitEffList,
                                            sigma2est=sigma2Estimates,
