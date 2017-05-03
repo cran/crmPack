@@ -7,6 +7,7 @@
 \alias{mcmc,Data,LogisticNormal,McmcOptions-method}
 \alias{mcmc,DataDual,EffFlexi,McmcOptions-method}
 \alias{mcmc,DataDual,Effloglog,McmcOptions-method}
+\alias{mcmc,DataMixture,GeneralModel,McmcOptions-method}
 \alias{mcmc,GeneralData,GeneralModel,McmcOptions-method}
 \title{Obtain posterior samples for all model parameters}
 \usage{
@@ -15,6 +16,9 @@ mcmc(data, model, options, ...)
 \S4method{mcmc}{GeneralData,GeneralModel,McmcOptions}(data, model, options,
   program = c("JAGS", "OpenBUGS", "WinBUGS"), verbose = FALSE,
   fromPrior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{DataMixture,GeneralModel,McmcOptions}(data, model, options,
+  fromPrior = data@nObs == 0L & data@nObsshare == 0L, ...)
 
 \S4method{mcmc}{Data,LogisticNormal,McmcOptions}(data, model, options,
   verbose = FALSE, ...)
@@ -63,6 +67,8 @@ function will then result in exactly the same output.
 \section{Methods (by class)}{
 \itemize{
 \item \code{data = GeneralData,model = GeneralModel,options = McmcOptions}: Standard method which uses JAGS/BUGS
+
+\item \code{data = DataMixture,model = GeneralModel,options = McmcOptions}: Method for DataMixture with different fromPrior default
 
 \item \code{data = Data,model = LogisticNormal,options = McmcOptions}: The fast method for the LogisticNormal class
 
@@ -157,9 +163,9 @@ samples<-mcmc(data=data,model=model,options=options)
 data<-DataDual(x=c(25,50,25,50,75,300,250,150),
               y=c(0,0,0,0,0,1,1,0),
               w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-              doseGrid=seq(25,300,25))
+              doseGrid=seq(25,300,25),placebo=FALSE)
 ## model must be of 'Effloglog' class
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data)
+Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
 
 ## options must be ''McmcOptions' class
 options<-McmcOptions(burnin=100,step=2,samples=200)

@@ -1,15 +1,20 @@
 BUGFIXES:
 
-- make it possible to sample from prior for DualEndpointRW model,
-  see report by Giuseppe in devel/dualEndpointRWbug.R
+- examine function:
+  Is that correct that also the check to see 'if there is no improvement in dose
+  over the last cohort' should be added
+  (Giuseppe's email) --> no, instead count number of times the same dose is 
+  recommended contiguously and break after e.g. default 10000 times (can be option
+  in examine function) to avoid infinite loop and issue a corresponding warning
+  if this condition is met.
   
-- merge in fixes from the Stash / Daniel's local branch.
-
-- why do new stopping rules for dual endpoint models not work with "and"/"or"
-  operators?
-
 ----------------------------------------------------------------
 IMPROVEMENTS:
+
+- add a customized simulation summary function for the dual endpoint models,
+  which also reports the frequency of simulated trials selecting the correct OBD
+
+- include the submitted JSS manuscript as additional vignette in the package
 
 - also optimize refDose for quantile->logistic functions
 
@@ -26,6 +31,8 @@ request)
 
 - allow different x values (doses) to be specified in simulate() to be passed to fit()
 
+- remove WinBUGS since not really used anyway
+
 ----------------------------------------------------------------
 NEW FEATURES:
 
@@ -33,17 +40,13 @@ NEW FEATURES:
 
 - be able to run simulations on a cluster
 
-- allow placebos in the cohorts for CNS
-
 - production of Word output tables from simulation summaries
 
-- minimal informative prior construction for other model(s)
+- minimal informative prior construction for other model(s), especially the probit model
+  to allow construction for the dual endpoint models.
 
 - other prior in the Kadane model -> how?
 
 - historical data prior,
   pseudodata prior
-
-- implement one-parameter CRM with skeleton probabilities?
-  -> perhaps also with random effects per doses (proposed by David)
 

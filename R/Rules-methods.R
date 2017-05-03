@@ -43,7 +43,8 @@
 ##' @param \dots possible additional arguments without method dispatch
 ##' @return a list with the next best dose (element \code{value})
 ##' on the grid defined in \code{data}, and a plot depicting this recommendation
-##' (element \code{plot})
+##' (element \code{plot}). Also additional list elements describing the outcome
+##' of the rule can be contained.
 ##'
 ##' @export
 ##' @keywords methods
@@ -146,7 +147,10 @@ setMethod("nextBest",
 ## The NCRM method
 ## --------------------------------------------------
 
-##' @describeIn nextBest Find the next best dose based on the NCRM method
+##' @describeIn nextBest Find the next best dose based on the NCRM method. The
+##' additional list element \code{probs} contains the target and overdosing
+##' probabilities (across all doses in the dose grid) 
+##' used in the derivation of the next best dose.
 ##'
 ##' @example examples/Rules-method-NextBestNCRM.R
 ##' @importFrom ggplot2 ggplot geom_bar xlab ylab ylim aes geom_vline
@@ -298,7 +302,10 @@ setMethod("nextBest",
 
               ## return value and plot
               return(list(value=ret,
-                          plot=plotJoint))
+                          plot=plotJoint,
+                          probs=cbind(dose=data@doseGrid,
+                                      target=probTarget,
+                                      overdose=probOverdose)))
           })
 
 
@@ -414,7 +421,9 @@ setMethod("nextBest",
 ## --------------------------------------------------
 
 ##' @describeIn nextBest Find the next best dose based on the dual endpoint
-##' model
+##' model. The additional list element \code{probs} contains the target and 
+##' overdosing probabilities (across all doses in the dose grid) used in the 
+##' derivation of the next best dose. 
 ##' @example examples/Rules-method-NextBestDualEndpoint.R
 ##' @importFrom ggplot2 ggplot geom_bar xlab ylab ylim aes geom_vline
 ##' geom_hline geom_point
@@ -467,37 +476,55 @@ setMethod("nextBest",
                                            samples)
               }
 
-              # If there is an 'Emax' parameter, target biomarker level will
-              # be relative to 'Emax', otherwise will be relative to the
-              # maximum biomarker level achieved in the given dose range.
-              if("Emax" %in% names(samples@data)){
-
+              ## if target is relative to maximum
+              if(nextBest@scale == "relative")
+              {
+                
+                # If there is an 'Emax' parameter, target biomarker level will
+                # be relative to 'Emax', otherwise will be relative to the
+                # maximum biomarker level achieved in the given dose range.
+                if("Emax" %in% names(samples@data)){
+                  
                   ## For each sample, look which dose is maximizing the
                   ## simultaneous probability to be in the target biomarker
                   ## range and below overdose toxicity
                   probTarget <- numeric(ncol(biomLevelSamples))
                   probTarget <- sapply(seq(1,ncol(biomLevelSamples)),
                                        function(x){
-                                           sum(biomLevelSamples[, x] >= nextBest@target[1]*samples@data$Emax &
-                                               biomLevelSamples[, x] <= nextBest@target[2]*samples@data$Emax &
-                                               probSamples[, x] <= nextBest@overdose[1]) / nrow(biomLevelSamples)
+                                         sum(biomLevelSamples[, x] >= nextBest@target[1] * samples@data$Emax &
+                                               biomLevelSamples[, x] <= nextBest@target[2] * samples@data$Emax) / 
+                                           nrow(biomLevelSamples)
                                        })
-              }else{
-
+                }else{
+                  
                   ## For each sample, look which was the minimum dose giving
                   ## relative target level
                   targetIndex <- apply(biomLevelSamples, 1L,
                                        function(x){
-                                           rnx <- range(x)
-                                           min(which((x >= nextBest@target[1] * diff(rnx) + rnx[1]) &
+                                         rnx <- range(x)
+                                         min(which((x >= nextBest@target[1] * diff(rnx) + rnx[1]) &
                                                      (x <= nextBest@target[2] * diff(rnx) + rnx[1] + 1e-10))
-                                              )
+                                         )
                                        })
-
+                  
                   probTarget <- numeric(ncol(biomLevelSamples))
                   tab <- table(targetIndex)
                   probTarget[as.numeric(names(tab))] <- tab
                   probTarget <- probTarget / nrow(biomLevelSamples)
+                }
+              } else {
+                ## otherwise target is absolute
+                
+                ## For each sample, look which dose is maximizing the
+                ## simultaneous probability to be in the target biomarker
+                ## range and below overdose toxicity
+                probTarget <- numeric(ncol(biomLevelSamples))
+                probTarget <- sapply(seq(1, ncol(biomLevelSamples)),
+                                     function(x){
+                                       sum(biomLevelSamples[, x] >= nextBest@target[1] &
+                                             biomLevelSamples[, x] <= nextBest@target[2]) / 
+                                         nrow(biomLevelSamples)
+                                     })
               }
 
               ## Now compute probabilities to be in
@@ -520,13 +547,19 @@ setMethod("nextBest",
               ## check if there are doses that are OK
               if(length(dosesOK))
               {
+                  ## For placebo design, if safety allow, exclude placebo from 
+                  ## the recommended next doses
+                  if(data@placebo & (length(dosesOK) > 1L) ){
+                    dosesOK <- dosesOK[-1]  
+                  }  
+                
                   ## what is the recommended dose level?
 
-                  ## if maximum target probability is higher than some numerical
+                  ## if maximum target probability is higher than the numerical
                   ## threshold, then take that level, otherwise stick to the
                   ## maximum level that is OK:
                   doseLevel <-
-                      if(max(probTarget[dosesOK]) > 0.05)
+                      if(max(probTarget[dosesOK]) > nextBest@targetThresh)
                       {
                           which.max(probTarget[dosesOK])
                       } else {
@@ -612,7 +645,10 @@ setMethod("nextBest",
 
               ## return value and plot
               return(list(value=ret,
-                          plot=plotJoint))
+                          plot=plotJoint,
+                          probs=cbind(dose=data@doseGrid,
+                                      target=probTarget,
+                                      overdose=probOverdose)))
           })
 
 
@@ -1392,6 +1428,10 @@ setMethod("stopTrial",
                                                      samples)
               }
 
+              ## if target is relative to maximum
+              if(stopping@scale == "relative")
+              {
+                
               ## If there is an 'Emax' parameter, target biomarker level will
               ## be relative to 'Emax', otherwise will be relative to the
               ## maximum biomarker level achieved in the given dose range.
@@ -1404,8 +1444,7 @@ setMethod("stopTrial",
                   probTarget <- sapply(seq(1,ncol(biomLevelSamples)),
                                        function(x){
                                            sum(biomLevelSamples[, x] >= stopping@target[1]*samples@data$Emax &
-                                               biomLevelSamples[, x] <= stopping@target[2]*samples@data$Emax &
-                                               probSamples[, x] <= stopping@overdose[1]) / nrow(biomLevelSamples)
+                                               biomLevelSamples[, x] <= stopping@target[2]*samples@data$Emax) / nrow(biomLevelSamples)
                                        })
               }else{
 
@@ -1423,6 +1462,21 @@ setMethod("stopTrial",
                   tab <- table(targetIndex)
                   probTarget[as.numeric(names(tab))] <- tab
                   probTarget <- probTarget / nrow(biomLevelSamples)
+              }
+                
+              } else {
+                ## otherwise target is absolute
+                
+                # For each sample, look which dose is maximizing the
+                ## simultaneous probability to be in the target biomarker
+                ## range and below overdose toxicity
+                probTarget <- numeric(ncol(biomLevelSamples))
+                probTarget <- sapply(seq(1, ncol(biomLevelSamples)),
+                                     function(x){
+                                       sum(biomLevelSamples[, x] >= stopping@target[1] &
+                                             biomLevelSamples[, x] <= stopping@target[2]) / 
+                                         nrow(biomLevelSamples)
+                                     })
               }
 
               ## so for this dose we have:
@@ -2060,6 +2114,12 @@ setMethod("nextBest",
               
               dosesOK <- which(data@doseGrid <= doselimit)
               
+              ## For placebo design, if safety allow, exclude placebo from 
+              ## the recommended next doses
+              if(data@placebo & (length(dosesOK) > 1L) ){
+                dosesOK <- dosesOK[-1]  
+              }  
+              
               ##FIND the next dose which is the minimum between TDtargetDuringTrial and Gstar
               nextdose<-min(TDtargetDuringTrialEstimate,Gstar)
               
@@ -2091,9 +2151,10 @@ setMethod("nextBest",
               
               Gstarret <- data@doseGrid[Gstarindex]
               
-              logGstar <- log(Gstar)
-              
-              
+              if (data@placebo){
+                logGstar <- log(Gstar+Effmodel@c)} else {
+                  logGstar <- log(Gstar)
+                }
               
               ##From paper (Yeung et. al 2015)
               
@@ -2359,6 +2420,12 @@ setMethod("nextBest",
               
               dosesOK <- which(data@doseGrid <= doselimit)
               
+              ## For placebo design, if safety allow, exclude placebo from 
+              ## the recommended next doses
+              if(data@placebo & (length(dosesOK) > 1L) ){
+                dosesOK <- dosesOK[-1]  
+              }  
+              
               ##FIND the next dose which is the minimum between TDtargetDuringTrial and Gstar
               nextdose<-min(TDtargetDuringTrialEstimate,Gstar)
               
@@ -2587,6 +2654,12 @@ setMethod("nextBest",
                 gainvalues <- apply(GainSamples,2,FUN=nextBest@Gstarderive)
                 
                 dosesOK <- which(data@doseGrid <= doselimit)
+                
+                ## For placebo design, if safety allow, exclude placebo from 
+                ## the recommended next doses
+                if(data@placebo & (length(dosesOK) > 1L) ){
+                  dosesOK <- dosesOK[-1]  
+                }  
                 
                 ##FIND the next dose which is the minimum between TDtargetDuringTrial and Gstar
                 nextdose<-min(TDtargetDuringTrialEstimate,Gstar)
@@ -2985,7 +3058,10 @@ setMethod("stopTrial",
               
               Gstar<-(optim(LowestDose,Gainfun,method = "L-BFGS-B",lower=LowestDose,upper=max(data@doseGrid))$par)
               MaxGain<--(optim(LowestDose,Gainfun,method = "L-BFGS-B",lower=LowestDose,upper=max(data@doseGrid))$value)
-              logGstar <- log(Gstar)
+              if (data@placebo){
+                logGstar <- log(Gstar+Effmodel@c)} else {
+                  logGstar <- log(Gstar)
+                }
               
               
              

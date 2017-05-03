@@ -4,14 +4,19 @@
 \alias{NextBestDualEndpoint}
 \title{Initialization function for "NextBestDualEndpoint"}
 \usage{
-NextBestDualEndpoint(target, overdose, maxOverdoseProb)
+NextBestDualEndpoint(target, scale = c("relative", "absolute"), overdose,
+  maxOverdoseProb, targetThresh = 0.01)
 }
 \arguments{
 \item{target}{see \code{\linkS4class{NextBestDualEndpoint}}}
 
+\item{scale}{see \code{\linkS4class{NextBestDualEndpoint}}}
+
 \item{overdose}{see \code{\linkS4class{NextBestDualEndpoint}}}
 
 \item{maxOverdoseProb}{see \code{\linkS4class{NextBestDualEndpoint}}}
+
+\item{targetThresh}{see \code{\linkS4class{NextBestDualEndpoint}}}
 }
 \value{
 the \code{\linkS4class{NextBestDualEndpoint}} object

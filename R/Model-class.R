@@ -311,6 +311,117 @@ validObject(LogisticLogNormal(mean=c(0, 1),
 
 ## ============================================================
 
+##' Probit model with bivariate log normal prior
+##'
+##' This is probit regression model with a bivariate normal prior on
+##' the intercept and log slope. 
+##' The covariate is the dose \eqn{x} itself for this class:
+##'
+##' \deqn{probit[p(x)] = \alpha + \beta \cdot x}
+##' where \eqn{p(x)} is the probability of observing a DLT for a given dose
+##' \eqn{x}.
+##'
+##' The prior is
+##' \deqn{(\alpha, \log(\beta)) \sim Normal(\mu, \Sigma)}
+##'
+##' The slots of this class contain the mean vector and the covariance matrix of
+##' the bivariate normal distribution, as well as the reference dose.
+##' Note that the parametrization inside the class uses alpha0 and alpha1.
+##' 
+##' This model is also used in the \code{\linkS4class{DualEndpoint}} classes,
+##' so this class can be used to check the prior assumptions on the dose-toxicity
+##' model - even when sampling from the prior distribution of the dual endpoint model
+##' is not possible.
+##'
+##' @slot mu the prior mean vector \eqn{\mu}
+##' @slot Sigma the prior covariance matrix \eqn{\Sigma}
+##'
+##' @example examples/Model-class-ProbitLogNormal.R
+##' @export
+##' @keywords classes
+.ProbitLogNormal <-
+  setClass(Class="ProbitLogNormal",
+           representation(mu="numeric",
+                          Sigma="matrix"),
+           prototype(mu=c(0, 1),
+                     Sigma=diag(2)),
+           contains="Model",
+           validity=
+             function(object){
+               o <- Validate()
+               
+               o$check(length(object@mu) == 2,
+                       "mu must have length 2")
+               o$check(identical(dim(object@Sigma), c(2L, 2L)) &&
+                         ! is.null(chol(object@Sigma)),
+                       "Sigma must be positive-definite 2x2 covariance matrix")
+               
+               o$result()
+             })
+validObject(.ProbitLogNormal())
+
+
+##' Initialization function for the "ProbitLogNormal" class
+##'
+##' @param mu the prior mean vector
+##' @param Sigma the prior covariance matrix
+##' @return the \code{\linkS4class{ProbitLogNormal}} object
+##'
+##' @export
+##' @keywords methods
+ProbitLogNormal <- function(mu,
+                            Sigma)
+{
+  .ProbitLogNormal(mu=mu,
+                     Sigma=Sigma,
+                     datamodel=
+                       function(){
+                         ## the Probit likelihood
+                         for (i in 1:nObs)
+                         {
+                           y[i] ~ dbern(p[i])
+                           probit(p[i]) <- alpha0 + alpha1 * x[i]
+                         }
+                       },
+                     priormodel=
+                       function(){
+                         ## the multivariate normal prior on the (transformed)
+                         ## coefficients
+                         priorPrec[1:2,1:2] <- inverse(priorCov[,])
+                         theta[1:2] ~ dmnorm(priorMean[1:2], priorPrec[1:2,1:2])
+                         ## extract actual coefficients
+                         alpha0 <- theta[1]
+                         alpha1 <- exp(theta[2])
+                       },
+                     datanames=c("nObs", "y", "x"),
+                     modelspecs=
+                       function(){
+                         list(priorCov=Sigma,
+                              priorMean=mu)
+                       },
+                     dose=
+                       function(prob, alpha0, alpha1){
+                         dose <- (probit(prob) - alpha0) / alpha1
+                         return(dose)
+                       },
+                     prob=
+                       function(dose, alpha0, alpha1){
+                         return(pnorm(alpha0 + alpha1 * dose))
+                       },
+                     init=
+                       ## todo: find better starting values
+                       function(){
+                         list(theta=c(0, 1))
+                       },
+                     sample=
+                       c("alpha0", "alpha1"))
+}
+validObject(ProbitLogNormal(mu=c(0, 1),
+                              Sigma=diag(2)))
+
+
+## ============================================================
+
 
 ##' Standard logistic model with bivariate (log) normal prior with substractive
 ##' dose standardization
@@ -1368,7 +1479,7 @@ validObject(DualEndpoint(mu=c(0, 1),
 ##' moment only the first order random walk produces useful results).
 ##'
 ##' That means, for the RW1 we assume
-##' \deqn{\beta_{W,i} - \beta_{W,i-1} \sim Normal(0, \sigma^{2}_{\beta_{W}}),}
+##' \deqn{\beta_{W,i} - \beta_{W,i-1} \sim Normal(0, (x_{i} - x_{i-1}) \sigma^{2}_{\beta_{W}}),}
 ##' where \eqn{\beta_{W,i} = f(x_{i})} is the biomarker mean at the i-th dose
 ##' gridpoint \eqn{x_{i}}.
 ##' For the RW2, the second-order differences instead of the first-order
@@ -1379,9 +1490,13 @@ validObject(DualEndpoint(mu=c(0, 1),
 ##' be very wiggly; if it is small, then f(x) will be smooth. This parameter can
 ##' either be fixed or assigned an inverse gamma prior distribution.
 ##'
-##' Usually this modelling will only make sense if a regular dose grid is used,
-##' with equidistant grid points ensuring that the distance \eqn{x_{i} -
-##' x_{i-1}} is the same for all grid positions \eqn{i}.
+##' Non-equidistant dose grids can be used now, because the difference
+##' \eqn{x_{i} - x_{i-1}} is included in the modelling assumption above.
+##' 
+##' Please note that due to impropriety of the RW prior distributions, it is 
+##' not possible to produce MCMC samples with empty data objects (i.e., sample
+##' from the prior). This is not a bug, but a theoretical feature of this
+##' model.
 ##'
 ##' @slot sigma2betaW Contains the prior variance factor of the random walk
 ##' prior for the biomarker model. If it is not a single number, it can also
@@ -1450,6 +1565,11 @@ DualEndpointRW <- function(sigma2betaW,
     ## to get started
     start <- DualEndpoint(...)
 
+    ## we need the dose grid here in the BUGS model,
+    ## therefore add it to datanames
+    start@datanames <- c(start@datanames,
+                         "doseGrid")
+    
     ## Find out RW choice
     smooth <- match.arg(smooth)
     useRW1 <- smooth == "RW1"
@@ -1497,7 +1617,7 @@ DualEndpointRW <- function(sigma2betaW,
                        function(){
                            ## the iid first oder differences:
                            for (j in 2:nGrid) {
-                               delta[j-1] ~ dnorm(0, precBetaW)
+                               delta[j-1] ~ dnorm(0, precBetaW / (doseGrid[j] - doseGrid[j-1]))
                            }
                        })
     } else {
@@ -1514,7 +1634,8 @@ DualEndpointRW <- function(sigma2betaW,
 
                            ## the iid second oder differences:
                            for (j in 1:(nGrid-2)) {
-                               delta2[j] ~ dnorm(0, precBetaW)
+                               delta2[j] ~ dnorm(0, 2 * precBetaW / (doseGrid[j+2] - doseGrid[j]))
+                             ## todo: not sure if this makes sense, please check
                            }
 
                            ## the first 1st order difference:
@@ -1601,7 +1722,9 @@ validObject(DualEndpointRW(sigma2betaW=1,
 ##' and multiplying this with \eqn{x^{*}} gives the mode on the dose grid.
 ##'
 ##' All parameters can currently be assigned uniform distributions or be fixed
-##' in advance.
+##' in advance. Note that \code{E0} and \code{Emax} can have negative values or uniform 
+##' distributions reaching into negative range, while \code{delta1} and \code{mode}
+##' must be positive or have uniform distributions in the positive range.
 ##'
 ##' @slot E0 either a fixed number or the two uniform distribution parameters
 ##' @slot Emax either a fixed number or the two uniform distribution parameters
@@ -1636,19 +1759,43 @@ validObject(DualEndpointRW(sigma2betaW=1,
                  function(object){
                      o <- Validate()
 
-                     ## check the prior parameters with variable content
-                     for(parName in c("E0", "Emax", "delta1", "mode"))
+                     ## check delta1
+                     if(object@useFixed$delta1)
                      {
-                         ## if we use a fixed value for this parameter
-                         if(object@useFixed[[parName]])
+                       o$check(object@delta1 > 0,
+                               "delta1 must be positive")
+                     } else {
+                       o$check(all(object@delta1 >= 0) &&
+                                 (diff(object@delta1) > 0),
+                               "delta1 has not proper prior parameters")
+                     }
+                     
+                     ## check delta1 and mode
+                     for(parName in c("delta1", "mode"))
+                     {
+                       ## if we use a fixed value for this parameter
+                       if(object@useFixed[[parName]])
+                       {
+                         ## check range of value
+                         o$check(slot(object, parName) > 0,
+                                 paste(parName, "must be positive"))
+                       } else {
+                         ## use a Uniform(a, b) prior
+                         o$check(all(slot(object, parName) >= 0) &&
+                                   (diff(slot(object, parName)) > 0),
+                                 paste(parName,
+                                       "has not proper prior parameters"))
+                       }
+                     }
+                     
+                     ## check E0 and Emax
+                     for(parName in c("E0", "Emax"))
+                     {
+                         ## if we don't use a fixed value for this parameter
+                         if(! object@useFixed[[parName]])
                          {
-                             ## check range of value
-                             o$check(slot(object, parName) > 0,
-                                         paste(parName, "must be positive"))
-                         } else {
                              ## use a Uniform(a, b) prior
-                             o$check(all(slot(object, parName) >= 0) &&
-                                         (diff(slot(object, parName)) > 0),
+                             o$check(diff(slot(object, parName)) > 0,
                                      paste(parName,
                                            "has not proper prior parameters"))
                          }

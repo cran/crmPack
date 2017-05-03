@@ -125,6 +125,9 @@ setMethod("mcmc",
                   do.call(model@init,
                           as.list(data)[names(formals(model@init))])
               stopifnot(is.list(inits))
+              
+              ## need to select only initial values with positive length
+              inits <- inits[sapply(inits, length) > 0]
 
               ## get the model specs
               ## by evaluating the modelspecs function from the model object.
@@ -316,6 +319,22 @@ setMethod("mcmc",
           })
 
 
+## --------------------------------------------------
+## The method for DataMixture usage
+## --------------------------------------------------
+
+##' @describeIn mcmc Method for DataMixture with different fromPrior default
+setMethod("mcmc",
+          signature=
+            signature(data="DataMixture",
+                      model="GeneralModel",
+                      options="McmcOptions"),
+          def=
+            function(data, model, options,
+                     fromPrior=data@nObs == 0L & data@nObsshare == 0L,
+                     ...){
+              callNextMethod(data, model, options, fromPrior=fromPrior, ...)
+            })
 
 ## --------------------------------------------------
 ## The fast method for the LogisticNormal class

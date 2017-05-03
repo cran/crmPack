@@ -13,7 +13,7 @@ moment only the first order random walk produces useful results).
 }
 \details{
 That means, for the RW1 we assume
-\deqn{\beta_{W,i} - \beta_{W,i-1} \sim Normal(0, \sigma^{2}_{\beta_{W}}),}
+\deqn{\beta_{W,i} - \beta_{W,i-1} \sim Normal(0, (x_{i} - x_{i-1}) \sigma^{2}_{\beta_{W}}),}
 where \eqn{\beta_{W,i} = f(x_{i})} is the biomarker mean at the i-th dose
 gridpoint \eqn{x_{i}}.
 For the RW2, the second-order differences instead of the first-order
@@ -24,9 +24,13 @@ steers the smoothness of the function f(x): if it is large, then f(x) will
 be very wiggly; if it is small, then f(x) will be smooth. This parameter can
 either be fixed or assigned an inverse gamma prior distribution.
 
-Usually this modelling will only make sense if a regular dose grid is used,
-with equidistant grid points ensuring that the distance \eqn{x_{i} -
-x_{i-1}} is the same for all grid positions \eqn{i}.
+Non-equidistant dose grids can be used now, because the difference
+\eqn{x_{i} - x_{i-1}} is included in the modelling assumption above.
+
+Please note that due to impropriety of the RW prior distributions, it is 
+not possible to produce MCMC samples with empty data objects (i.e., sample
+from the prior). This is not a bug, but a theoretical feature of this
+model.
 }
 \section{Slots}{
 

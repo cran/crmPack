@@ -73,7 +73,8 @@ recommendation calculation, and a corresponding warning is given.}
 \value{
 a list with the next best dose (element \code{value})
 on the grid defined in \code{data}, and a plot depicting this recommendation
-(element \code{plot})
+(element \code{plot}). Also additional list elements describing the outcome
+of the rule can be contained.
 }
 \description{
 Compute the recommended next best dose.
@@ -87,7 +88,10 @@ corresponding rule \code{nextBest}, the posterior \code{samples} from the
 \itemize{
 \item \code{nextBest = NextBestMTD,doselimit = numeric,samples = Samples,model = Model,data = Data}: Find the next best dose based on the MTD rule
 
-\item \code{nextBest = NextBestNCRM,doselimit = numeric,samples = Samples,model = Model,data = Data}: Find the next best dose based on the NCRM method
+\item \code{nextBest = NextBestNCRM,doselimit = numeric,samples = Samples,model = Model,data = Data}: Find the next best dose based on the NCRM method. The
+additional list element \code{probs} contains the target and overdosing
+probabilities (across all doses in the dose grid) 
+used in the derivation of the next best dose.
 
 \item \code{nextBest = NextBestNCRM,doselimit = numeric,samples = Samples,model = Model,data = DataParts}: Find the next best dose based on the NCRM method when
 two parts trial is used - todo: need an example here for DataParts
@@ -95,7 +99,9 @@ two parts trial is used - todo: need an example here for DataParts
 \item \code{nextBest = NextBestThreePlusThree,doselimit = missing,samples = missing,model = missing,data = Data}: Find the next best dose based on the 3+3 method
 
 \item \code{nextBest = NextBestDualEndpoint,doselimit = numeric,samples = Samples,model = DualEndpoint,data = Data}: Find the next best dose based on the dual endpoint
-model
+model. The additional list element \code{probs} contains the target and 
+overdosing probabilities (across all doses in the dose grid) used in the 
+derivation of the next best dose.
 
 \item \code{nextBest = NextBestTDsamples,doselimit = numeric,samples = Samples,model = LogisticIndepBeta,data = Data}: Find the next best dose based on the 'NextBestTDsamples'
 class rule. This a method based only on the DLE responses and for 
@@ -197,6 +203,10 @@ myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
 doseRecommendation <- nextBest(myNextBest,
                                doselimit=nextMaxDose,
                                samples=samples, model=model, data=data)
+
+# Look at the probabilities
+doseRecommendation$probs
+
 
 
 # create an object of class 'DataParts'
@@ -349,7 +359,7 @@ RecommendDose<- nextBest(tdNextBest,
 data <-DataDual(x=c(25,50,25,50,75,300,250,150),
                y=c(0,0,0,0,0,1,1,0),
                w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-               doseGrid=seq(25,300,25))
+               doseGrid=seq(25,300,25),placebo=FALSE)
 
 ##The 'nextBest' method using NextBestMaxGain' rules class object
 ## using the 'ModelTox' class DLE model 
@@ -358,7 +368,7 @@ DLEmodel<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,30
 
 ## using the 'ModelEff' class efficacy model 
 ## Effmodel e.g 'Effloglog' class
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data)
+Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
 
 ##target probabilities of the occurrence of a DLE during trial and at the
 ## end of trial are defined as
@@ -370,7 +380,7 @@ RecommendDose<-nextBest(mynextbest,doselimit=300,model=DLEmodel,Effmodel=Effmode
 data <-DataDual(x=c(25,50,25,50,75,300,250,150),
                 y=c(0,0,0,0,0,1,1,0),
                 w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-                doseGrid=seq(25,300,25))
+                doseGrid=seq(25,300,25),placebo=FALSE)
 ##The 'nextBest' method using NextBestMaxGainSamples' rules class object
 ## using the 'ModelTox' class DLE model 
 ## DLEmodel e.g 'LogisticIndepBeta' class
@@ -378,7 +388,7 @@ DLEmodel<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,30
 
 ## using the 'ModelEff' class efficacy model 
 ## Effmodel e.g 'Effloglog' class
-Effmodel<-Effloglog(c(1.223,2.513),c(25,300),nu=c(a=1,b=0.025),data=data)
+Effmodel<-Effloglog(c(1.223,2.513),c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
 ##DLE and efficacy samples must be of 'Samples' Class
 DLEsamples<-mcmc(data,DLEmodel,options)
 Effsamples<-mcmc(data,Effmodel,options)

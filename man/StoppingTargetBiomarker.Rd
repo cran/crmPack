@@ -4,10 +4,12 @@
 \alias{StoppingTargetBiomarker}
 \title{Initialization function for "StoppingTargetBiomarker"}
 \usage{
-StoppingTargetBiomarker(target, prob)
+StoppingTargetBiomarker(target, scale = c("relative", "absolute"), prob)
 }
 \arguments{
 \item{target}{see \code{\linkS4class{StoppingTargetBiomarker}}}
+
+\item{scale}{see \code{\linkS4class{StoppingTargetBiomarker}}}
 
 \item{prob}{see \code{\linkS4class{StoppingTargetBiomarker}}}
 }
