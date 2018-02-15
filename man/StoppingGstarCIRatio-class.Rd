@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingGstarCIRatio-class}
-\alias{.StoppingGstarCIRatio}
 \alias{StoppingGstarCIRatio-class}
+\alias{.StoppingGstarCIRatio}
 \title{Stop based on a target ratio, the ratio of the upper to the lower
 95\% credibility interval of the estimate of the minimum of the dose which gives the maximum gain (Gstar) and 
 the TD end of trial, the dose with probability of DLE equals to the target 
@@ -22,6 +22,7 @@ estimate that required to stop a trial}
 
 \item{\code{targetEndOfTrial}}{the target probability of DLE to be used at the end of a trial}
 }}
+
 \examples{
 ##Define the target stopping ratio of 5 and 
 ##the target probability of DLE to be used at the end of a trial
@@ -30,4 +31,3 @@ myStopping <- StoppingGstarCIRatio(targetRatio=5,
                                    targetEndOfTrial=0.3)
 }
 \keyword{classes}
-

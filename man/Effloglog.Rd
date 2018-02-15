@@ -25,4 +25,3 @@ the \code{\linkS4class{Effloglog}} object
 Initialization function for the "Effloglog" class
 }
 \keyword{methods}
-

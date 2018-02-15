@@ -17,4 +17,3 @@ scalar)
 Predicate checking for a boolean option
 }
 \keyword{internal}
-

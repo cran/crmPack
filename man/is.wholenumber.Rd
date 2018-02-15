@@ -18,4 +18,3 @@ TRUE or FALSE for each element of x
 checks for whole numbers (integers)
 }
 \keyword{internal}
-

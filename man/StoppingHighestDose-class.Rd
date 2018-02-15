@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingHighestDose-class}
-\alias{.StoppingHighestDose}
 \alias{StoppingHighestDose-class}
+\alias{.StoppingHighestDose}
 \title{Stop when the highest dose is reached}
 \description{
 Stop when the highest dose is reached
@@ -32,4 +32,3 @@ stopHigh <-
 ## stopRule <- stopHigh | stopLow | stopSamplesize
 }
 \keyword{classes}
-

@@ -4,12 +4,17 @@
 \alias{DualEndpoint}
 \title{Initialization function for the "DualEndpoint" class}
 \usage{
-DualEndpoint(mu, Sigma, sigma2W, rho)
+DualEndpoint(mu, Sigma, refDose = 1, useLogDose = FALSE, sigma2W, rho)
 }
 \arguments{
 \item{mu}{see \code{\linkS4class{DualEndpoint}}}
 
 \item{Sigma}{see \code{\linkS4class{DualEndpoint}}}
+
+\item{refDose}{see \code{\linkS4class{DualEndpoint}} (default: 1)}
+
+\item{useLogDose}{see \code{\linkS4class{DualEndpoint}} 
+(default: \code{FALSE})}
 
 \item{sigma2W}{see \code{\linkS4class{DualEndpoint}}}
 
@@ -22,4 +27,3 @@ the \code{\linkS4class{DualEndpoint}} object
 Initialization function for the "DualEndpoint" class
 }
 \keyword{methods}
-

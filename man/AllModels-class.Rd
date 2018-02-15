@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{AllModels-class}
-\alias{.AllModels}
 \alias{AllModels-class}
+\alias{.AllModels}
 \title{Class for All models
 This is a class where all models inherit.}
 \description{
@@ -17,8 +17,8 @@ This is a class where all models inherit.
 In particularly, those are also used in the \code{datamodel} and/or
 \code{priormodel} definition for \code{\linkS4class{GeneralModel}}.}
 }}
+
 \seealso{
 \code{\linkS4class{GeneralModel}}, \code{\linkS4class{ModelPseudo}}
 }
 \keyword{classes}
-

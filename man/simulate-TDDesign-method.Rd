@@ -105,4 +105,3 @@ mySim <- simulate(object=design,
                   seed=819,
                   parallel=FALSE)
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{PseudoSimulations-class}
-\alias{.PseudoSimulations}
 \alias{PseudoSimulations-class}
+\alias{.PseudoSimulations}
 \title{This is a class which captures the trial simulations from designs using 
 pseudo model. The design for DLE only responses and model from \code{\linkS4class{ModelTox}}
 class object. It contains all slots from \code{\linkS4class{GeneralSimulations}} object.
@@ -47,5 +47,5 @@ incorporated) after each simulations}
 
 \item{\code{stopReasons}}{todo: add slot description}
 }}
-\keyword{class}
 
+\keyword{class}

@@ -20,4 +20,3 @@ the \code{\linkS4class{StoppingMTDdistribution}} object
 Initialization function for "StoppingMTDdistribution"
 }
 \keyword{methods}
-

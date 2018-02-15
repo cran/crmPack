@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestNCRM-class}
-\alias{.NextBestNCRM}
 \alias{NextBestNCRM-class}
+\alias{.NextBestNCRM}
 \title{The class with the input for finding the next dose in target interval}
 \description{
 Note that to avoid numerical problems, the dose selection algorithm has been
@@ -25,6 +25,7 @@ limit included)}
 
 \item{\code{maxOverdoseProb}}{maximum overdose probability that is allowed}
 }}
+
 \examples{
 
 # In the example below, the target toxiciy interval [0.2, 0.35] while the 
@@ -37,4 +38,3 @@ myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
 
 }
 \keyword{classes}
-

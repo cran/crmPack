@@ -16,4 +16,3 @@ the \code{\linkS4class{CohortSizeParts}} object
 Initialization function for "CohortSizeParts"
 }
 \keyword{methods}
-

@@ -102,4 +102,3 @@ summary(mySim,
         trueEff=myTruthEff)
 }
 \keyword{methods}
-

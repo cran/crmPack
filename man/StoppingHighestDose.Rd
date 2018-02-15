@@ -13,4 +13,3 @@ the \code{\linkS4class{StoppingHighestDose}} object
 Initialization function for "StoppingHighestDose"
 }
 \keyword{methods}
-

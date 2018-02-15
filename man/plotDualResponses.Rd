@@ -28,13 +28,13 @@ plotDualResponses(DLEmodel, DLEsamples, Effmodel, Effsamples, data, ...)
 
 \item{data}{the data input of \code{\linkS4class{DataDual}} class object}
 
+\item{\dots}{additional arguments for the parent method
+\code{\link{plot,Samples,Model-method}}}
+
 \item{extrapolate}{should the biomarker fit be extrapolated to the whole
 dose grid? (default)}
 
 \item{showLegend}{should the legend be shown? (not default)}
-
-\item{\dots}{additional arguments for the parent method
-\code{\link{plot,Samples,Model-method}}}
 }
 \value{
 This returns the \code{\link[ggplot2]{ggplot}}
@@ -54,6 +54,7 @@ and a given pseudo efficacy model without DLE and efficacy samples
 \item \code{DLEmodel = ModelTox,DLEsamples = missing,Effmodel = ModelEff,Effsamples = missing}: Plot the DLE and efficacy curve side by side given a DLE model
 and an efficacy model without any samples
 }}
+
 \examples{
 ## we need a data object with doses >= 1:
 data <-DataDual(x=c(25,50,25,50,75,300,250,150),
@@ -102,4 +103,3 @@ plotDualResponses(DLEmodel=DLEmodel,
                   data=data)
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestTD-class}
-\alias{.NextBestTD}
 \alias{NextBestTD-class}
+\alias{.NextBestTD}
 \title{Next best dose based on Pseudo DLE model without sample}
 \description{
 The class is to find the next best dose for allocation and the dose for final recommendation 
@@ -27,6 +27,7 @@ during the trial}
 of the trial. This target is particularly used to recommend the dose for which its posterior 
 probability of the occurrence of a DLE is equal to this target}
 }}
+
 \examples{
 ##define the NextBestTD class (no samples and based a pseudo DLE model)
 ##specified the target probability of the occurrence of a DLE during the trial be 0.35
@@ -36,4 +37,3 @@ myNextBest <-NextBestTD(targetDuringTrial=0.35,
                         targetEndOfTrial=0.3)
 }
 \keyword{class}
-

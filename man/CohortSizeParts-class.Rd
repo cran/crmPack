@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeParts-class}
-\alias{.CohortSizeParts}
 \alias{CohortSizeParts-class}
+\alias{.CohortSizeParts}
 \title{Cohort size based on the parts}
 \description{
 This class is used when the cohort size should change for the second part of
@@ -15,10 +15,10 @@ the dose escalation. Only works in conjunction with
 \describe{
 \item{\code{sizes}}{the two sizes for part 1 and part 2}
 }}
+
 \examples{
 
 mySize <- CohortSizeParts(sizes=c(1,3))
 
 }
 \keyword{classes}
-

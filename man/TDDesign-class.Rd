@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{TDDesign-class}
-\alias{.TDDesign}
 \alias{TDDesign-class}
+\alias{.TDDesign}
 \title{Design class using DLE responses only based on the pseudo DLE model without sample}
 \description{
 This is a class of design based only on DLE responses using the 'LogisticIndepBeta' class model
@@ -25,6 +25,7 @@ objects of this class contain:
 \item{\code{PLcohortSize}}{rules for the cohort sizes for placebo, if any planned
 an object of class \code{\linkS4class{CohortSize}}}
 }}
+
 \examples{
 ##Specified the design to run simulations
 ##The design comprises a model, the escalation rule, starting data, 
@@ -59,4 +60,3 @@ design <- TDDesign(model=model,
                    data=data,startingDose=25)
 }
 \keyword{class}
-

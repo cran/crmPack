@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{Model-class}
-\alias{.Model}
 \alias{Model-class}
+\alias{.Model}
 \title{Class for the model input}
 \description{
 This is the model class for single agent dose escalation,
@@ -52,6 +52,7 @@ probability, based on the model parameters and additional prior settings
 dose, based on the model parameters and additional prior settings (see the
 details above)}
 }}
+
 \seealso{
 \code{\linkS4class{LogisticNormal}},
 \code{\linkS4class{LogisticLogNormal}},
@@ -60,4 +61,3 @@ details above)}
 \code{\linkS4class{DualEndpoint}}
 }
 \keyword{classes}
-

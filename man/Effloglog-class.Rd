@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{Effloglog-class}
-\alias{.Effloglog}
 \alias{Effloglog-class}
+\alias{.Effloglog}
 \title{Class for the linear log-log efficacy model using pseudo data prior}
 \description{
 This is the efficacy model which describe the relationship of the continuous efficacy responses and 
@@ -115,6 +115,7 @@ to the model form described above. In general, the model has the form
 \eqn{y_i=\theta_1 +theta_2 log(log(d_i + c))+\epsilon_i}, such that dose levels
 greater than \eqn{1-c} can be considered as described in Yeung et al. (2015).}
 }}
+
 \examples{
 ##Obtain prior modal estimates for the Effloglog model (efficacy model) given the pseudo data.
 ##First define an empty data set by only define the dose levels used in the study,
@@ -143,4 +144,3 @@ Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=
 
 }
 \keyword{methods}
-

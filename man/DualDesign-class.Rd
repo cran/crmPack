@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{DualDesign-class}
-\alias{.DualDesign}
 \alias{DualDesign-class}
+\alias{.DualDesign}
 \title{Class for the dual-endpoint CRM design}
 \description{
 This class has special requirements for the \code{model} and \code{data}
@@ -22,6 +22,7 @@ Note that the \code{NextBest} slot can be of any class, this allows for easy
 comparison with recommendation methods that don't use the
 biomarker information.}
 }}
+
 \examples{
 
 # Define the dose-grid
@@ -68,4 +69,3 @@ design <- DualDesign(model = model,
   
 }
 \keyword{classes}
-

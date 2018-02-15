@@ -18,4 +18,3 @@ the initialized \code{\linkS4class{DataDual}} object
 This is the function for initializing a "DataDual" class object.
 }
 \keyword{programming}
-

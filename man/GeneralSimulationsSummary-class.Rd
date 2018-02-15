@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{GeneralSimulationsSummary-class}
-\alias{.GeneralSimulationsSummary}
 \alias{GeneralSimulationsSummary-class}
+\alias{.GeneralSimulationsSummary}
 \title{Class for the summary of general simulations output}
 \description{
 Note that objects should not be created by users, therefore no
@@ -41,5 +41,5 @@ selected}
 
 \item{\code{placebo}}{set to TRUE (default is FALSE) for a design with placebo}
 }}
-\keyword{classes}
 
+\keyword{classes}

@@ -18,4 +18,3 @@ the \code{\linkS4class{StoppingPatientsNearDose}} object
 Initialization function for "StoppingPatientsNearDose"
 }
 \keyword{methods}
-

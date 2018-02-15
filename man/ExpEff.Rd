@@ -3,9 +3,9 @@
 \docType{methods}
 \name{ExpEff}
 \alias{ExpEff}
-\alias{ExpEff,numeric,EffFlexi,Samples-method}
 \alias{ExpEff,numeric,Effloglog,Samples-method}
 \alias{ExpEff,numeric,Effloglog,missing-method}
+\alias{ExpEff,numeric,EffFlexi,Samples-method}
 \title{Compute the expected efficacy based on a given dose, a given pseudo Efficacy log-log model and a given 
 efficacy sample}
 \usage{
@@ -41,6 +41,7 @@ samples
 \item \code{dose = numeric,model = EffFlexi,samples = Samples}: Compute the Expected Efficacy based a given dose, Efficacy 
 Flexible model with samples
 }}
+
 \examples{
 ##Obtain the expected efficacy value for a given dose, a given pseudo 
 ## efficacy model and a given efficacy sample
@@ -78,4 +79,3 @@ samples<-mcmc(data=data,model=model,options=options)
 ExpEff(dose=75,model=model,samples=samples)
 }
 \keyword{methods}
-

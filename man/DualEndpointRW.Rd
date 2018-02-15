@@ -21,4 +21,3 @@ the \code{\linkS4class{DualEndpointRW}} object
 Initialization function for the "DualEndpointRW" class
 }
 \keyword{methods}
-

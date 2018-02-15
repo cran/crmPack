@@ -17,11 +17,11 @@ examine(object, ...)
 \item{object}{the design (\code{\linkS4class{Design}} or
 \code{\linkS4class{RuleDesign}} object) we want to examine}
 
+\item{\dots}{additional arguments (see methods)}
+
 \item{mcmcOptions}{object of class \code{\linkS4class{McmcOptions}},
 giving the MCMC options for each evaluation in the trial. By default,
 the standard options are used}
-
-\item{\dots}{additional arguments (see methods)}
 }
 \value{
 The data frame
@@ -48,6 +48,7 @@ listed.
 
 \item \code{RuleDesign}: Examine a rule-based design
 }}
+
 \examples{
 
 # Define the dose-grid
@@ -116,4 +117,3 @@ examine(myDesign)
 }
 \keyword{methods}
 \keyword{regression}
-

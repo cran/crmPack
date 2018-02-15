@@ -67,4 +67,3 @@ plot(x = samples, y = model, data = data)
 
 
 }
-

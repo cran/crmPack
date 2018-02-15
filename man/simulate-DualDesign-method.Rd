@@ -64,6 +64,8 @@ model <- DualEndpointRW(mu = c(0, 1),
                         Sigma = matrix(c(1, 0, 0, 1), nrow=2),
                         sigma2betaW = 0.01,
                         sigma2W = c(a=0.1, b=0.1),
+                        useLogDose=TRUE,
+                        refDose=2,
                         rho = c(a=1, b=1),
                         smooth="RW1")
 
@@ -82,7 +84,7 @@ mySize <- maxSize(mySize1, mySize2)
 # Choose the rule for stopping
 myStopping4 <- StoppingTargetBiomarker(target=c(0.9, 1),
                                        prob=0.5)
-myStopping <- myStopping4 | StoppingMinPatients(40)
+myStopping <- myStopping4 | StoppingMinPatients(10)
 
 # Choose the rule for dose increments
 myIncrements <- IncrementsRelative(intervals=c(0, 20),
@@ -122,7 +124,8 @@ curve(trueBiomarker(x), from=0, to=80)
 
 # Run the simulation on the desired design
 # We only generate 1 trial outcome here for illustration, for the actual study 
-# this should be increased of course
+# this should be increased of course, similarly for the McmcOptions - 
+# they also need to be increased.
 mySims <- simulate(design,
                    trueTox=trueTox,
                    trueBiomarker=trueBiomarker,
@@ -133,10 +136,9 @@ mySims <- simulate(design,
                    seed=3,
                    startingDose=6,
                    mcmcOptions =
-                     McmcOptions(burnin=1000,
+                     McmcOptions(burnin=100,
                                  step=1,
-                                 samples=3000))
+                                 samples=300))
   
 }
 \keyword{methods}
-

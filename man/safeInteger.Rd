@@ -16,4 +16,3 @@ the integer vector
 Safe conversion to integer vector
 }
 \keyword{internal}
-

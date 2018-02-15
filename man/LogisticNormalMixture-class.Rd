@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticNormalMixture-class}
-\alias{.LogisticNormalMixture}
 \alias{LogisticNormalMixture-class}
+\alias{.LogisticNormalMixture}
 \title{Standard logistic model with flexible mixture of two bivariate normal priors}
 \description{
 This is standard logistic regression model with a mixture of two bivariate
@@ -44,6 +44,7 @@ well as the reference dose.
 
 \item{\code{refDose}}{the reference dose \eqn{x^{*}}}
 }}
+
 \examples{
 
 model <- LogisticNormalMixture(comp1 = list(mean = c(-0.85, 1),
@@ -58,4 +59,3 @@ model <- LogisticNormalMixture(comp1 = list(mean = c(-0.85, 1),
 
 }
 \keyword{classes}
-

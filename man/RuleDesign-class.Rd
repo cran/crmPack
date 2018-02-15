@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{RuleDesign-class}
-\alias{.RuleDesign}
 \alias{RuleDesign-class}
+\alias{.RuleDesign}
 \title{Class for rule-based designs}
 \description{
 The difference to \code{\linkS4class{Design}} class is that
@@ -24,6 +24,7 @@ in an object of class \code{\linkS4class{Data}}}
 \item{\code{startingDose}}{what is the starting dose? Must lie on the grid in
 \code{data}}
 }}
+
 \examples{
 
 emptydata <- Data(doseGrid = c(5, 10, 15, 25, 35, 50, 80))
@@ -38,4 +39,3 @@ myDesign <- RuleDesign(nextBest = NextBestThreePlusThree(),
   
 }
 \keyword{classes}
-

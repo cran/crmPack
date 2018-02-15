@@ -25,6 +25,7 @@ the maximum of all sizes.
 \itemize{
 \item \code{CohortSize}: The method combining cohort size rules by taking maximum
 }}
+
 \examples{
 
 # Here is the rule for: 
@@ -48,4 +49,3 @@ mySize <- maxSize(mySize1, mySize2)
 \code{\link{minSize}}
 }
 \keyword{methods}
-

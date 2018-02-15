@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingMinCohorts-class}
-\alias{.StoppingMinCohorts}
 \alias{StoppingMinCohorts-class}
+\alias{.StoppingMinCohorts}
 \title{Stop based on minimum number of cohorts}
 \description{
 Stop based on minimum number of cohorts
@@ -13,6 +13,7 @@ Stop based on minimum number of cohorts
 \describe{
 \item{\code{nCohorts}}{minimum required number of cohorts}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -22,4 +23,3 @@ myStopping <- StoppingMinCohorts(nCohorts = 6)
 
 }
 \keyword{classes}
-

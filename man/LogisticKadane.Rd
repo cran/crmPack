@@ -20,4 +20,3 @@ the \code{\linkS4class{LogisticKadane}}
 Initialization function for the "LogisticKadane" class
 }
 \keyword{methods}
-

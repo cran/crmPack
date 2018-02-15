@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{IncrementsRelativeDLT-class}
-\alias{.IncrementsRelativeDLT}
 \alias{IncrementsRelativeDLT-class}
+\alias{.IncrementsRelativeDLT}
 \title{Increments control based on relative differences in terms of DLTs}
 \description{
 Note that \code{DLTintervals} is to be read as follows. If for example,
@@ -23,6 +23,7 @@ DLT intervals}
 \item{\code{increments}}{a vector of the same length with the maximum allowable
 relative increments in the \code{DLTintervals}}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -35,4 +36,3 @@ myIncrements <- IncrementsRelativeDLT(DLTintervals = c(0, 1, 3),
 
 }
 \keyword{classes}
-

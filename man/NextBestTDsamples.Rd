@@ -20,4 +20,3 @@ the \code{\linkS4class{NextBestTDsamples}} class object
 Initialization function for class "NextBestTDsamples"
 }
 \keyword{methods}
-

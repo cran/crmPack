@@ -131,4 +131,3 @@ mySim<-simulate(design,
 print(plot(mySim))
 }
 \keyword{methods}
-

@@ -14,4 +14,3 @@ The virtual class for finding next best dose
 \code{\linkS4class{NextBestThreePlusThree}}
 }
 \keyword{classes}
-

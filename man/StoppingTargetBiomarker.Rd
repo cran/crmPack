@@ -20,4 +20,3 @@ the \code{\linkS4class{StoppingTargetBiomarker}} object
 Initialization function for "StoppingTargetBiomarker"
 }
 \keyword{methods}
-

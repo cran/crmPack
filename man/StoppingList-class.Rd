@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingList-class}
-\alias{.StoppingList}
 \alias{StoppingList-class}
+\alias{.StoppingList}
 \title{Stop based on multiple stopping rules}
 \description{
 This class can be used to combine multiple stopping rules.
@@ -24,6 +24,7 @@ fulfilled in order that the result of this rule is to stop.
 \item{\code{summary}}{the summary function to combine the results of the stopping
 rules into a single result}
 }}
+
 \examples{
 
 # Define some stopping rules
@@ -41,4 +42,3 @@ mystopping <- StoppingList(stopList=c(myStopping1,myStopping2,myStopping3),
 
 }
 \keyword{classes}
-

@@ -26,4 +26,3 @@ the \code{\linkS4class{LogisticNormalFixedMixture}} object
 Initialization function for the "LogisticNormalFixedMixture" class
 }
 \keyword{methods}
-

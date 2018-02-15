@@ -21,4 +21,3 @@ qinvGamma(p, a, b, lower.tail = TRUE, log.p = FALSE)
 Compute the quantile function of Inverse gamma distribution
 }
 \keyword{internal}
-

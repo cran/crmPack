@@ -18,4 +18,3 @@ the \code{\linkS4class{NextBestMaxGain}} class object
 Initialization function for the class 'NextBestMaxGain'
 }
 \keyword{methods}
-

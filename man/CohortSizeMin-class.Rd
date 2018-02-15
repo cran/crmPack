@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeMin-class}
-\alias{.CohortSizeMin}
 \alias{CohortSizeMin-class}
+\alias{.CohortSizeMin}
 \title{Size based on minimum of multiple cohort size rules}
 \description{
 This class can be used to combine multiple cohort size rules with the MIN
@@ -19,6 +19,7 @@ individual cohort sizes is taken to give the final cohort size.
 \describe{
 \item{\code{cohortSizeList}}{list of cohort size rules}
 }}
+
 \examples{
 
 # Rule for having cohort of size 1 for doses <30
@@ -39,4 +40,3 @@ mySize <- CohortSizeMin(cohortSizeList=list(mySize1,
 
 }
 \keyword{classes}
-

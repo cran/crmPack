@@ -7,14 +7,14 @@
 multiplot(..., plotlist = NULL, rows = 1, layout = NULL)
 }
 \arguments{
+\item{\dots}{Objects to be passed}
+
 \item{plotlist}{a list of additional objects}
 
 \item{rows}{Number of rows in layout}
 
 \item{layout}{A matrix specifying the layout. If present, \code{rows} 
 is ignored.}
-
-\item{\dots}{Objects to be passed}
 }
 \value{
 Used for the side effect of plotting
@@ -25,4 +25,3 @@ If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
 then plot 1 will go in the upper left, 2 will go in the upper right, and
 3 will go all the way across the bottom.
 }
-

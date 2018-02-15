@@ -2,8 +2,8 @@
 % Please edit documentation in R/Data-class.R
 \docType{class}
 \name{GeneralData-class}
-\alias{.GeneralData}
 \alias{GeneralData-class}
+\alias{.GeneralData}
 \title{Class for general data input}
 \description{
 Class for general data input
@@ -17,5 +17,5 @@ Class for general data input
 
 \item{\code{nObs}}{number of observations}
 }}
-\keyword{classes}
 
+\keyword{classes}

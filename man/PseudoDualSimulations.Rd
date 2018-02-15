@@ -33,4 +33,3 @@ the \code{\linkS4class{PseudoDualSimulations}} object
 \description{
 Initialization function for 'DualPseudoSimulations' class
 }
-

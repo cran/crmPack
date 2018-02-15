@@ -20,4 +20,3 @@ the \code{\linkS4class{LogisticNormal}} object
 Initialization function for the "LogisticNormal" class
 }
 \keyword{methods}
-

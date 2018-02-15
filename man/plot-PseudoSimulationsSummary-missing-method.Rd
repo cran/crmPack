@@ -115,4 +115,3 @@ options<-McmcOptions(burnin=100,step=2,samples=200)
 # print(plot(MYSUM))
 }
 \keyword{methods}
-

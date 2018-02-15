@@ -16,4 +16,3 @@ the \code{\linkS4class{CohortSizeMax}} object
 Initialization function for "CohortSizeMax"
 }
 \keyword{methods}
-

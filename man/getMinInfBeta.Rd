@@ -21,4 +21,3 @@ request that the p-quantile should be q, i.e. X ~ Be(a, b) with Pr(X <= q) =
 p.
 }
 \keyword{programming}
-

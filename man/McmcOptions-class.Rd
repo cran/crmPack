@@ -2,8 +2,8 @@
 % Please edit documentation in R/McmcOptions-class.R
 \docType{class}
 \name{McmcOptions-class}
-\alias{.McmcOptions}
 \alias{McmcOptions-class}
+\alias{.McmcOptions}
 \title{Class for the three canonical MCMC options}
 \description{
 Class for the three canonical MCMC options
@@ -17,6 +17,7 @@ Class for the three canonical MCMC options
 
 \item{\code{step}}{only every step-th iteration is saved after the burn-in}
 }}
+
 \examples{
 
 # Set up MCMC option in order to have a burn-in of 10000 iterations and
@@ -27,4 +28,3 @@ options <- McmcOptions(burnin=10000,
 
 }
 \keyword{classes}
-

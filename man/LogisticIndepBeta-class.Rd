@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticIndepBeta-class}
-\alias{.LogisticIndepBeta}
 \alias{LogisticIndepBeta-class}
+\alias{.LogisticIndepBeta}
 \title{No initialization function
 Standard logistic model with prior in form of pseudo data}
 \description{
@@ -79,6 +79,7 @@ model. This is used in output to display the resulting prior and posterior covar
 phi2 obtained, based on the pseudo data and (if any) the observed data and responses. This slot is needed for 
 internal purposes.}
 }}
+
 \examples{
 ##Obtain prior modal estimates given the pseudo data.
 ##First we used an empty data set such that only the dose levels under investigations are given.
@@ -108,4 +109,3 @@ model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),
 
 }
 \keyword{classes}
-

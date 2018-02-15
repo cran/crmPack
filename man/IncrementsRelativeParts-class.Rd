@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{IncrementsRelativeParts-class}
-\alias{.IncrementsRelativeParts}
 \alias{IncrementsRelativeParts-class}
+\alias{.IncrementsRelativeParts}
 \title{Increments control based on relative differences in intervals,
 with special rules for part 1 and beginning of part 2}
 \description{
@@ -29,6 +29,7 @@ ladder will be used to find the maximum next dose. If this is larger than 0,
 then the relative increment rules will be applied to find the next maximum
 dose level.}
 }}
+
 \examples{
 
 myIncrements <- IncrementsRelativeParts(dltStart=0,
@@ -36,4 +37,3 @@ myIncrements <- IncrementsRelativeParts(dltStart=0,
 
 }
 \keyword{classes}
-

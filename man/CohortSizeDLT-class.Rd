@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeDLT-class}
-\alias{.CohortSizeDLT}
 \alias{CohortSizeDLT-class}
+\alias{.CohortSizeDLT}
 \title{Cohort size based on number of DLTs}
 \description{
 Cohort size based on number of DLTs
@@ -17,6 +17,7 @@ DLT intervals}
 \item{\code{cohortSize}}{an integer vector of the same length with the cohort
 sizes in the \code{DLTintervals}}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -28,4 +29,3 @@ mySize <- CohortSizeDLT(DLTintervals = c(0, 1),
 
 }
 \keyword{classes}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{DualEndpointEmax-class}
-\alias{.DualEndpointEmax}
 \alias{DualEndpointEmax-class}
+\alias{.DualEndpointEmax}
 \title{Dual endpoint model with emax function for dose-biomarker relationship}
 \description{
 This class extends the \code{\linkS4class{DualEndpoint}} class. Here the
@@ -28,14 +28,15 @@ in advance.
 
 \item{\code{ED50}}{either a fixed number or the two uniform distribution parameters}
 
-\item{\code{refDose}}{the reference dose \eqn{x^{*}}}
+\item{\code{refDoseEmax}}{the reference dose \eqn{x^{*}}}
 }}
+
 \examples{
 
 model <- DualEndpointEmax(E0 = c(0, 100),
                           Emax = c(0, 500),
                           ED50 = c(10,200),
-                          refDose = 1000,
+                          refDoseEmax = 1000,
                           mu = c(0, 1),
                           Sigma = matrix(c(1, 0, 0, 1), nrow=2),
                           sigma2W = c(a=0.1, b=0.1),
@@ -44,4 +45,3 @@ model <- DualEndpointEmax(E0 = c(0, 100),
 
 }
 \keyword{classes}
-

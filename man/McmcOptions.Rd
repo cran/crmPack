@@ -23,4 +23,3 @@ the \code{\linkS4class{McmcOptions}} object
 Initialization function for the "McmcOptions" class
 }
 \keyword{methods}
-

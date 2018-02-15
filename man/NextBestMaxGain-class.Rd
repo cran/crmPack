@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestMaxGain-class}
-\alias{.NextBestMaxGain}
 \alias{NextBestMaxGain-class}
+\alias{.NextBestMaxGain}
 \title{Next best dose with maximum gain value based on a pseudo DLE and efficacy model without samples}
 \description{
 This is a class for which to find the next dose which is safe and give the maximum gain value 
@@ -27,6 +27,7 @@ during the trial}
 of the trial. This target is particularly used to recommend the dose for which its posterior 
 probability of the occurrence of a DLE is equal to this target}
 }}
+
 \examples{
 ##define the NextBestMaxGain class (no samples and based a pseudo DLE model and a efficacy model)
 ##specified the target probability of the occurrence of a DLE during the trial be 0.35
@@ -36,4 +37,3 @@ myNextBest <-NextBestMaxGain(DLEDuringTrialtarget=0.35,
                              DLEEndOfTrialtarget=0.3)
 }
 \keyword{class}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{DualEndpointBeta-class}
-\alias{.DualEndpointBeta}
 \alias{DualEndpointBeta-class}
+\alias{.DualEndpointBeta}
 \title{Dual endpoint model with beta function for dose-biomarker relationship}
 \description{
 This class extends the \code{\linkS4class{DualEndpoint}} class. Here the
@@ -38,15 +38,19 @@ must be positive or have uniform distributions in the positive range.
 
 \item{\code{mode}}{either a fixed number or the two uniform distribution parameters}
 
-\item{\code{refDose}}{the reference dose \eqn{x^{*}}}
+\item{\code{refDoseBeta}}{the reference dose \eqn{x^{*}} (note that this is different from
+the \code{refDose} in the inherited \code{\linkS4class{DualEndpoint}} model)}
 }}
+
 \examples{
 
 model <- DualEndpointBeta(E0 = c(0, 100),
                           Emax = c(0, 500),
                           delta1 = c(0, 5),
                           mode = c(1, 15),
-                          refDose = 1000,
+                          refDose=10,
+                          useLogDose=TRUE,
+                          refDoseBeta = 1000,
                           mu = c(0, 1),
                           Sigma = matrix(c(1, 0, 0, 1), nrow=2),
                           sigma2W = c(a=0.1, b=0.1),
@@ -55,4 +59,3 @@ model <- DualEndpointBeta(E0 = c(0, 100),
 
 }
 \keyword{classes}
-

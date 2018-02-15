@@ -36,6 +36,7 @@ Pseudo DLE model with samples
 \item \code{prob = numeric,model = ModelTox,samples = missing}: Compute the dose for a given probability and a given 
 Pseudo DLE model without samples
 }}
+
 \examples{
 
 # create some data
@@ -94,4 +95,3 @@ TD45 <- dose(prob=0.45, model = DLEmodel)
 
 }
 \keyword{methods}
-

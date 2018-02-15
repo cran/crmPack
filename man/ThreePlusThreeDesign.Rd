@@ -27,4 +27,3 @@ myDesign <- ThreePlusThreeDesign(doseGrid=c(5, 10, 15, 25, 35, 50, 80))
 Daniel Sabanes Bove \email{sabanesd@roche.com}
 }
 \keyword{programming}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{DualResponsesSamplesDesign-class}
-\alias{.DualResponsesSamplesDesign}
 \alias{DualResponsesSamplesDesign-class}
+\alias{.DualResponsesSamplesDesign}
 \title{This is a class of design based on DLE responses using the \code{\linkS4class{LogisticIndepBeta}} model 
 model and efficacy responses using \code{\linkS4class{ModelEff}}  model class
 with DLE and efficacy samples.It contain all slots in 
@@ -22,6 +22,7 @@ with DLE and efficacy samples.It contain all slots in
 \item{\code{Effmodel}}{the pseudo efficacy model to be used, an object class of 
 \code{\linkS4class{ModelEff}}}
 }}
+
 \examples{
 ##Construct the DualResponsesSamplesDesign for simulations
 ##The design comprises the DLE and efficacy models, the escalation rule, starting data, 
@@ -71,4 +72,3 @@ design <- DualResponsesSamplesDesign(nextBest=mynextbest,
 
 }
 \keyword{class}
-

@@ -3,12 +3,12 @@
 \docType{methods}
 \name{size}
 \alias{size}
-\alias{size,CohortSizeConst,ANY,Data-method}
+\alias{size,CohortSizeRange,ANY,Data-method}
 \alias{size,CohortSizeDLT,ANY,Data-method}
 \alias{size,CohortSizeMax,ANY,Data-method}
 \alias{size,CohortSizeMin,ANY,Data-method}
+\alias{size,CohortSizeConst,ANY,Data-method}
 \alias{size,CohortSizeParts,ANY,DataParts-method}
-\alias{size,CohortSizeRange,ANY,Data-method}
 \title{Determine the size of the next cohort}
 \usage{
 size(cohortSize, dose, data, ...)
@@ -57,6 +57,7 @@ far
 
 \item \code{cohortSize = CohortSizeParts,dose = ANY,data = DataParts}: Cohort size based on the parts
 }}
+
 \examples{
 
 # Create the data
@@ -372,4 +373,3 @@ size(mySize, dose=doseRecommendation$value, data = data)
 
 }
 \keyword{methods}
-

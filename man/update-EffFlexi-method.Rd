@@ -46,4 +46,3 @@ data<-DataDual(x=c(25,50,50,75,100,100,225,300),y=c(0,0,0,0,1,1,1,1),
 newEffModel <- update(object=Effmodel,data=data)
 }
 \keyword{methods}
-

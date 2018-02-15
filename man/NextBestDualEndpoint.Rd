@@ -25,4 +25,3 @@ the \code{\linkS4class{NextBestDualEndpoint}} object
 Initialization function for "NextBestDualEndpoint"
 }
 \keyword{methods}
-

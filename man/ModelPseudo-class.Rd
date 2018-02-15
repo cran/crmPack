@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{ModelPseudo-class}
-\alias{.ModelPseudo}
 \alias{ModelPseudo-class}
+\alias{.ModelPseudo}
 \title{Class of models using expressing their prior in form of Pseudo data}
 \description{
 This is the Pseudo model class, from which all models where their prior 
@@ -17,4 +17,3 @@ from \code{\linkS4class{AllModels}}.No slots for this class
 \code{\linkS4class{EffFlexi}}
 }
 \keyword{classes}
-

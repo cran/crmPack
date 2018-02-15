@@ -13,4 +13,3 @@ the \code{\linkS4class{NextBestThreePlusThree}} object
 Initialization function for "NextBestThreePlusThree"
 }
 \keyword{methods}
-

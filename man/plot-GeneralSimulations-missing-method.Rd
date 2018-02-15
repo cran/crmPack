@@ -116,4 +116,3 @@ design <- TDsamplesDesign(model=model,
 # 
 }
 \keyword{methods}
-

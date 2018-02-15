@@ -2,8 +2,8 @@
 % Please edit documentation in R/Samples-class.R
 \docType{class}
 \name{Samples-class}
-\alias{.Samples}
 \alias{Samples-class}
+\alias{.Samples}
 \title{Class for the MCMC output}
 \description{
 Class for the MCMC output
@@ -17,6 +17,7 @@ of the parameter).}
 
 \item{\code{options}}{the \code{\linkS4class{McmcOptions}} which have been used}
 }}
+
 \examples{
 
 # Saving the mcmc options which were used to generate the samples
@@ -32,4 +33,3 @@ samples <- Samples(data=list(alpha=rnorm(10000),beta=rnorm(10000)),
 
 }
 \keyword{classes}
-

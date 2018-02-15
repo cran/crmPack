@@ -24,4 +24,3 @@ This is the function for initializing a \code{\linkS4class{DataParts}}
 object.
 }
 \keyword{programming}
-

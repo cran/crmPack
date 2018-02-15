@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticLogNormal-class}
-\alias{.LogisticLogNormal}
 \alias{LogisticLogNormal-class}
+\alias{.LogisticLogNormal}
 \title{Standard logistic model with bivariate (log) normal prior}
 \description{
 This is the usual logistic regression model with a bivariate normal prior on
@@ -31,7 +31,7 @@ Note that the expected odds is not just the exp of the prior mean of alpha0,
 because the non-linearity of the exp transformation. The log-normal
 distribution on Wikipedia gives the formula for computing the prior mean of
 exp(alpha0). alpha0 is the log(alpha) in the Neuenschwander et al. (2008)
-paper. alpha1 is identical to \eqn{\log(\beta)} above and equals the beta
+paper. alpha1 is identical to \eqn{\beta} above and equals the beta
 in the Neuenschwander et al paper. exp(alpha1) gives the odds-ratio for DLT
 between two doses that differ by the factor exp(1) ~ 2.7. alpha1 has a
 log-normal distribution in the LogisticLogNormal model in order to ensure
@@ -46,6 +46,7 @@ positivity of alpha1 and thus exp(alpha1) > 1.
 
 \item{\code{refDose}}{the reference dose \eqn{x^{*}}}
 }}
+
 \examples{
 
 
@@ -56,4 +57,3 @@ model <- LogisticLogNormal(mean = c(-0.85, 1),
 
 }
 \keyword{classes}
-

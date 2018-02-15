@@ -88,4 +88,3 @@ show(summary(mySims,truth=myTruth))
 
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticNormalFixedMixture-class}
-\alias{.LogisticNormalFixedMixture}
 \alias{LogisticNormalFixedMixture-class}
+\alias{.LogisticNormalFixedMixture}
 \title{Standard logistic model with fixed mixture of multiple bivariate (log) normal priors}
 \description{
 This is standard logistic regression model with a mixture of multiple bivariate
@@ -50,6 +50,7 @@ to 1}
 
 \item{\code{logNormal}}{is a log normal prior specified for each of the components?}
 }}
+
 \examples{
 
 model <- LogisticNormalFixedMixture(components = 
@@ -65,4 +66,3 @@ model <- LogisticNormalFixedMixture(components =
 
 }
 \keyword{classes}
-

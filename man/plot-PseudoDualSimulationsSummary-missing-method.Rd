@@ -197,4 +197,3 @@ myTruthGain <- function(dose)
 # print(plot(MYSUM))
 }
 \keyword{methods}
-

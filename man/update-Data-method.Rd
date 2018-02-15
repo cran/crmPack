@@ -44,4 +44,3 @@ myData <- update(myData,
 
 }
 \keyword{methods}
-

@@ -22,4 +22,3 @@ the \code{\linkS4class{DualSimulations}} object
 Initialization function for "DualSimulations"
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeRange-class}
-\alias{.CohortSizeRange}
 \alias{CohortSizeRange-class}
+\alias{.CohortSizeRange}
 \title{Cohort size based on dose range}
 \description{
 Cohort size based on dose range
@@ -16,6 +16,7 @@ Cohort size based on dose range
 \item{\code{cohortSize}}{an integer vector of the same length with the cohort
 sizes in the \code{intervals}}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -27,4 +28,3 @@ mySize <- CohortSizeRange(intervals=c(0, 30),
 
 }
 \keyword{classes}
-

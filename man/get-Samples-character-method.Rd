@@ -54,4 +54,3 @@ samples <- mcmc(data, model, options)
 alpha0samples <- get(samples, "alpha0")
 }
 \keyword{methods}
-

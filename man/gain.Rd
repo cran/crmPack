@@ -3,8 +3,8 @@
 \docType{methods}
 \name{gain}
 \alias{gain}
-\alias{gain,numeric,ModelTox,Samples,EffFlexi,Samples-method}
 \alias{gain,numeric,ModelTox,Samples,Effloglog,Samples-method}
+\alias{gain,numeric,ModelTox,Samples,EffFlexi,Samples-method}
 \alias{gain,numeric,ModelTox,missing,Effloglog,missing-method}
 \title{Compute the gain value with a given dose level, given a pseudo DLE model, a DLE sample, 
 a pseudo Efficacy log-log model and a Efficacy sample}
@@ -45,6 +45,7 @@ the pseudo EffFlexi model and an Efficacy sample
 \item \code{dose = numeric,DLEmodel = ModelTox,DLEsamples = missing,Effmodel = Effloglog,Effsamples = missing}: Compute the gain value given a dose level, a pseudo DLE model and a pseudo
 efficacy model of \code{\linkS4class{Effloglog}} class object without DLE and the efficacy sample
 }}
+
 \examples{
 ##Obtain the gain value for a given dose, a pseudo DLE model, a DLE sample, 
 ## a pseudo efficacy model and an efficacy sample
@@ -90,4 +91,3 @@ Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=
 gain(dose=75,DLEmodel=DLEmodel,Effmodel=Effmodel)
 }
 \keyword{methods}
-

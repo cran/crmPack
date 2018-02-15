@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingAll-class}
-\alias{.StoppingAll}
 \alias{StoppingAll-class}
+\alias{.StoppingAll}
 \title{Stop based on fullfillment of all multiple stopping rules}
 \description{
 This class can be used to combine multiple stopping rules with an AND
@@ -19,6 +19,7 @@ order that the result of this rule is to stop.
 \describe{
 \item{\code{stopList}}{list of stopping rules}
 }}
+
 \examples{
 
 # Define some stopping rules
@@ -35,4 +36,3 @@ mystopping <- StoppingAll(stopList=c(myStopping1,myStopping2,myStopping3))
 
 }
 \keyword{classes}
-

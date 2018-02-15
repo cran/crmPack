@@ -27,4 +27,3 @@ an object of class \code{\linkS4class{GeneralSimulationsSummary}}
 Summarize the simulations, relative to a given truth
 }
 \keyword{methods}
-

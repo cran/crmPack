@@ -19,4 +19,3 @@ The virtual class for stopping rules
 \code{\linkS4class{StoppingHighestDose}}
 }
 \keyword{classes}
-

@@ -21,4 +21,3 @@ dinvGamma(x, a, b, log = FALSE, normalize = TRUE)
 Compute the density of Inverse gamma distribution
 }
 \keyword{internal}
-

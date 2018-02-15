@@ -3,21 +3,21 @@
 \docType{methods}
 \name{stopTrial}
 \alias{stopTrial}
+\alias{stopTrial,StoppingList,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingAll,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingAny,ANY,ANY,ANY,ANY-method}
 \alias{stopTrial,StoppingCohortsNearDose,numeric,ANY,ANY,Data-method}
-\alias{stopTrial,StoppingGstarCIRatio,ANY,Samples,ModelTox,DataDual-method}
-\alias{stopTrial,StoppingGstarCIRatio,ANY,missing,ModelTox,DataDual-method}
-\alias{stopTrial,StoppingHighestDose,numeric,ANY,ANY,Data-method}
-\alias{stopTrial,StoppingList,ANY,ANY,ANY,ANY-method}
-\alias{stopTrial,StoppingMTDdistribution,numeric,Samples,Model,ANY-method}
+\alias{stopTrial,StoppingPatientsNearDose,numeric,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingMinCohorts,ANY,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingMinPatients,ANY,ANY,ANY,Data-method}
-\alias{stopTrial,StoppingPatientsNearDose,numeric,ANY,ANY,Data-method}
+\alias{stopTrial,StoppingTargetProb,numeric,Samples,Model,ANY-method}
+\alias{stopTrial,StoppingMTDdistribution,numeric,Samples,Model,ANY-method}
+\alias{stopTrial,StoppingTargetBiomarker,numeric,Samples,DualEndpoint,ANY-method}
+\alias{stopTrial,StoppingHighestDose,numeric,ANY,ANY,Data-method}
 \alias{stopTrial,StoppingTDCIRatio,ANY,Samples,ModelTox,ANY-method}
 \alias{stopTrial,StoppingTDCIRatio,ANY,missing,ModelTox,ANY-method}
-\alias{stopTrial,StoppingTargetBiomarker,numeric,Samples,DualEndpoint,ANY-method}
-\alias{stopTrial,StoppingTargetProb,numeric,Samples,Model,ANY-method}
+\alias{stopTrial,StoppingGstarCIRatio,ANY,Samples,ModelTox,DataDual-method}
+\alias{stopTrial,StoppingGstarCIRatio,ANY,missing,ModelTox,DataDual-method}
 \title{Stop the trial?}
 \usage{
 stopTrial(stopping, dose, samples, model, data, ...)
@@ -83,6 +83,8 @@ stopTrial(stopping, dose, samples, model, data, ...)
 
 \item{data}{The data input, an object of class \code{\linkS4class{Data}}}
 
+\item{\dots}{additional arguments}
+
 \item{TDderive}{the function which derives from the input, a vector of the posterior samples called 
 \code{TDsamples} of the dose
 which has the probability of the occurrence of DLE equals to either the targetDuringTrial or
@@ -96,8 +98,6 @@ occurrence of DLE equals to the targetDuringTrial)and TDtargetEndOfTrial estimat
 \item{Gstarderive}{the function which derives from the input, a vector of the posterior Gstar (the dose
 which gives the maximum gain value) samples 
 called \code{Gstarsamples}, the final next best Gstar estimate.}
-
-\item{\dots}{additional arguments}
 }
 \value{
 logical value: \code{TRUE} if the trial can be stopped, \code{FALSE}
@@ -151,6 +151,7 @@ incorporate DLE and efficacy responses and DLE and efficacy samples are also use
 interval of the estimate (the minimum of Gstar and TDtargetEndOfTrial). This is a stopping rule which 
 incorporate DLE and efficacy responses without DLE and efficacy samples involved.
 }}
+
 \examples{
 
 ## Example of combining stopping rules with '&' and/or '|' operators
@@ -907,4 +908,3 @@ stopTrial(stopping=myStopping,dose=RecommendDose$nextdose,model=DLEmodel,
 ## RecommendDose$nextdose refers to the next dose obtained in RecommendDose
 }
 \keyword{methods}
-

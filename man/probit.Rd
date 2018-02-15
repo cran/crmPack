@@ -16,4 +16,3 @@ the probit(x)
 Shorthand for probit function
 }
 \keyword{programming}
-

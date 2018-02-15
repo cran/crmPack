@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestDualEndpoint-class}
-\alias{.NextBestDualEndpoint}
 \alias{NextBestDualEndpoint-class}
+\alias{.NextBestDualEndpoint}
 \title{The class with the input for finding the next dose
 based on the dual endpoint model}
 \description{
@@ -39,6 +39,7 @@ limit included)}
 \item{\code{targetThresh}}{which target probability threshold needs to be fulfilled before the 
 target probability will be used for deriving the next best dose (default: 0.01)}
 }}
+
 \examples{
 
 # Target a dose achieving at least 0.9 of maximum biomarker level (efficacy)
@@ -56,4 +57,3 @@ myNextBest <- NextBestDualEndpoint(target=c(200, 300),
                                    maxOverdoseProb=0.25)
 }
 \keyword{classes}
-

@@ -22,4 +22,3 @@ the \code{\linkS4class{RuleDesign}} object
 Initialization function for "RuleDesign"
 }
 \keyword{methods}
-

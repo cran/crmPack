@@ -39,4 +39,3 @@ data<-Data(x=c(25,50,50,75,100,100,225,300),
 newModel <- update(object=model,data=data)
 }
 \keyword{methods}
-

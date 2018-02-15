@@ -25,4 +25,3 @@ This is basically copied from simulate.lm
 Daniel Sabanes Bove \email{sabanesd@roche.com}
 }
 \keyword{programming}
-

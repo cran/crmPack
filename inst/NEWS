@@ -1,3 +1,58 @@
+Version 0.2.7
+--------------------------------------------------------------------------------
+
+Bugfixes:
+
+* Replaced BayesLogit dependency by JAGS code, since BayesLogit was taken off CRAN.
+
+* Speed up one example to pass CRAN check.
+
+
+Version 0.2.5
+--------------------------------------------------------------------------------
+
+New features:
+
+* matching of doses with the dose grid now includes a tolerance of 1e-10, in order
+  to make it more user-friendly (thanks to YJ Choi and Giuseppe for investigating)
+
+Bugfixes:
+
+* documentation: 
+  - minor fix for alpha1 description in LogisticLogNormal-class
+  
+* minor fix on scale_colour_manual import from ggplot2 reported by R-Core
+
+
+Version 0.2.4
+--------------------------------------------------------------------------------
+
+New features:
+
+* In case of multiple nextBest plots these are now also returned as original plots
+  in the list singlePlots, to allow for further customization, before jointly plotting them. 
+* ProbitLogNormal: Now also this model allows for a reference dose and a log transformation
+  of the (standardized) dose. This can be specified with options refDose and useLogDose.
+* DualEndpoint: Same additional options as for ProbitLogNormal are now available for the
+  DualEndpoint models. As a consequence, the parameter "refDose" for class 
+  DualEndpointBeta needed to be renamed to "refDoseBeta", and the parameter "refDose" for
+  class DualEndpointEmax renamed to "refDoseEmax".
+
+
+Bugfixes:
+
+* documentation: in the DualEndpoint description fixed the \left problem in the
+  formula 
+  
+Version 0.2.3
+--------------------------------------------------------------------------------
+
+New features:
+
+* New increment class "IncrementMin" has been added which allows to combine multiple 
+  increment rules with the MIN operation
+
+
 Version 0.2.1
 --------------------------------------------------------------------------------
 

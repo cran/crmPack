@@ -44,4 +44,3 @@ which are above the target toxicity interval (as specified by the
 You can specify any subset of these in the \code{type} argument.
 }
 \keyword{methods}
-

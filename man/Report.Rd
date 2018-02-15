@@ -17,3 +17,4 @@ A Reference Class to represent sequentially updated reporting objects.
 \item{\code{dfNames}}{the names to which strings are sequentially added}
 }}
 
+

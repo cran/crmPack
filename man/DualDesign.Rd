@@ -20,4 +20,3 @@ the \code{\linkS4class{DualDesign}} object
 Initialization function for "DualDesign"
 }
 \keyword{methods}
-

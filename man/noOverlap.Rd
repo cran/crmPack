@@ -19,4 +19,3 @@ vectors, otherwise FALSE
 Check overlap of two character vectors
 }
 \keyword{internal}
-

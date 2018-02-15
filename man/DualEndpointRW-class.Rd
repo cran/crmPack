@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{DualEndpointRW-class}
-\alias{.DualEndpointRW}
 \alias{DualEndpointRW-class}
+\alias{.DualEndpointRW}
 \title{Dual endpoint model with RW prior for biomarker}
 \description{
 This class extends the \code{\linkS4class{DualEndpoint}} class. Here the
@@ -43,6 +43,7 @@ on \code{sigma2betaW}.}
 \item{\code{useRW1}}{for specifying the random walk prior on the biomarker level: if
 \code{TRUE}, RW1 is used, otherwise RW2.}
 }}
+
 \examples{
 
 
@@ -56,4 +57,3 @@ model <- DualEndpointRW(mu = c(0, 1),
 
 }
 \keyword{classes}
-

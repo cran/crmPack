@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{DualSimulations-class}
-\alias{.DualSimulations}
 \alias{DualSimulations-class}
+\alias{.DualSimulations}
 \title{Class for the simulations output from dual-endpoint model based designs}
 \description{
 This class captures the trial simulations from dual-endpoint model based
@@ -20,5 +20,5 @@ sigma2W and rho estimates.
 
 \item{\code{fitBiomarker}}{list with the final dose-biomarker curve fits}
 }}
-\keyword{classes}
 
+\keyword{classes}

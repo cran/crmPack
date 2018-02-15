@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeMax-class}
-\alias{.CohortSizeMax}
 \alias{CohortSizeMax-class}
+\alias{.CohortSizeMax}
 \title{Size based on maximum of multiple cohort size rules}
 \description{
 This class can be used to combine multiple cohort size rules with the MAX
@@ -19,6 +19,7 @@ individual cohort sizes is taken to give the final cohort size.
 \describe{
 \item{\code{cohortSizeList}}{list of cohort size rules}
 }}
+
 \examples{
 
 # Rule for having cohort of size 1 for doses <30
@@ -39,4 +40,3 @@ mySize <- CohortSizeMax(cohortSizeList=list(mySize1,
 
 }
 \keyword{classes}
-

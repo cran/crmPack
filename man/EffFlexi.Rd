@@ -33,4 +33,3 @@ the \code{\linkS4class{EffFlexi}} class object
 Initialization function for the "EffFlexi" class
 }
 \keyword{methods}
-

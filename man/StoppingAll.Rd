@@ -16,4 +16,3 @@ the \code{\linkS4class{StoppingAll}} object
 Initialization function for "StoppingAll"
 }
 \keyword{methods}
-

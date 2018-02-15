@@ -110,4 +110,3 @@ mySim <-  simulate(object=design,
                    mcmcOptions=options,
                    parallel=FALSE)
 }
-

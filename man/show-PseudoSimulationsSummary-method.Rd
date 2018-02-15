@@ -105,4 +105,3 @@ MYSUM <- summary(mySim,
 show(MYSUM)
 }
 \keyword{methods}
-

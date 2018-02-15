@@ -18,4 +18,3 @@ the \code{\linkS4class{StoppingGstarCIRatio}} class object
 Initialization function for "StoppingGstarCIRatio"
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{Design-class}
-\alias{.Design}
 \alias{Design-class}
+\alias{.Design}
 \title{Class for the CRM design}
 \description{
 In addition to the slots in the more simple \code{\linkS4class{RuleDesign}},
@@ -24,6 +24,7 @@ an object of class \code{\linkS4class{Increments}}}
 \item{\code{PLcohortSize}}{rules for the cohort sizes for placebo, if any planned
 an object of class \code{\linkS4class{CohortSize}}}
 }}
+
 \examples{
 
 # Define the dose-grid
@@ -71,4 +72,3 @@ design <- Design(model=model,
   
 }
 \keyword{classes}
-

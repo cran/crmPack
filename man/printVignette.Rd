@@ -10,4 +10,3 @@ printVignette(x, ...)
 Taken from utils package (print.vignette)
 }
 \keyword{internal}
-

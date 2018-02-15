@@ -27,4 +27,3 @@ sampleSize(options)
 
 }
 \keyword{programming}
-

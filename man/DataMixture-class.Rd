@@ -2,8 +2,8 @@
 % Please edit documentation in R/Data-class.R
 \docType{class}
 \name{DataMixture-class}
-\alias{.DataMixture}
 \alias{DataMixture-class}
+\alias{.DataMixture}
 \title{Class for the data with mixture sharing}
 \description{
 Class for the data with mixture sharing
@@ -18,6 +18,7 @@ patients}
 
 \item{\code{nObsshare}}{number of share patients}
 }}
+
 \examples{
 ## decide on the dose grid:
 doseGrid <- 1:80
@@ -60,4 +61,3 @@ plot(priorSamplesShare, modelShare, nodataShare)
 how to use this data class
 }
 \keyword{classes}
-

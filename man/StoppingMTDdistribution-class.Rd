@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingMTDdistribution-class}
-\alias{.StoppingMTDdistribution}
 \alias{StoppingMTDdistribution-class}
+\alias{.StoppingMTDdistribution}
 \title{Stop based on MTD distribution}
 \description{
 Has 90\% probability above a threshold of 50\% of the current
@@ -18,6 +18,7 @@ MTD been reached? This class is used for this question.
 
 \item{\code{prob}}{required probability (e.g. 0.9)}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -30,4 +31,3 @@ myStopping <- StoppingMTDdistribution(target = 0.33,
 
 }
 \keyword{classes}
-

@@ -16,4 +16,3 @@ the \code{\linkS4class{StoppingMinCohorts}} object
 Initialization function for "StoppingMinCohorts"
 }
 \keyword{methods}
-

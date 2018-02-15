@@ -20,4 +20,3 @@ the \code{\linkS4class{DualResponsesDesign}} class object
 Initialization function for 'DualResponsesDesign"
 }
 \keyword{methods}
-

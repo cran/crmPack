@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{IncrementsRelative-class}
-\alias{.IncrementsRelative}
 \alias{IncrementsRelative-class}
+\alias{.IncrementsRelative}
 \title{Increments control based on relative differences in intervals}
 \description{
 Note that \code{intervals} is to be read as follows. If for example,
@@ -21,6 +21,7 @@ goes from the last value until infinity.
 \item{\code{increments}}{a vector of the same length with the maximum allowable
 relative increments in the \code{intervals}}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -32,4 +33,3 @@ myIncrements <- IncrementsRelative(intervals=c(0, 20),
 
 }
 \keyword{classes}
-

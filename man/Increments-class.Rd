@@ -13,4 +13,3 @@ The virtual class for controlling increments
 \code{\linkS4class{IncrementsRelativeParts}}
 }
 \keyword{classes}
-

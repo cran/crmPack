@@ -21,4 +21,3 @@ pinvGamma(q, a, b, lower.tail = TRUE, log.p = FALSE)
 Compute the distribution function of Inverse gamma distribution
 }
 \keyword{internal}
-

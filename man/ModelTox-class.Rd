@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{ModelTox-class}
-\alias{.ModelTox}
 \alias{ModelTox-class}
+\alias{.ModelTox}
 \title{No intialization function
 Class for DLE models using pseudo data prior. 
 This is a class of DLE (dose-limiting events) models/ toxicity model which contains all DLE models 
@@ -55,10 +55,10 @@ corresponding dose levels (see dtails above)}
 \item{\code{data}}{refers to the data input specification in \code{\linkS4class{Data}} class which are used to
 obtain model paramters estimates or samples (see details above)}
 }}
+
 \seealso{
 \code{\linkS4class{LogisticIndepBeta}},
 \code{\linkS4class{Effloglog}},
 \code{\linkS4class{EffFlexi}}
 }
 \keyword{classes}
-

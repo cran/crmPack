@@ -18,4 +18,3 @@ Returns \code{TRUE} if \code{x} is a probability range
 Predicate checking for a probability range
 }
 \keyword{internal}
-

@@ -18,4 +18,3 @@ the \code{\linkS4class{NextBestMTD}} object
 Initialization function for class "NextBestMTD"
 }
 \keyword{methods}
-

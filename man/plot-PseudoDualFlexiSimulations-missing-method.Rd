@@ -117,4 +117,3 @@ mySim<-simulate(object=design,
 print(plot(mySim))
 }
 \keyword{methods}
-

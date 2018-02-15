@@ -17,4 +17,3 @@ Returns \code{TRUE} if \code{x} is a length one vector
 Checking for scalar
 }
 \keyword{internal}
-

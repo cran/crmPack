@@ -18,4 +18,3 @@ the \code{\linkS4class{StoppingTargetProb}} object
 Initialization function for "StoppingTargetProb"
 }
 \keyword{methods}
-

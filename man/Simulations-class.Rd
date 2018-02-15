@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{Simulations-class}
-\alias{.Simulations}
 \alias{Simulations-class}
+\alias{.Simulations}
 \title{Class for the simulations output from model based designs}
 \description{
 This class captures the trial simulations from model based designs.
@@ -17,5 +17,5 @@ Additional slots fit and stopReasons compared to the general class
 
 \item{\code{stopReasons}}{list of stopping reasons for each simulation run}
 }}
-\keyword{classes}
 
+\keyword{classes}

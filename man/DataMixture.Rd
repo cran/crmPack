@@ -20,4 +20,3 @@ the initialized \code{\linkS4class{DataMixture}} object
 This is the function for initializing a "DataMixture" class object.
 }
 \keyword{programming}
-

@@ -19,4 +19,3 @@ Helper function to join two function bodies
 }
 \keyword{internal}
 \keyword{programming}
-

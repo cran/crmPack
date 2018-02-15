@@ -15,13 +15,13 @@ getEff(object, ...)
 \arguments{
 \item{object}{for data input from \code{\linkS4class{DataDual}} object}
 
+\item{\dots}{unused}
+
 \item{x}{todo}
 
 \item{y}{todo}
 
 \item{w}{todo}
-
-\item{\dots}{unused}
 }
 \description{
 Extracting efficacy responses for subjects without or with a DLE. This is a class where we separate
@@ -40,4 +40,3 @@ data<-DataDual(x=c(25,50,25,50,75,300,250,150),
 getEff(data)
 }
 \keyword{methods}
-

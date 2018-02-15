@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestMaxGainSamples-class}
-\alias{.NextBestMaxGainSamples}
 \alias{NextBestMaxGainSamples-class}
+\alias{.NextBestMaxGainSamples}
 \title{Next best dose with maximum gain value based on a pseudo DLE and efficacy model with samples}
 \description{
 This is a class for which to find the next dose which is safe and give the maximum gain value 
@@ -35,6 +35,7 @@ occurrence of DLE equals to the targetDuringTrial)and TDtargetEndOfTrial estimat
 which gives the maximum gain value) samples 
 called \code{Gstarsamples}, the final next best Gstar estimate.}
 }}
+
 \examples{
 ##define the NextBestMaxGainsamples class
 ##specified the target probability of the occurrence of a DLE during the trial be 0.35
@@ -54,4 +55,3 @@ mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,
                                      quantile(Gstarsamples,prob=0.5)})
 }
 \keyword{class}
-

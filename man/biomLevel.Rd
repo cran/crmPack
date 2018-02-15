@@ -18,9 +18,9 @@ biomLevel(dose, model, samples, ...)
 
 \item{samples}{the \code{\linkS4class{Samples}} object}
 
-\item{xLevel}{the grid index of \code{dose}}
-
 \item{\dots}{unused}
+
+\item{xLevel}{the grid index of \code{dose}}
 }
 \description{
 Compute the biomarker level for a given dose, given model and samples
@@ -31,6 +31,7 @@ Compute the biomarker level for a given dose, given model and samples
 column (index \code{xLevel}) of the biomarker samples matrix, since we save
 that in the samples
 }}
+
 \examples{
 
 # Create the data
@@ -69,4 +70,3 @@ biomLevel(dose = 0.5,
 
 }
 \keyword{methods}
-

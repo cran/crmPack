@@ -19,4 +19,3 @@ Helper function to join two BUGS models
 }
 \keyword{internal}
 \keyword{programming}
-

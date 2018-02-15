@@ -18,4 +18,3 @@ the \code{\linkS4class{Samples}} object
 Initialization function for "Samples"
 }
 \keyword{methods}
-

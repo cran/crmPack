@@ -20,4 +20,3 @@ the \code{\linkS4class{Simulations}} object
 Initialization function for the "Simulations" class
 }
 \keyword{methods}
-

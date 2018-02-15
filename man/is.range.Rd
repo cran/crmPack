@@ -16,4 +16,3 @@ Returns \code{TRUE} if \code{x} is a numeric range
 Predicate checking for a numeric range
 }
 \keyword{internal}
-

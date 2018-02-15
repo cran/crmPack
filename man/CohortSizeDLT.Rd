@@ -18,4 +18,3 @@ the \code{\linkS4class{CohortSizeDLT}} object
 Initialization function for "CohortSizeDLT"
 }
 \keyword{methods}
-

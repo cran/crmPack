@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{PseudoDualFlexiSimulations-class}
-\alias{.PseudoDualFlexiSimulations}
 \alias{PseudoDualFlexiSimulations-class}
+\alias{.PseudoDualFlexiSimulations}
 \title{This is a class which captures the trial simulations design using both the
 DLE and efficacy responses. The design of model from \code{\linkS4class{ModelTox}}
 class and the efficacy model from \code{\linkS4class{EffFlexi}} class 
@@ -29,5 +29,5 @@ capture the sigma2betaW estimates.
 \describe{
 \item{\code{sigma2betaWest}}{the vector of the final posterior mean sigma2betaW estimates}
 }}
-\keyword{class}
 
+\keyword{class}

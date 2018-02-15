@@ -17,4 +17,3 @@ the \code{\linkS4class{PseudoDualFlexiSimulations}} object
 \description{
 Initialization function for 'PseudoDualFlexiSimulations' class
 }
-

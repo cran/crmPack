@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingPatientsNearDose-class}
-\alias{.StoppingPatientsNearDose}
 \alias{StoppingPatientsNearDose-class}
+\alias{.StoppingPatientsNearDose}
 \title{Stop based on number of patients near to next best dose}
 \description{
 Stop based on number of patients near to next best dose
@@ -16,6 +16,7 @@ Stop based on number of patients near to next best dose
 \item{\code{percentage}}{percentage (between 0 and 100) within the next best dose
 the patients must lie}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -27,4 +28,3 @@ myStopping <- StoppingPatientsNearDose(nPatients = 9,
 
 }
 \keyword{classes}
-

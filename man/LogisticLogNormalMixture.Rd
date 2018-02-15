@@ -22,4 +22,3 @@ the \code{\linkS4class{LogisticLogNormalMixture}} object
 Initialization function for the "LogisticLogNormalMixture" class
 }
 \keyword{methods}
-

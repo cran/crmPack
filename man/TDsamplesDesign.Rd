@@ -25,4 +25,3 @@ the \code{\linkS4class{TDsamplesDesign}} class object
 Initialization function for 'TDsamplesDesign' class
 }
 \keyword{methods}
-

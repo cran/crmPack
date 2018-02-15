@@ -3,15 +3,15 @@
 \docType{methods}
 \name{nextBest}
 \alias{nextBest}
-\alias{nextBest,NextBestDualEndpoint,numeric,Samples,DualEndpoint,Data-method}
 \alias{nextBest,NextBestMTD,numeric,Samples,Model,Data-method}
-\alias{nextBest,NextBestMaxGain,numeric,missing,ModelTox,DataDual-method}
-\alias{nextBest,NextBestMaxGainSamples,numeric,Samples,ModelTox,DataDual-method}
 \alias{nextBest,NextBestNCRM,numeric,Samples,Model,Data-method}
 \alias{nextBest,NextBestNCRM,numeric,Samples,Model,DataParts-method}
-\alias{nextBest,NextBestTD,numeric,missing,LogisticIndepBeta,Data-method}
-\alias{nextBest,NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data-method}
 \alias{nextBest,NextBestThreePlusThree,missing,missing,missing,Data-method}
+\alias{nextBest,NextBestDualEndpoint,numeric,Samples,DualEndpoint,Data-method}
+\alias{nextBest,NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data-method}
+\alias{nextBest,NextBestTD,numeric,missing,LogisticIndepBeta,Data-method}
+\alias{nextBest,NextBestMaxGain,numeric,missing,ModelTox,DataDual-method}
+\alias{nextBest,NextBestMaxGainSamples,numeric,Samples,ModelTox,DataDual-method}
 \title{Find the next best dose}
 \usage{
 nextBest(nextBest, doselimit, samples, model, data, ...)
@@ -62,18 +62,20 @@ recommendation calculation, and a corresponding warning is given.}
 
 \item{data}{The data input, an object of class \code{\linkS4class{Data}}}
 
+\item{\dots}{possible additional arguments without method dispatch}
+
 \item{SIM}{internal command to notify if this method is used within simulations. Default as FALSE}
 
 \item{Effmodel}{the efficacy model of \code{\linkS4class{ModelEff}} class object}
 
 \item{Effsamples}{the efficacy samples of \code{\linkS4class{Samples}} class object}
-
-\item{\dots}{possible additional arguments without method dispatch}
 }
 \value{
 a list with the next best dose (element \code{value})
 on the grid defined in \code{data}, and a plot depicting this recommendation
-(element \code{plot}). Also additional list elements describing the outcome
+(element \code{plot}). In case of multiple plots also an element \code{singlePlots}
+is included which returns the list of single plots, which allows for further
+customization of these. Also additional list elements describing the outcome
 of the rule can be contained.
 }
 \description{
@@ -122,6 +124,7 @@ class rule. This a method based on the DLE responses and efficacy responses with
 efficacy samples. Effmodel must be of class \code{\linkS4class{Effloglog}} or  
 \code{\linkS4class{EffFlexi}}.
 }}
+
 \examples{
 
 # Create the data
@@ -314,6 +317,13 @@ doseRecommendation <- nextBest(myNextBest,
                                model=model,
                                data=data)
 
+## joint plot
+print(doseRecommendation$plot)
+
+## show customization of single plot
+variant1 <- doseRecommendation$singlePlots$plot1 + xlim(0, 20)
+print(variant1)
+
 ## we need a data object with doses >= 1:
 data<-Data(x=c(25,50,50,75,150,200,225,300),
            y=c(0,0,0,0,1,1,1,1),
@@ -441,4 +451,3 @@ RecommendDose<-nextBest(mynextbest,doselimit=max(data@doseGrid),samples=DLEsampl
 
 }
 \keyword{methods}
-

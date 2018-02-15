@@ -18,4 +18,3 @@ the \code{\linkS4class{StoppingList}} object
 Initialization function for "StoppingList"
 }
 \keyword{methods}
-

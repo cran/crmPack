@@ -33,4 +33,3 @@ myStopping <- myStopping1 & myStopping2
 
 }
 \keyword{methods}
-

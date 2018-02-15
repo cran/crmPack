@@ -67,4 +67,3 @@ threeSims <- simulate(myDesign,
                       parallel=FALSE)
 }
 \keyword{methods}
-

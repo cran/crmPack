@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestMTD-class}
-\alias{.NextBestMTD}
 \alias{NextBestMTD-class}
+\alias{.NextBestMTD}
 \title{The class with the input for finding the next best MTD estimate}
 \description{
 The class with the input for finding the next best MTD estimate
@@ -17,6 +17,7 @@ The class with the input for finding the next best MTD estimate
 posterior MTD samples called \code{mtdSamples}, the final next best MTD
 estimate.}
 }}
+
 \examples{
 
 # In the example below the MTD is defined as the dose for which prob(DLE)=0.33 and
@@ -30,4 +31,3 @@ mtdNextBest <- NextBestMTD(target=0.33,
 
 }
 \keyword{classes}
-

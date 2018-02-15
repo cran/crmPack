@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{GeneralSimulations-class}
-\alias{.GeneralSimulations}
 \alias{GeneralSimulations-class}
+\alias{.GeneralSimulations}
 \title{General class for the simulations output}
 \description{
 This class captures trial simulations.
@@ -23,5 +23,5 @@ saved, in order to be able to reproduce the outcome. For this just use
 
 \item{\code{seed}}{random generator state before starting the simulation}
 }}
-\keyword{classes}
 
+\keyword{classes}

@@ -192,4 +192,3 @@ mySim<-simulate(object=design,
 
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{PseudoDualSimulations-class}
-\alias{.PseudoDualSimulations}
 \alias{PseudoDualSimulations-class}
+\alias{.PseudoDualSimulations}
 \title{This is a class which captures the trial simulations design using both the
 DLE and efficacy responses. The design of model from \code{\linkS4class{ModelTox}}
 class and the efficacy model from \code{\linkS4class{ModelEff}} class 
@@ -47,5 +47,5 @@ and Gstar estimates at dose Grid}
 
 \item{\code{sigma2est}}{the vector of the final posterior mean sigma2 estimates}
 }}
-\keyword{class}
 
+\keyword{class}

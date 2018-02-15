@@ -2,8 +2,8 @@
 % Please edit documentation in R/Data-class.R
 \docType{class}
 \name{Data-class}
-\alias{.Data}
 \alias{Data-class}
+\alias{.Data}
 \title{Class for the data input}
 \description{
 This class inherits from \code{\linkS4class{GeneralData}}.
@@ -25,6 +25,7 @@ grid}
 \item{\code{placebo}}{logical value: if TRUE the first dose level in the grid is
 considered as PLACEBO}
 }}
+
 \examples{
 # create some data from the class 'Data'
 myData <- Data(x=c(0.1,0.5,1.5,3,6,10,10,10),
@@ -33,4 +34,3 @@ myData <- Data(x=c(0.1,0.5,1.5,3,6,10,10,10),
                           seq(from=10,to=80,by=2)))
 }
 \keyword{classes}
-

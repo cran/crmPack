@@ -37,4 +37,3 @@ plot(myData)
 
 }
 \keyword{methods}
-

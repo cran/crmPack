@@ -18,4 +18,3 @@ the \code{\linkS4class{StoppingTDCIRatio}} class object
 Initialization function for "StoppingTDCIRatio"
 }
 \keyword{methods}
-

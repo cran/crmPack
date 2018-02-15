@@ -15,13 +15,13 @@
 
 \item{data}{the \code{\linkS4class{Data}} object}
 
+\item{\dots}{not used}
+
 \item{xlab}{the x axis label}
 
 \item{ylab}{the y axis label}
 
 \item{showLegend}{should the legend be shown? (default)}
-
-\item{\dots}{not used}
 }
 \value{
 This returns the \code{\link[ggplot2]{ggplot}}
@@ -50,4 +50,3 @@ samples <- mcmc(data=data,model=model,options=options)
 plot(x=samples,y=model,data=data)
 }
 \keyword{methods}
-

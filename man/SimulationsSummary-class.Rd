@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{SimulationsSummary-class}
-\alias{.SimulationsSummary}
 \alias{SimulationsSummary-class}
+\alias{.SimulationsSummary}
 \title{Class for the summary of model-based simulations output}
 \description{
 In addition to the slots in the parent class
@@ -22,5 +22,5 @@ initialization function is provided for this class.
 \item{\code{meanFit}}{list with the average, lower (2.5%) and upper (97.5%)
 quantiles of the mean fitted toxicity at each dose level}
 }}
-\keyword{classes}
 
+\keyword{classes}

@@ -43,7 +43,9 @@
 ##' @param \dots possible additional arguments without method dispatch
 ##' @return a list with the next best dose (element \code{value})
 ##' on the grid defined in \code{data}, and a plot depicting this recommendation
-##' (element \code{plot}). Also additional list elements describing the outcome
+##' (element \code{plot}). In case of multiple plots also an element \code{singlePlots}
+##' is included which returns the list of single plots, which allows for further
+##' customization of these. Also additional list elements describing the outcome
 ##' of the rule can be contained.
 ##'
 ##' @export
@@ -303,6 +305,8 @@ setMethod("nextBest",
               ## return value and plot
               return(list(value=ret,
                           plot=plotJoint,
+                          singlePlots=list(plot1=plot1,
+                                           plot2=plot2),
                           probs=cbind(dose=data@doseGrid,
                                       target=probTarget,
                                       overdose=probOverdose)))
@@ -646,6 +650,8 @@ setMethod("nextBest",
               ## return value and plot
               return(list(value=ret,
                           plot=plotJoint,
+                          singlePlots=list(plot1=plot1,
+                                          plot2=plot2),
                           probs=cbind(dose=data@doseGrid,
                                       target=probTarget,
                                       overdose=probOverdose)))
@@ -744,7 +750,7 @@ setMethod("maxDose",
 
                   ## what dose level (index) has the highest dose
                   ## so far?
-                  lastDoseLevel <- match(max(data@x),
+                  lastDoseLevel <- matchTolerance(max(data@x),
                                          data@part1Ladder)
 
                   ## determine the next maximum dose
@@ -812,6 +818,35 @@ setMethod("maxDose",
 
               return(ret)
           })
+
+
+## --------------------------------------------------
+## The maximum allowable relative increments in terms of DLTs
+## --------------------------------------------------
+
+##' @describeIn maxDose Determine the maximum possible next dose based on
+##' multiple increment rules (taking the minimum across individual increments).
+##' 
+##' @example examples/Rules-method-maxDose-IncrementMin.R
+setMethod("maxDose",
+          signature=
+            signature(increments="IncrementMin",
+                      data="Data"),
+          def=
+            function(increments, data, ...){
+              
+              ## apply the multiple increment rules
+              individualResults <-
+                sapply(increments@IncrementsList,
+                       maxDose,
+                       data=data,
+                       ...)
+              
+              ## so the maximum increment is the minimum across the individual increments 
+              ret <- min(individualResults)
+              
+              return(ret)
+            })
 
 
 ## ============================================================
@@ -2065,6 +2100,7 @@ setMethod("nextBest",
 ##' 
 ##' @example examples/Rules-method-nextbest_MaxGain.R
 ##' 
+##' @importFrom ggplot2 scale_colour_manual
 ##' @export
 ##' @keywords methods
 setMethod("nextBest",
@@ -2226,7 +2262,7 @@ setMethod("nextBest",
                           ))
               
               plot1 <- ggplot(data=gdata, aes(x=x,y=y))+geom_line(aes(group=group,color=group),size=1.5)+
-                ggplot2:::scale_colour_manual(name="curves",values=c("blue","green3","red"))+
+                ggplot2::scale_colour_manual(name="curves",values=c("blue","green3","red"))+
                 xlab("Dose Level")+ xlim(c(0,max(data@doseGrid)))+
                 ylab(paste("Values")) + ylim(c(min(gdata$y),max(gdata$y)))
               

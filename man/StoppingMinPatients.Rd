@@ -16,4 +16,3 @@ the \code{\linkS4class{StoppingMinPatients}} object
 Initialization function for "StoppingMinPatients"
 }
 \keyword{methods}
-

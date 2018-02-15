@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticKadane-class}
-\alias{.LogisticKadane}
 \alias{LogisticKadane-class}
+\alias{.LogisticKadane}
 \title{Reparametrized logistic model}
 \description{
 This is the logistic model in the parametrization of Kadane et al. (1980).
@@ -38,6 +38,7 @@ data later on.
 
 \item{\code{xmax}}{the maximum of the dose range \eqn{x_{max}}}
 }}
+
 \examples{
 
 
@@ -48,4 +49,3 @@ model <- LogisticKadane(theta = 0.33,
 
 }
 \keyword{classes}
-

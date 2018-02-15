@@ -118,4 +118,3 @@ mySim <-simulate(object=design,
                  parallel=FALSE)
 }
 \keyword{methods}
-

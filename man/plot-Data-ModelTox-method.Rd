@@ -42,4 +42,3 @@ model <-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300)
 plot(x=data,y=model)
 }
 \keyword{methods}
-

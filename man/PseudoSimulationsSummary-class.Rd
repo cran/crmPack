@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{PseudoSimulationsSummary-class}
-\alias{.PseudoSimulationsSummary}
 \alias{PseudoSimulationsSummary-class}
+\alias{.PseudoSimulationsSummary}
 \title{Class for the summary of pseudo-models simulations output}
 \description{
 Note that objects should not be created by users, therefore no
@@ -85,5 +85,5 @@ selected}
 \item{\code{meanFit}}{list with the average, lower (2.5%) and upper (97.5%)
 quantiles of the mean fitted toxicity at each dose level}
 }}
-\keyword{classes}
 
+\keyword{classes}

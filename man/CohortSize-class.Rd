@@ -16,4 +16,3 @@ The virtual class for cohort sizes
 \code{\linkS4class{CohortSizeParts}}
 }
 \keyword{classes}
-

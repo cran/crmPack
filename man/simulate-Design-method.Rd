@@ -115,4 +115,3 @@ time <- system.time(mySims <- simulate(design,
   
 }
 \keyword{methods}
-

@@ -24,4 +24,3 @@ the \code{\linkS4class{TDDesign}} class object
 Initialization function for 'TDDesign' class
 }
 \keyword{methods}
-

@@ -19,6 +19,8 @@ approximate(object, model, data, ...)
 
 \item{data}{the \code{\linkS4class{Data}} object}
 
+\item{\dots}{additional arguments (see methods)}
+
 \item{points}{optional parameter, which gives the dose values at which
 the approximation should rely on (default: 5 values equally spaced from
 minimum to maximum of the dose grid)}
@@ -30,8 +32,6 @@ minimum to maximum of the dose grid)}
 normal prior for the logistic regression coefficients is used}
 
 \item{verbose}{be verbose (progress statements and plot)? (default)}
-
-\item{\dots}{additional arguments (see methods)}
 }
 \value{
 the approximation model
@@ -46,6 +46,7 @@ to be able to reproduce the resulting approximating model exactly.
 \code{\link{Quantiles2LogisticNormal}}, e.g. in order to control the
 approximation quality, etc.
 }}
+
 \examples{
 
 # Create some data
@@ -83,4 +84,3 @@ posterior <- approximate(object = samples,
 
 }
 \keyword{methods}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticNormal-class}
-\alias{.LogisticNormal}
 \alias{LogisticNormal-class}
+\alias{.LogisticNormal}
 \title{Standard logistic model with bivariate normal prior}
 \description{
 This is the usual logistic regression model with a bivariate normal prior on
@@ -35,6 +35,7 @@ reference dose.
 
 \item{\code{refDose}}{the reference dose \eqn{x^{*}}}
 }}
+
 \examples{
 
 
@@ -45,4 +46,3 @@ model <- LogisticNormal(mean = c(-0.85, 1),
 
 }
 \keyword{classes}
-

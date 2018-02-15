@@ -17,4 +17,3 @@ rinvGamma(n, a, b)
 The random generation of the Inverse gamma distribution
 }
 \keyword{internal}
-

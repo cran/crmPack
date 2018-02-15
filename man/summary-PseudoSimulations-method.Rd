@@ -115,4 +115,3 @@ summary(mySim,
         truth=myTruth)
 }
 \keyword{methods}
-

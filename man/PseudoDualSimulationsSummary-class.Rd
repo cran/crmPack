@@ -2,8 +2,8 @@
 % Please edit documentation in R/Simulations-class.R
 \docType{class}
 \name{PseudoDualSimulationsSummary-class}
-\alias{.PseudoDualSimulationsSummary}
 \alias{PseudoDualSimulationsSummary-class}
+\alias{.PseudoDualSimulationsSummary}
 \title{Class for the summary of the dual responses simulations using pseudo models}
 \description{
 It contains all slots from \code{\linkS4class{PseudoSimulationsSummary}} object. In addition to 
@@ -33,5 +33,5 @@ selected}
 \item{\code{meanEffFit}}{list with mean, lower (2.5%) and upper (97.5%) quantiles of the fitted expected 
 efficacy value at each dose level.}
 }}
-\keyword{class}
 
+\keyword{class}

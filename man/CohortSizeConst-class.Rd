@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{CohortSizeConst-class}
-\alias{.CohortSizeConst}
 \alias{CohortSizeConst-class}
+\alias{.CohortSizeConst}
 \title{Constant cohort size}
 \description{
 This class is used when the cohort size should be kept constant.
@@ -13,6 +13,7 @@ This class is used when the cohort size should be kept constant.
 \describe{
 \item{\code{size}}{the constant integer size}
 }}
+
 \examples{
 
 # This is to have along the study a constant cohort size of 3
@@ -20,4 +21,3 @@ mySize <- CohortSizeConst(size=3)
 
 }
 \keyword{classes}
-

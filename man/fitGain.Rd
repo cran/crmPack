@@ -26,6 +26,8 @@ fitGain(DLEmodel, DLEsamples, Effmodel, Effsamples, data, ...)
 
 \item{data}{the data input of \code{\linkS4class{DataDual}} class object}
 
+\item{\dots}{additional arguments for methods}
+
 \item{points}{at which dose levels is the fit requested? default is the dose
 grid}
 
@@ -34,8 +36,6 @@ grid}
 
 \item{middle}{the function for computing the middle point. Default:
 \code{\link{mean}}}
-
-\item{\dots}{additional arguments for methods}
 }
 \description{
 Get the fiited values for the gain values at all dose levels based on 
@@ -48,6 +48,7 @@ of the gain value samples
 \item \code{DLEmodel = ModelTox,DLEsamples = Samples,Effmodel = ModelEff,Effsamples = Samples,data = DataDual}: This method returns a data frame with dose, middle, lower, upper quantiles for 
 the gain values obtained given the DLE and the efficacy samples
 }}
+
 \examples{
 ##Obtain the 'fitGain' the middle, uppper and lower quantiles for the samples of gain values
 ## at all dose levels using a pseudo DLE model, a DLE sample, a pseudo Efficacy model and
@@ -75,4 +76,3 @@ fitGain(DLEmodel=DLEmodel,DLEsamples=DLEsamples,
         Effmodel=Effmodel, Effsamples=Effsamples,data=data)
 }
 \keyword{methods}
-

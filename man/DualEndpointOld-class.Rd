@@ -36,6 +36,6 @@ transformation kappa = (rho + 1) / 2, which is in (0, 1). For example,
 \code{sigma2betaW}, \code{sigma2W} and \code{rho} indicating whether
 a fixed value is used or not.}
 }}
+
 \keyword{classes}
 \keyword{internal}
-

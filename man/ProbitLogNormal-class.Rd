@@ -2,21 +2,28 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{ProbitLogNormal-class}
-\alias{.ProbitLogNormal}
 \alias{ProbitLogNormal-class}
+\alias{.ProbitLogNormal}
 \title{Probit model with bivariate log normal prior}
 \description{
 This is probit regression model with a bivariate normal prior on
 the intercept and log slope. 
-The covariate is the dose \eqn{x} itself for this class:
+The covariate is the dose \eqn{x} itself, potentially divided
+by a reference dose \eqn{x^{*}}, or the logarithm of it:
 }
 \details{
-\deqn{probit[p(x)] = \alpha + \beta \cdot x}
-where \eqn{p(x)} is the probability of observing a DLT for a given dose
+\deqn{probit[p(x)] = \alpha + \beta 
+\cdot x/x^{*}}{probit[p(x)] = alpha + beta * x/x*}
+or
+\deqn{probit[p(x)] = \alpha + \beta 
+\cdot \log(x/x^{*})}{probit[p(x)] = alpha + beta * log(x/x*)}
+in case that the option \code{useLogDose} is \code{TRUE}.
+Here \eqn{p(x)} is the probability of observing a DLT for a given dose
 \eqn{x}.
 
 The prior is
-\deqn{(\alpha, \log(\beta)) \sim Normal(\mu, \Sigma)}
+\deqn{(\alpha, \log(\beta)) \sim Normal(\mu, \Sigma)}{
+(alpha, beta) ~ Normal(mu, Sigma)}
 
 The slots of this class contain the mean vector and the covariance matrix of
 the bivariate normal distribution, as well as the reference dose.
@@ -33,14 +40,23 @@ is not possible.
 \item{\code{mu}}{the prior mean vector \eqn{\mu}}
 
 \item{\code{Sigma}}{the prior covariance matrix \eqn{\Sigma}}
+
+\item{\code{refDose}}{the reference dose \eqn{x^{*}}}
+
+\item{\code{useLogDose}}{should the log of (standardized) dose be used?}
 }}
+
 \examples{
-
-
 model <- ProbitLogNormal(mu = c(-0.85, 1),
                            Sigma = matrix(c(1, -0.5, -0.5, 1), nrow = 2))
+
+## we can also specify a reference dose, and use a log transformation of
+## standardized dose in the model:
+model <- ProbitLogNormal(mu = c(-0.85, 1),
+                         Sigma = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+                         refDose = 7.2,
+                         useLogDose=TRUE)
 
 
 }
 \keyword{classes}
-

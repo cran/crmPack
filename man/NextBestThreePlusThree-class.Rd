@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{NextBestThreePlusThree-class}
-\alias{.NextBestThreePlusThree}
 \alias{NextBestThreePlusThree-class}
+\alias{.NextBestThreePlusThree}
 \title{The class with the input for finding the next dose in target interval}
 \description{
 Implements the classical 3+3 dose recommendation.
@@ -18,4 +18,3 @@ myNextBest <- NextBestThreePlusThree()
 
 }
 \keyword{classes}
-

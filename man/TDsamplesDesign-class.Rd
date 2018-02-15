@@ -2,8 +2,8 @@
 % Please edit documentation in R/Design-class.R
 \docType{class}
 \name{TDsamplesDesign-class}
-\alias{.TDsamplesDesign}
 \alias{TDsamplesDesign-class}
+\alias{.TDsamplesDesign}
 \title{This is a class of design based only on DLE responses using the 'LogisticIndepBeta' class model
 and DLE samples are also used. 
 In addition to the slots in the more simple \code{\linkS4class{RuleDesign}},
@@ -28,6 +28,7 @@ objects of this class contain:
 \item{\code{PLcohortSize}}{rules for the cohort sizes for placebo, if any planned
 an object of class \code{\linkS4class{CohortSize}}}
 }}
+
 \examples{
 ##Specified the design to run simulations
 ##The design comprises a model, the escalation rule, starting data, 
@@ -67,4 +68,3 @@ design <- TDsamplesDesign(model=model,
 
 }
 \keyword{class}
-

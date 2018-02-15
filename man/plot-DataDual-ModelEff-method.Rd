@@ -13,13 +13,13 @@
 
 \item{y}{the model of the \code{\linkS4class{ModelEff}} class object}
 
+\item{\dots}{not used}
+
 \item{xlab}{the x axis label}
 
 \item{ylab}{the y axis label}
 
 \item{showLegend}{should the legend be shown? (default)}
-
-\item{\dots}{not used}
 }
 \value{
 This returns the \code{\link[ggplot2]{ggplot}}
@@ -43,4 +43,3 @@ Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=
 plot(x=data,y=Effmodel)
 }
 \keyword{methods}
-

@@ -20,4 +20,3 @@ the \code{\linkS4class{GeneralSimulations}} object
 Initialization function for "GeneralSimulations"
 }
 \keyword{methods}
-

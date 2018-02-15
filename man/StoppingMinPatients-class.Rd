@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingMinPatients-class}
-\alias{.StoppingMinPatients}
 \alias{StoppingMinPatients-class}
+\alias{.StoppingMinPatients}
 \title{Stop based on minimum number of patients}
 \description{
 Stop based on minimum number of patients
@@ -13,6 +13,7 @@ Stop based on minimum number of patients
 \describe{
 \item{\code{nPatients}}{minimum allowed number of patients}
 }}
+
 \examples{
 
 # As example, here is the rule for: 
@@ -22,4 +23,3 @@ myStopping <- StoppingMinPatients(nPatients = 20)
 
 }
 \keyword{classes}
-

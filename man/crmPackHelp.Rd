@@ -17,4 +17,3 @@ crmPack.
 Daniel Sabanes Bove \email{sabanesd@roche.com}
 }
 \keyword{documentation}
-

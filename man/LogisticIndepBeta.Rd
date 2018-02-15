@@ -23,4 +23,3 @@ the \code{\linkS4class{LogisticIndepBeta}}
 Intialization function for "LogisticIndepBeta" class
 }
 \keyword{methods}
-

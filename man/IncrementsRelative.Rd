@@ -18,4 +18,3 @@ the \code{\linkS4class{IncrementsRelative}} object
 Initialization function for "IncrementsRelative"
 }
 \keyword{methods}
-

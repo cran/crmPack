@@ -3,12 +3,11 @@
 \docType{methods}
 \name{mcmc}
 \alias{mcmc}
-\alias{mcmc,Data,LogisticIndepBeta,McmcOptions-method}
-\alias{mcmc,Data,LogisticNormal,McmcOptions-method}
-\alias{mcmc,DataDual,EffFlexi,McmcOptions-method}
-\alias{mcmc,DataDual,Effloglog,McmcOptions-method}
-\alias{mcmc,DataMixture,GeneralModel,McmcOptions-method}
 \alias{mcmc,GeneralData,GeneralModel,McmcOptions-method}
+\alias{mcmc,DataMixture,GeneralModel,McmcOptions-method}
+\alias{mcmc,Data,LogisticIndepBeta,McmcOptions-method}
+\alias{mcmc,DataDual,Effloglog,McmcOptions-method}
+\alias{mcmc,DataDual,EffFlexi,McmcOptions-method}
 \title{Obtain posterior samples for all model parameters}
 \usage{
 mcmc(data, model, options, ...)
@@ -19,9 +18,6 @@ mcmc(data, model, options, ...)
 
 \S4method{mcmc}{DataMixture,GeneralModel,McmcOptions}(data, model, options,
   fromPrior = data@nObs == 0L & data@nObsshare == 0L, ...)
-
-\S4method{mcmc}{Data,LogisticNormal,McmcOptions}(data, model, options,
-  verbose = FALSE, ...)
 
 \S4method{mcmc}{Data,LogisticIndepBeta,McmcOptions}(data, model, options, ...)
 
@@ -37,6 +33,8 @@ mcmc(data, model, options, ...)
 \item{options}{MCMC options, an object of class
 \code{\linkS4class{McmcOptions}}}
 
+\item{\dots}{unused}
+
 \item{program}{the program which shall be used: either \dQuote{JAGS} (default),
 \dQuote{OpenBUGS} or \dQuote{WinBUGS}}
 
@@ -44,8 +42,6 @@ mcmc(data, model, options, ...)
 
 \item{fromPrior}{sample from the prior only? Defaults to checking if nObs is
 0. For some models it might be necessary to specify it manually here though.}
-
-\item{\dots}{unused}
 }
 \value{
 The posterior samples, an object of class
@@ -69,8 +65,6 @@ function will then result in exactly the same output.
 \item \code{data = GeneralData,model = GeneralModel,options = McmcOptions}: Standard method which uses JAGS/BUGS
 
 \item \code{data = DataMixture,model = GeneralModel,options = McmcOptions}: Method for DataMixture with different fromPrior default
-
-\item \code{data = Data,model = LogisticNormal,options = McmcOptions}: The fast method for the LogisticNormal class
 
 \item \code{data = Data,model = LogisticIndepBeta,options = McmcOptions}: Obtain posterior samples for the model parameters based on the pseudo 'LogisticsIndepBeta'
 DLE model. The joint prior and posterior probability density function of 
@@ -101,30 +95,8 @@ both sigma2 and sigma2betaW acan be fixed or having an inverse-gamma prior and p
 Therefore, if the inverse gamma distribution(s) are used, the parameters in the distribution will be 
 first updated and then samples of sigma2 and sigma2betaW will be generated using the updated parameters.
 }}
+
 \examples{
-
-# create some data from the class 'Data'
-myData <- Data(x=c(0.1,0.5,1.5,3,6,10,10,10),
-               y=c(0,0,0,0,0,0,1,0),
-               doseGrid=c(0.1,0.5,1.5,3,6,
-                          seq(from=10,to=80,by=2)))
-
-# Initialize the CRM model 
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
-
-
-# Sample from the posterior distribution
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=1000)
-
-samples <- mcmc(data = myData, model = model, options=options)
-
-
 
 # create some data from the class 'Data'
 myData <- Data(x=c(0.1,0.5,1.5,3,6,10,10,10),
@@ -190,4 +162,3 @@ samples<-mcmc(data=data,model=Effmodel,options=options)
 }
 \keyword{methods}
 \keyword{regression}
-

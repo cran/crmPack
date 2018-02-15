@@ -46,6 +46,7 @@ and a given efficacy pseudo model
 
 \item \code{DLEmodel = ModelTox,DLEsamples = missing,Effmodel = ModelEff,Effsamples = missing}: Standard method
 }}
+
 \examples{
 ## we need a data object with doses >= 1:
 data <-DataDual(x=c(25,50,25,50,75,300,250,150),
@@ -95,4 +96,3 @@ plotGain(DLEmodel=DLEmodel,
          data=data)
 }
 \keyword{methods}
-

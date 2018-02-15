@@ -2,8 +2,8 @@
 % Please edit documentation in R/Data-class.R
 \docType{class}
 \name{DataParts-class}
-\alias{.DataParts}
 \alias{DataParts-class}
+\alias{.DataParts}
 \title{Class for the data with two study parts}
 \description{
 This is a subclass of \code{\linkS4class{Data}}, so contains all
@@ -20,6 +20,7 @@ study parts.
 \item{\code{part1Ladder}}{sorted numeric vector; what is the escalation ladder for
 part 1? This shall be a subset of the \code{doseGrid}.}
 }}
+
 \examples{
 # create an object of class 'DataParts'
 myData <- DataParts(x=c(0.1,0.5,1.5),
@@ -31,4 +32,3 @@ myData <- DataParts(x=c(0.1,0.5,1.5),
                     part1Ladder=c(0.1,0.5,1.5,3,6,10))
 }
 \keyword{classes}
-

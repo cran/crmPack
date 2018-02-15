@@ -31,4 +31,3 @@ specifying the random walk prior on the biomarker level.}
 Initialization method for the "DualEndpointOld" class
 }
 \keyword{methods}
-

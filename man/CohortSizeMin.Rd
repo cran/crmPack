@@ -16,4 +16,3 @@ the \code{\linkS4class{CohortSizeMin}} object
 Initialization function for "CohortSizeMin"
 }
 \keyword{methods}
-

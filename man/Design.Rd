@@ -24,4 +24,3 @@ the \code{\linkS4class{Design}} object
 Initialization function for "Design"
 }
 \keyword{methods}
-

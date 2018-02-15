@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticLogNormalSub-class}
-\alias{.LogisticLogNormalSub}
 \alias{LogisticLogNormalSub-class}
+\alias{.LogisticLogNormalSub}
 \title{Standard logistic model with bivariate (log) normal prior with substractive
 dose standardization}
 \description{
@@ -32,6 +32,7 @@ the bivariate normal distribution, as well as the reference dose.
 
 \item{\code{refDose}}{the reference dose \eqn{x^{*}}}
 }}
+
 \examples{
 
 
@@ -42,4 +43,3 @@ model <- LogisticLogNormalSub(mean = c(-0.85, 1),
 
 }
 \keyword{classes}
-

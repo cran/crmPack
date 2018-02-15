@@ -113,4 +113,3 @@ show(summary(mySims,
   
 }
 \keyword{methods}
-

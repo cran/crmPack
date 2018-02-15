@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{ModelEff-class}
-\alias{.ModelEff}
 \alias{ModelEff-class}
+\alias{.ModelEff}
 \title{No Initialization function
 class for Efficacy models using pseudo data prior}
 \description{
@@ -49,9 +49,9 @@ with observed responses (see details above)}
 \item{\code{data}}{refers to the data input specification in \code{\linkS4class{DataDual}} class which are used to
 obtain model paramters estimates or samples (see details above)}
 }}
+
 \seealso{
 \code{\linkS4class{Effloglog}},
 \code{\linkS4class{EffFlexi}}
 }
 \keyword{classes}
-

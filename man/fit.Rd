@@ -3,11 +3,11 @@
 \docType{methods}
 \name{fit}
 \alias{fit}
-\alias{fit,Samples,DualEndpoint,DataDual-method}
-\alias{fit,Samples,EffFlexi,DataDual-method}
-\alias{fit,Samples,Effloglog,DataDual-method}
-\alias{fit,Samples,LogisticIndepBeta,Data-method}
 \alias{fit,Samples,Model,Data-method}
+\alias{fit,Samples,DualEndpoint,DataDual-method}
+\alias{fit,Samples,LogisticIndepBeta,Data-method}
+\alias{fit,Samples,Effloglog,DataDual-method}
+\alias{fit,Samples,EffFlexi,DataDual-method}
 \title{Fit method for the Samples class}
 \usage{
 fit(object, model, data, ...)
@@ -34,6 +34,8 @@ fit(object, model, data, ...)
 
 \item{data}{the \code{\linkS4class{Data}} object}
 
+\item{\dots}{unused}
+
 \item{points}{at which dose levels is the fit requested? default is the dose
 grid}
 
@@ -42,8 +44,6 @@ grid}
 
 \item{middle}{the function for computing the middle point. Default:
 \code{\link{mean}}}
-
-\item{\dots}{unused}
 }
 \value{
 the data frame with required information (see method details)
@@ -73,6 +73,7 @@ the dose-efficacy curve using efficacy samples for \dQuote{Effloglog} model clas
 quantiles for the dose-efficacy curve using efficacy samples for \dQuote{EffFlexi} 
 model class
 }}
+
 \examples{
 
 # Create some data
@@ -205,4 +206,3 @@ Effsamples <- mcmc(data=data,model=Effmodel,options=options)
 fit(object=Effsamples, model=Effmodel,data=data)
 }
 \keyword{methods}
-

@@ -20,4 +20,3 @@ the \code{\linkS4class{NextBestNCRM}} object
 Initialization function for "NextBestNCRM"
 }
 \keyword{methods}
-

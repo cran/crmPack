@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{EffFlexi-class}
-\alias{.EffFlexi}
 \alias{EffFlexi-class}
+\alias{.EffFlexi}
 \title{Class for the efficacy model in flexible form for prior expressed in form of pseudo data}
 \description{
 This is a class where a flexible form is used to describe the realtionship between the efficacy
@@ -78,6 +78,7 @@ purposes and not to be touched by the user.}
 \item{\code{RWmatRank}}{is the rank of the difference matrix. This slot is needed for internal purposes and not
 to be touched by the user.}
 }}
+
 \examples{
 ##Obtain prior estimates for the EffFlexi (efficacy model) given the pseudo data.
 ##First define an empty data set by only define the dose levels used in the study
@@ -111,4 +112,3 @@ Effmodel<- EffFlexi(Eff=c(1.223, 2.513),Effdose=c(25,300),
 
 }
 \keyword{class}
-

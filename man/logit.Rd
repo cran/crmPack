@@ -16,4 +16,3 @@ the logit(x)
 Shorthand for logit function
 }
 \keyword{programming}
-

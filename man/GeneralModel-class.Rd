@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{GeneralModel-class}
-\alias{.GeneralModel}
 \alias{GeneralModel-class}
+\alias{.GeneralModel}
 \title{No Intitialization function for this
 General class for model input}
 \description{
@@ -42,8 +42,8 @@ function}
 \item{\code{sample}}{names of all parameters from which you would like to save the
 MCMC samples.}
 }}
+
 \seealso{
 \code{\linkS4class{Model}}
 }
 \keyword{classes}
-

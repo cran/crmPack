@@ -23,4 +23,3 @@ the \code{\linkS4class{NextBestMaxGainSamples}} class object
 Initialization function for class "NextBestMaxGainSamples"
 }
 \keyword{methods}
-

@@ -57,4 +57,3 @@ a \code{\linkS4class{LogisticNormal}} model to be as close as possible
 to the given prior quantiles.
 }
 \keyword{programming}
-

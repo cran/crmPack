@@ -20,4 +20,3 @@ the \code{\linkS4class{IncrementsRelativeParts}} object
 Initialization function for "IncrementsRelativeParts"
 }
 \keyword{methods}
-

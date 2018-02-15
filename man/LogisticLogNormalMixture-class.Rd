@@ -2,8 +2,8 @@
 % Please edit documentation in R/Model-class.R
 \docType{class}
 \name{LogisticLogNormalMixture-class}
-\alias{.LogisticLogNormalMixture}
 \alias{LogisticLogNormalMixture-class}
+\alias{.LogisticLogNormalMixture}
 \title{Standard logistic model with online mixture of two bivariate log normal priors}
 \description{
 This model can be used when data is arising online from the informative
@@ -30,6 +30,7 @@ class.
 \describe{
 \item{\code{shareWeight}}{the prior weight for sharing the same model \eqn{p_{1}(x)}}
 }}
+
 \examples{
 ## decide on the dose grid:
 doseGrid <- 1:80
@@ -71,4 +72,3 @@ plot(priorSamplesShare, modelShare, nodataShare)
 the \code{\linkS4class{DataMixture}} class for use with this model
 }
 \keyword{classes}
-

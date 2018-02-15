@@ -2,8 +2,8 @@
 % Please edit documentation in R/Rules-class.R
 \docType{class}
 \name{StoppingTargetBiomarker-class}
-\alias{.StoppingTargetBiomarker}
 \alias{StoppingTargetBiomarker-class}
+\alias{.StoppingTargetBiomarker}
 \title{Stop based on probability of target biomarker}
 \description{
 Stop based on probability of target biomarker
@@ -21,6 +21,7 @@ relative to the maximum, so must be a probability range) or \code{absolute}
 
 \item{\code{prob}}{required target probability for reaching sufficient precision}
 }}
+
 \examples{
 # As example, here is the rule for: 
 #   stopping the study if there is at least 0.5 probability that the biomarker 
@@ -32,4 +33,3 @@ myStopping <- StoppingTargetBiomarker(target = c(0.9, 1),
 
 }
 \keyword{classes}
-

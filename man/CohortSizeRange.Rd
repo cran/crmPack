@@ -18,4 +18,3 @@ the \code{\linkS4class{CohortSizeRange}} object
 Initialization function for "CohortSizeRange"
 }
 \keyword{methods}
-
