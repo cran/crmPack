@@ -1,4 +1,4 @@
-605fc01982d21289a123b891e5070521 *DESCRIPTION
+27015ad92cb0da713a4d4acc20026da6 *DESCRIPTION
 701da3975146a65ce192f50c6ce98031 *NAMESPACE
 36e5484597dcfe1c8c9199b505bc238e *R/Data-class.R
 fde25119aac874993df162721b7d3c62 *R/Data-methods.R
@@ -6,7 +6,7 @@ fde25119aac874993df162721b7d3c62 *R/Data-methods.R
 cf92eea9862a1663263ae4806fb4c6e1 *R/Design-methods.R
 ded97d065f68119e7afa3815128a972c *R/McmcOptions-class.R
 b40651784ee6f99a9f75cea7a5d1febd *R/McmcOptions-methods.R
-847227503da9c9bf12111a36b3ed9f4c *R/Model-class.R
+d7faa5a967f6374b84d8cf0fc4805362 *R/Model-class.R
 98b306dceedaa5d506fc14b257cb40c8 *R/Model-methods.R
 3477fe76ef1334ba315ca632bc3f7c80 *R/Rules-class.R
 6245dc56221d0aca95a7169373e282a0 *R/Rules-methods.R
@@ -21,11 +21,11 @@ d33a4609f37ff5d83ee6dac395ab5bce *R/Simulations-class.R
 82f478604c255c666d8cd7136aabcf24 *R/writeModel.R
 9df2ab4d0e5e06a23e206974a8988b1d *TODO
 ed4b197bca72b6736309dc6f64f68334 *build/vignette.rds
-74c257fa0222bdb1ba373e7c08fb0819 *inst/NEWS
+e461c724ae205cbc3fdc82fe14067912 *inst/NEWS
 149163c1bd70c7601ac801584c136f41 *inst/crmPack.pdf
 024554ebe77e6df8f110e2c18656606a *inst/doc/example.R
 37deafac4e11b8d9a3b1e5dbf9d9b870 *inst/doc/example.Rnw
-1368a37c424757695bab2c4c5b4df064 *inst/doc/example.pdf
+bc59620adc85a2d12c43441826dbf508 *inst/doc/example.pdf
 5f82e6339cda14956a8e1f3d92bdaddf *man/AllModels-class.Rd
 5ece48739d6dedced969daadadae3e52 *man/CohortSize-class.Rd
 695178cbf46b47cc9b13f47b6259daa0 *man/CohortSizeConst-class.Rd
@@ -97,7 +97,7 @@ afbca0150c1e68a9c2cf570fcbd42532 *man/LogisticLogNormal.Rd
 a81feed7842d966b9559fe2182549dda *man/LogisticLogNormalMixture.Rd
 7ad6f85573f6dac36d1a943c42b16799 *man/LogisticLogNormalSub-class.Rd
 57fd56a0ef2705c38dcea97570360538 *man/LogisticLogNormalSub.Rd
-575e6dc24427840086769c8e961580c2 *man/LogisticNormal-class.Rd
+efd8b6be8f1d7f275107de7c8994e887 *man/LogisticNormal-class.Rd
 a17fe340a64f98cc1301a5c84d70b5b5 *man/LogisticNormal.Rd
 5971038a9025e3e5d43cb7aaaa94a560 *man/LogisticNormalFixedMixture-class.Rd
 4ef8bb6d587ffa207b698ae72286f5de *man/LogisticNormalFixedMixture.Rd

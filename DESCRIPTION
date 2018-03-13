@@ -16,8 +16,8 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 0.2.6
-Date: 2018-02-15
+Version: 0.2.7
+Date: 2018-03-12
 Copyright: F. Hoffmann-La Roche Ltd
 Depends: R (>= 3.0.0), ggplot2 (>= 2.0.0), graphics
 Imports: methods, grid, gridExtra, GenSA, mvtnorm, parallel, rjags,
@@ -31,6 +31,6 @@ Collate: 'helpers.R' 'Data-class.R' 'Data-methods.R' 'Rules-class.R'
         'Samples-methods.R' 'Simulations-methods.R' 'crmPack-package.R'
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2018-02-15 10:49:19 UTC; sabanesd
+Packaged: 2018-03-13 09:21:17 UTC; sabanesd
 Repository: CRAN
-Date/Publication: 2018-02-15 23:04:23 UTC
+Date/Publication: 2018-03-13 17:03:26 UTC
