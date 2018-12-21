@@ -22,7 +22,8 @@ objects of this class contain:
 an object of class \code{\linkS4class{Increments}}}
 
 \item{\code{PLcohortSize}}{rules for the cohort sizes for placebo, if any planned
-an object of class \code{\linkS4class{CohortSize}}}
+an object of class \code{\linkS4class{CohortSize}} (defaults to constant
+0 placebo patients)}
 }}
 
 \examples{

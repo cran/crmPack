@@ -6,7 +6,8 @@
 \title{Simulate outcomes from a rule-based design}
 \usage{
 \S4method{simulate}{RuleDesign}(object, nsim = 1L, seed = NULL, truth,
-  args = NULL, parallel = FALSE, ...)
+  args = NULL, parallel = FALSE,
+  nCores = min(parallel::detectCores(), 5), ...)
 }
 \arguments{
 \item{object}{the \code{\linkS4class{RuleDesign}} object we want to simulate
@@ -27,6 +28,9 @@ simulations.}
 
 \item{parallel}{should the simulation runs be parallelized across the
 clusters of the computer? (not default)}
+
+\item{nCores}{how many cores should be used for parallel computing?
+Defaults to the number of cores on the machine, maximum 5.}
 
 \item{\dots}{not used}
 }

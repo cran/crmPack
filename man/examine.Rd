@@ -7,17 +7,21 @@
 \alias{examine,RuleDesign-method}
 \title{Obtain hypothetical trial course table for a design}
 \usage{
-examine(object, ...)
+examine(object, ..., maxNoIncrement = 100L)
 
-\S4method{examine}{Design}(object, mcmcOptions = McmcOptions(), ...)
+\S4method{examine}{Design}(object, mcmcOptions = McmcOptions(), ...,
+  maxNoIncrement)
 
-\S4method{examine}{RuleDesign}(object, ...)
+\S4method{examine}{RuleDesign}(object, ..., maxNoIncrement = 100L)
 }
 \arguments{
 \item{object}{the design (\code{\linkS4class{Design}} or
 \code{\linkS4class{RuleDesign}} object) we want to examine}
 
 \item{\dots}{additional arguments (see methods)}
+
+\item{maxNoIncrement}{maximum number of contiguous next doses at 0 
+DLTs that are the same as before, i.e. no increment (default to 100)}
 
 \item{mcmcOptions}{object of class \code{\linkS4class{McmcOptions}},
 giving the MCMC options for each evaluation in the trial. By default,
@@ -31,7 +35,8 @@ This generic function takes a design and generates a dataframe
 showing the beginning of several hypothetical trial courses under
 the design. This means, from the generated dataframe one can read off:
 - how many cohorts are required in the optimal case (no DLTs observed) in
-  order to reach the highest dose of the specified dose grid
+  order to reach the highest dose of the specified dose grid (or until
+  the stopping rule is fulfilled)
 - assuming no DLTs are observed until a certain dose level, what the next
   recommended dose is for all possible number of DLTs observed
 - the actual relative increments that will be used in these cases
@@ -98,8 +103,34 @@ set.seed(4235)
 # MCMC parameters are set to small values only to show this example. They should be
 # increased for a real case.
 options <- McmcOptions(burnin=10,step=1,samples=20)
-examine(design,options=options)
+examine(design, options)
   
+## example where examine stops because stopping rule already fulfilled
+myStopping4 <- StoppingMinPatients(nPatients=3)
+myStopping <- (myStopping1 & myStopping2) | myStopping4
+design <- Design(model=model,
+                 nextBest=myNextBest,
+                 stopping=myStopping,
+                 increments=myIncrements,
+                 cohortSize=mySize,
+                 data=emptydata,
+                 startingDose=3)
+examine(design,mcmcOptions=options)
+
+## example where examine stops because infinite looping
+## (note that here a very low threshold is used for the parameter
+## "maxNoIncrement" in "examine" to keep the execution time short)
+myIncrements <- IncrementsRelative(intervals=c(0, 20),
+                                   increments=c(1, 0.00001))
+myStopping <- (myStopping1 & myStopping2) 
+design <- Design(model=model,
+                 nextBest=myNextBest,
+                 stopping=myStopping,
+                 increments=myIncrements,
+                 cohortSize=mySize,
+                 data=emptydata,
+                 startingDose=3)
+examine(design, mcmcOptions=options, maxNoIncrement = 2)
 
 # Define the dose-grid
 emptydata <- Data(doseGrid = c(5, 10, 15, 25, 35, 50, 80))

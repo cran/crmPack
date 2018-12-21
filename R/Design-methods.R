@@ -77,6 +77,8 @@ setSeed <- function(seed=NULL)
 ##' @param nsim number of simulations to be conducted
 ##' @param vars names of the variables
 ##' @param parallel shall the iterations be parallelized across the cores?
+##' if NULL, then no parallelization will be done. If scalar positive number, 
+##' then so many cores will be used.
 ##' @return the list with all simulation results (one iteration corresponds
 ##' to one list element)
 ##'
@@ -86,17 +88,21 @@ setSeed <- function(seed=NULL)
 getResultList <- function(fun,
                           nsim,
                           vars,
-                          parallel)
+                          parallel=NULL)
 {
     ret <-
-        if(! parallel)
+        if(is.null(parallel))
         {
             lapply(X=seq_len(nsim),
                    FUN=fun)
         } else {
 
+            ## check that parallel parameter makes sense
+            stopifnot(is.scalar(parallel), parallel > 0)
+          
             ## now process all simulations
-            cores <- parallel::detectCores()
+            cores <- min(safeInteger(parallel),
+                         min(parallel::detectCores(), 5))
 
             ## start the cluster
             cl <- parallel::makeCluster(cores)
@@ -161,12 +167,15 @@ getResultList <- function(fun,
 ##' the standard options are used
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##'
 ##' @return an object of class \code{\linkS4class{Simulations}}
 ##'
 ##' @example examples/design-method-simulate-Design.R
 ##' @export
+##' @importFrom parallel detectCores
 ##' @keywords methods
 setMethod("simulate",
           signature=
@@ -177,7 +186,9 @@ setMethod("simulate",
               function(object, nsim=1L, seed=NULL,
                        truth, args=NULL, firstSeparate=FALSE,
                        mcmcOptions=McmcOptions(),
-                       parallel=FALSE, ...){
+                       parallel=FALSE, nCores=
+                       min(parallel::detectCores(), 5),
+                       ...){
 
               nsim <- safeInteger(nsim)
 
@@ -186,7 +197,9 @@ setMethod("simulate",
                         is.bool(firstSeparate),
                         is.scalar(nsim),
                         nsim > 0,
-                        is.bool(parallel))
+                        is.bool(parallel),
+                        is.scalar(nCores),
+                        nCores > 0)
 
               args <- as.data.frame(args)
               nArgs <- max(nrow(args), 1L)
@@ -366,7 +379,7 @@ setMethod("simulate",
                                             "truth",
                                             "object",
                                             "mcmcOptions"),
-                                          parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
 
               ## put everything in the Simulations format:
 
@@ -410,6 +423,8 @@ setMethod("simulate",
 ##' simulations.
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##'
 ##' @return an object of class \code{\linkS4class{GeneralSimulations}}
@@ -425,7 +440,10 @@ setMethod("simulate",
           def=
               function(object, nsim=1L, seed=NULL,
                        truth, args=NULL,
-                       parallel=FALSE, ...){
+                       parallel=FALSE, 
+                       nCores=
+                       min(parallel::detectCores(), 5),
+                       ...){
 
               nsim <- safeInteger(nsim)
 
@@ -523,7 +541,7 @@ setMethod("simulate",
                                             "nArgs",
                                             "truth",
                                             "object"),
-                                          parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
 
               ## put everything in the GeneralSimulations format:
 
@@ -569,6 +587,8 @@ setMethod("simulate",
 ##' the standard options are used
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##'
 ##' @return an object of class \code{\linkS4class{DualSimulations}}
@@ -586,7 +606,10 @@ setMethod("simulate",
                        sigma2W, rho=0,
                        firstSeparate=FALSE,
                        mcmcOptions=McmcOptions(),
-                       parallel=FALSE, ...){
+                       parallel=FALSE, 
+                       nCores=
+                       min(parallel::detectCores(), 5),
+                       ...){
 
               nsim <- safeInteger(nsim)
 
@@ -861,7 +884,7 @@ setMethod("simulate",
                                             "trueCov",
                                             "object",
                                             "mcmcOptions"),
-                                          parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
 
               ## put everything in the Simulations format:
 
@@ -909,7 +932,8 @@ setMethod("simulate",
 ##' showing the beginning of several hypothetical trial courses under
 ##' the design. This means, from the generated dataframe one can read off:
 ##' - how many cohorts are required in the optimal case (no DLTs observed) in
-##'   order to reach the highest dose of the specified dose grid
+##'   order to reach the highest dose of the specified dose grid (or until
+##'   the stopping rule is fulfilled)
 ##' - assuming no DLTs are observed until a certain dose level, what the next
 ##'   recommended dose is for all possible number of DLTs observed
 ##' - the actual relative increments that will be used in these cases
@@ -923,6 +947,8 @@ setMethod("simulate",
 ##' @param object the design (\code{\linkS4class{Design}} or
 ##' \code{\linkS4class{RuleDesign}} object) we want to examine
 ##' @param \dots additional arguments (see methods)
+##' @param maxNoIncrement maximum number of contiguous next doses at 0 
+##' DLTs that are the same as before, i.e. no increment (default to 100)
 ##'
 ##' @return The data frame
 ##'
@@ -930,10 +956,14 @@ setMethod("simulate",
 ##' @keywords methods regression
 setGeneric("examine",
            def=
-           function(object, ...){
-               ## there should be no default method,
-               ## therefore just forward to next method!
-               standardGeneric("examine")
+           function(object, ..., maxNoIncrement=100L){
+             
+             ## check maxNoIncrement argument
+             stopifnot(is.scalar(maxNoIncrement) && maxNoIncrement > 0)  
+             
+             ## there should be no default method,
+             ## therefore just forward to next method!
+             standardGeneric("examine")
            },
            valueClass="data.frame")
 
@@ -949,7 +979,10 @@ setMethod("examine",
           signature=
               signature(object="Design"),
           def=
-              function(object, mcmcOptions=McmcOptions(), ...){
+              function(object, 
+                       mcmcOptions=McmcOptions(), 
+                       ...,
+                       maxNoIncrement){
 
                   ## start with the empty table
                   ret <- data.frame(dose=numeric(),
@@ -963,6 +996,10 @@ setMethod("examine",
 
                   ## are we finished and can stop?
                   stopit <- FALSE
+                  
+                  ## counter how many contiguous doses at 0 DLTs with 
+                  ## no increment
+                  noIncrementCounter <- 0L
 
                   ## what is the next dose to be used?
                   ## initialize with starting dose
@@ -1068,22 +1105,43 @@ setMethod("examine",
                                    y=rep(0, thisSize))
                       }
 
-                      ## what is the new dose according to table?
-                      newDose <- as.numeric(subset(tail(ret, thisSize + 1),
-                                                   dose==thisDose & DLTs==0,
-                                                   select=nextDose))
-
+                      ## what are the results if 0 DLTs?
+                      resultsNoDLTs <- subset(tail(ret, thisSize + 1),
+                                              dose==thisDose & DLTs==0)
+                      
+                      ## what is the new dose then accordingly?
+                      newDose <- as.numeric(resultsNoDLTs$nextDose)
+                      
                       ## what is the difference to the previous dose?
                       doseDiff <- newDose - thisDose
+                      
+                      ## update the counter for no increments of the dose
+                      if(doseDiff == 0)
+                      {
+                        noIncrementCounter <- noIncrementCounter + 1L
+                      } else {
+                        noIncrementCounter <- 0L
+                      }
+                      
+                      ## would stopping rule be fulfilled already?
+                      stopAlready <- resultsNoDLTs$stop
 
                       ## update dose
                       thisDose <- newDose
-
+                      
+                      ## too many times no increment?
+                      stopNoIncrement <- (noIncrementCounter >= maxNoIncrement)
+                      if(stopNoIncrement) 
+                        warning(paste("Stopping because", 
+                                      noIncrementCounter,
+                                      "times no increment vs. previous dose"))
+                      
                       ## check if we can stop:
                       ## either when we have reached the highest dose in the
-                      ## next cohort, or when there is no improvement in dose
-                      ## over the last cohort
-                      stopit <- (thisDose >= max(object@data@doseGrid))
+                      ## next cohort, or when the stopping rule is already 
+                      ## fulfilled, or when too many times no increment
+                      stopit <- (thisDose >= max(object@data@doseGrid)) ||
+                        stopAlready || stopNoIncrement
                   }
 
                   return(ret)
@@ -1097,7 +1155,9 @@ setMethod("examine",
           signature=
               signature(object="RuleDesign"),
           def=
-              function(object, ...){
+              function(object, 
+                       ...,
+                       maxNoIncrement){
 
                   ## start with the empty table
                   ret <- data.frame(dose=numeric(),
@@ -1111,6 +1171,10 @@ setMethod("examine",
 
                   ## are we finished and can stop?
                   stopit <- FALSE
+                  
+                  ## counter how many contiguous doses at 0 DLTs with 
+                  ## no increment
+                  noIncrementCounter <- 0L
 
                   ## what is the next dose to be used?
                   ## initialize with starting dose
@@ -1167,22 +1231,43 @@ setMethod("examine",
                                  x=thisDose,
                                  y=rep(0, thisSize))
 
-                      ## what is the new dose according to table?
-                      newDose <- as.numeric(subset(tail(ret, thisSize + 1),
-                                                   dose==thisDose & DLTs==0,
-                                                   select=nextDose))
-
+                      ## what are the results if 0 DLTs?
+                      resultsNoDLTs <- subset(tail(ret, thisSize + 1),
+                                              dose==thisDose & DLTs==0)
+                      
+                      ## what is the new dose then accordingly?
+                      newDose <- as.numeric(resultsNoDLTs$nextDose)
+                      
                       ## what is the difference to the previous dose?
                       doseDiff <- newDose - thisDose
-
+                      
+                      ## update the counter for no increments of the dose
+                      if(doseDiff == 0)
+                      {
+                        noIncrementCounter <- noIncrementCounter + 1L
+                      } else {
+                        noIncrementCounter <- 0L
+                      }
+                      
+                      ## would stopping rule be fulfilled already?
+                      stopAlready <- resultsNoDLTs$stop
+                      
                       ## update dose
                       thisDose <- newDose
-
+                      
+                      ## too many times no increment?
+                      stopNoIncrement <- (noIncrementCounter >= maxNoIncrement)
+                      if(stopNoIncrement) 
+                        warning(paste("Stopping because", 
+                                      noIncrementCounter,
+                                      "times no increment vs. previous dose"))
+                      
                       ## check if we can stop:
                       ## either when we have reached the highest dose in the
-                      ## next cohort, or when there is no improvement in dose
-                      ## over the last cohort
-                      stopit <- (thisDose >= max(object@data@doseGrid))
+                      ## next cohort, or when the stopping rule is already 
+                      ## fulfilled, or when too many times no increment
+                      stopit <- (thisDose >= max(object@data@doseGrid)) ||
+                        stopAlready || stopNoIncrement
                   }
 
                   return(ret)
@@ -1216,6 +1301,8 @@ setMethod("examine",
 ##' the standard options are used
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##' 
 ##' @example examples/design-method-simulateTDsamplesDesign.R
@@ -1233,7 +1320,9 @@ setMethod("simulate",
             function(object, nsim=1L, seed=NULL,
                      truth, args=NULL, firstSeparate=FALSE,
                      mcmcOptions=McmcOptions(),
-                     parallel=FALSE, ...){
+                     parallel=FALSE, nCores=
+                     min(parallel::detectCores(), 5),
+                     ...){
               
               nsim <- safeInteger(nsim)
               
@@ -1456,7 +1545,7 @@ setMethod("simulate",
                                             "truth",
                                             "object",
                                             "mcmcOptions"),
-                                            parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
               
               ## put everything in the Simulations format:
               
@@ -1539,6 +1628,8 @@ setMethod("simulate",
 ##' in this patient.
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##' 
 ##' @example examples/design-method-simulateTDDesign.R
@@ -1555,7 +1646,9 @@ setMethod("simulate",
           def=
             function(object, nsim=1L, seed=NULL,
                      truth, args=NULL, firstSeparate=FALSE,
-                     parallel=FALSE, ...){
+                     parallel=FALSE, nCores=
+                     min(parallel::detectCores(), 5),
+                     ...){
               
               nsim <- safeInteger(nsim)
               
@@ -1761,7 +1854,7 @@ setMethod("simulate",
                                                         "firstSeparate",
                                                         "truth",
                                                         "object"),
-                                                    parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
               
               ## put everything in the Simulations format:
               
@@ -1847,6 +1940,8 @@ setMethod("simulate",
 ##' in this patient.
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##' 
 ##' @example examples/design-method-simulateDualResponsesDesign.R
@@ -1865,7 +1960,9 @@ setMethod("simulate",
             function(object, nsim=1L, seed=NULL,
                      trueDLE, trueEff, trueNu,
                      args=NULL, firstSeparate=FALSE,
-                     parallel=FALSE, ...){
+                     parallel=FALSE, nCores=
+                     min(parallel::detectCores(), 5),
+                     ...){
               
               nsim <- safeInteger(nsim)
               
@@ -2187,7 +2284,7 @@ setMethod("simulate",
                                                         "trueEff",
                                                         "trueNu",
                                                         "object"),
-                                                    parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
               
               
               ## put everything in the Simulations format:
@@ -2321,6 +2418,8 @@ setMethod("simulate",
 ##' the standard options are used
 ##' @param parallel should the simulation runs be parallelized across the
 ##' clusters of the computer? (not default)
+##' @param nCores how many cores should be used for parallel computing?
+##' Defaults to the number of cores on the machine, maximum 5.
 ##' @param \dots not used
 ##' 
 ##' @example examples/design-method-simulateDualResponsesSamplesDesign.R
@@ -2341,7 +2440,9 @@ setMethod("simulate",
                      trueSigma2=NULL,trueSigma2betaW=NULL,
                      args=NULL, firstSeparate=FALSE,
                      mcmcOptions=McmcOptions(),
-                     parallel=FALSE, ...){
+                     parallel=FALSE, nCores=
+                     min(parallel::detectCores(), 5),
+                     ...){
 
               nsim <- safeInteger(nsim)
               
@@ -2671,7 +2772,7 @@ setMethod("simulate",
                                                 "trueSigma2betaW",
                                                 "object",
                                                 "mcmcOptions"),
-                                            parallel=parallel)
+                                            parallel=if(parallel) nCores else NULL)
                 
                 ## put everything in the Simulations format:
                 
@@ -3077,7 +3178,7 @@ setMethod("simulate",
                                                         "trueEff",
                                                         "trueNu",
                                                         "object"),
-                                                    parallel=parallel)
+                                          parallel=if(parallel) nCores else NULL)
               
               
               ## put everything in the Simulations format:

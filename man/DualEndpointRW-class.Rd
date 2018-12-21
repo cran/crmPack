@@ -8,8 +8,7 @@
 \description{
 This class extends the \code{\linkS4class{DualEndpoint}} class. Here the
 dose-biomarker relationship \eqn{f(x)} is modelled by a non-parametric
-random-walk of first (RW1) or second order (RW2) (todo: warning: at the
-moment only the first order random walk produces useful results).
+random-walk of first (RW1) or second order (RW2).
 }
 \details{
 That means, for the RW1 we assume

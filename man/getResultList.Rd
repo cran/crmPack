@@ -4,7 +4,7 @@
 \alias{getResultList}
 \title{Helper function to obtain simulation results list}
 \usage{
-getResultList(fun, nsim, vars, parallel)
+getResultList(fun, nsim, vars, parallel = NULL)
 }
 \arguments{
 \item{fun}{the simulation function for a single iteration, which takes as
@@ -14,7 +14,9 @@ single parameter the iteration index}
 
 \item{vars}{names of the variables}
 
-\item{parallel}{shall the iterations be parallelized across the cores?}
+\item{parallel}{shall the iterations be parallelized across the cores?
+if NULL, then no parallelization will be done. If scalar positive number, 
+then so many cores will be used.}
 }
 \value{
 the list with all simulation results (one iteration corresponds

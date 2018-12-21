@@ -5,7 +5,7 @@
 \title{Initialization function for 'TDsamplesDesign' class}
 \usage{
 TDsamplesDesign(model, stopping, increments,
-  PLcohortSize = CohortSizeConst(1), ...)
+  PLcohortSize = CohortSizeConst(0L), ...)
 }
 \arguments{
 \item{model}{see \code{\linkS4class{TDsamplesDesign}}}

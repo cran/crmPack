@@ -8,7 +8,8 @@ This is a method based on the \code{\linkS4class{TDDesign}} where model used are
 \code{\linkS4class{ModelTox}} class object and no samples are involved.}
 \usage{
 \S4method{simulate}{TDDesign}(object, nsim = 1L, seed = NULL, truth,
-  args = NULL, firstSeparate = FALSE, parallel = FALSE, ...)
+  args = NULL, firstSeparate = FALSE, parallel = FALSE,
+  nCores = min(parallel::detectCores(), 5), ...)
 }
 \arguments{
 \item{object}{the \code{\linkS4class{TDDesign}} object we want to simulate the data from}
@@ -34,6 +35,9 @@ in this patient.}
 
 \item{parallel}{should the simulation runs be parallelized across the
 clusters of the computer? (not default)}
+
+\item{nCores}{how many cores should be used for parallel computing?
+Defaults to the number of cores on the machine, maximum 5.}
 
 \item{\dots}{not used}
 }

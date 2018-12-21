@@ -13,13 +13,14 @@
 mcmc(data, model, options, ...)
 
 \S4method{mcmc}{GeneralData,GeneralModel,McmcOptions}(data, model, options,
-  program = c("JAGS", "OpenBUGS", "WinBUGS"), verbose = FALSE,
-  fromPrior = data@nObs == 0L, ...)
+  program = c("JAGS"), verbose = FALSE, fromPrior = data@nObs == 0L,
+  ...)
 
 \S4method{mcmc}{DataMixture,GeneralModel,McmcOptions}(data, model, options,
   fromPrior = data@nObs == 0L & data@nObsshare == 0L, ...)
 
-\S4method{mcmc}{Data,LogisticIndepBeta,McmcOptions}(data, model, options, ...)
+\S4method{mcmc}{Data,LogisticIndepBeta,McmcOptions}(data, model, options,
+  ...)
 
 \S4method{mcmc}{DataDual,Effloglog,McmcOptions}(data, model, options, ...)
 
@@ -35,8 +36,8 @@ mcmc(data, model, options, ...)
 
 \item{\dots}{unused}
 
-\item{program}{the program which shall be used: either \dQuote{JAGS} (default),
-\dQuote{OpenBUGS} or \dQuote{WinBUGS}}
+\item{program}{the program which shall be used: currently only \dQuote{JAGS}
+is supported}
 
 \item{verbose}{shall progress bar and messages be printed? (not default)}
 
@@ -62,7 +63,7 @@ function will then result in exactly the same output.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{data = GeneralData,model = GeneralModel,options = McmcOptions}: Standard method which uses JAGS/BUGS
+\item \code{data = GeneralData,model = GeneralModel,options = McmcOptions}: Standard method which uses JAGS
 
 \item \code{data = DataMixture,model = GeneralModel,options = McmcOptions}: Method for DataMixture with different fromPrior default
 
