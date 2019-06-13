@@ -16,8 +16,9 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 0.2.9
-Copyright: F. Hoffmann-La Roche Ltd
+Version: 1.0.0
+Copyright: F. Hoffmann-La Roche Ltd, except Google LLC for
+        contributions by Daniel Sabanes Bove after 6 August 2018
 URL: https://github.com/roche/crmPack
 BugReports: https://github.com/roche/crmPack/issues
 VignetteBuilder: knitr
@@ -33,11 +34,11 @@ Collate: 'helpers.R' 'Data-class.R' 'Data-methods.R' 'Rules-class.R'
         'Samples-methods.R' 'Simulations-methods.R' 'crmPack-package.R'
 RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2018-12-20 07:11:49 UTC; rei
+Packaged: 2019-06-12 11:13:01 UTC; palermog
 Author: Daniel Sabanes Bove [aut],
   Wai Yin Yeung [aut],
   Giuseppe Palermo [aut, cre],
   Thomas Jaki [aut]
 Maintainer: Giuseppe Palermo <giuseppe.palermo@roche.com>
 Repository: CRAN
-Date/Publication: 2018-12-21 14:30:09 UTC
+Date/Publication: 2019-06-13 07:30:03 UTC
