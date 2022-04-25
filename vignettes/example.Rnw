@@ -364,7 +364,8 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmax=0.3,
                                   control=
                                  list(threshold.stop=0.03,
-                                       maxit=200),
+                                      maxit=200,
+                                      max.time=0.01), # take this out for real application
                                   seed=432)
 @
 
@@ -437,14 +438,14 @@ As said before, models inheriting from the \texttt{GeneralModel} class rely on M
 for example as follows:
 
 <<mcmc-opts>>=
-options <- McmcOptions(burnin=100,
+options <- McmcOptions(burnin=10, # use larger burnin and samples for real application
                        step=2,
-                       samples=2000)
+                       samples=200)
 @
 
-Now the object \texttt{options} specifies that you would like to have 2000
+Now the object \texttt{options} specifies that you would like to have 200
 parameter samples obtained from a Markov chain that starts with a ``burn-in''
-phase of 100 iterations that are discarded, and then save a sample every 2
+phase of 10 iterations that are discarded, and then save a sample every 2
 iterations. Note that these numbers are too low for actual production use and are
 only used for illustrating purposes here; normally you would specify at least
 the default parameters of the initialization function \texttt{McmcOptions}:
@@ -1156,7 +1157,7 @@ curve(TrueDLT, from=25, to=300, ylim=c(0, 1))
 
 This true DLT scenario will be used for both the \texttt{TDDesign} and the \texttt{TDsamplesDesign}
 
-Now we can proceed to the simulations. We only generate 100 trial outcomes here
+Now we can proceed to the simulations. We only generate 10 trial outcomes here
 for illustration, for the actual study this should be increased of course to at
 least 500:
 
@@ -1164,7 +1165,7 @@ least 500:
 time <- system.time(mySims <- simulate(design,
                                        args=NULL,
                                        truth=myTruth,
-                                       nsim=100,
+                                       nsim=10, # increase this in real application
                                        seed=819,
                                        mcmcOptions=options,
                                        parallel=FALSE))[3]
@@ -1329,7 +1330,7 @@ DLTsampSim@doses[3]
 @
 
 
-The overall results of the 100 trials for these two simulations can also be plotted as
+The overall results of the 10 trials for these two simulations can also be plotted as
 <<plotDLTSim,fig=TRUE>>=
 print(plot(DLTSim))
 @
@@ -1386,11 +1387,11 @@ model@prob
 For the simulations, these arguments are internally given by the values
 contained in the data frame given to \texttt{simulate} as the \texttt{args}
 argument. In our case, we want to supply the posterior samples of
-\texttt{alpha0} and \texttt{alpha1} in this data frame. We take only 50 out of
-the 2000 posterior samples in order to reduce the runtime for this example:
+\texttt{alpha0} and \texttt{alpha1} in this data frame. We take only 10 out of
+the posterior samples in order to reduce the runtime for this example:
 
 <<fut-samples>>=
-postSamples <- as.data.frame(samples@data)[(1:20)*50, ]
+postSamples <- as.data.frame(samples@data)[(1:2)*5, ]
 postSamples
 @
 
@@ -1481,7 +1482,7 @@ relationship:
 
 <<three-sims>>=
 threeSims <- simulate(threeDesign,
-                      nsim=1000,
+                      nsim=100,
                       seed=35,
                       truth=myTruth,
                       parallel=FALSE)
@@ -1583,9 +1584,9 @@ sufficiently long Markov chain for fitting them. Here we just use for illustrati
 purposes a quite small Markov chain -- again, for the real application, this would need to be at least 100 times longer!
 
 <<dual-options>>=
-options <- McmcOptions(burnin=100,
+options <- McmcOptions(burnin=10,
                        step=2,
-                       samples=500)
+                       samples=50)
 @
 
 Then we can obtain the MCMC samples:

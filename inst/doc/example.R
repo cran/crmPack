@@ -1,5 +1,4 @@
 ### R code from vignette source 'example.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: load
@@ -124,7 +123,8 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmax=0.3,
                                   control=
                                  list(threshold.stop=0.03,
-                                       maxit=200),
+                                      maxit=200,
+                                      max.time=0.01), # take this out for real application
                                   seed=432)
 
 
@@ -167,9 +167,9 @@ myModel <- minInfModel$model
 ###################################################
 ### code chunk number 22: mcmc-opts
 ###################################################
-options <- McmcOptions(burnin=100,
+options <- McmcOptions(burnin=10, # use larger burnin and samples for real application
                        step=2,
-                       samples=2000)
+                       samples=200)
 
 
 ###################################################
@@ -509,7 +509,7 @@ curve(TrueDLT, from=25, to=300, ylim=c(0, 1))
 time <- system.time(mySims <- simulate(design,
                                        args=NULL,
                                        truth=myTruth,
-                                       nsim=100,
+                                       nsim=10, # increase this in real application
                                        seed=819,
                                        mcmcOptions=options,
                                        parallel=FALSE))[3]
@@ -661,7 +661,7 @@ model@prob
 ###################################################
 ### code chunk number 85: fut-samples
 ###################################################
-postSamples <- as.data.frame(samples@data)[(1:20)*50, ]
+postSamples <- as.data.frame(samples@data)[(1:2)*5, ]
 postSamples
 
 
@@ -724,7 +724,7 @@ class(threeDesign)
 ### code chunk number 91: three-sims
 ###################################################
 threeSims <- simulate(threeDesign,
-                      nsim=1000,
+                      nsim=100,
                       seed=35,
                       truth=myTruth,
                       parallel=FALSE)
@@ -785,9 +785,9 @@ model <- DualEndpointRW(mu=c(0, 1),
 ###################################################
 ### code chunk number 97: dual-options
 ###################################################
-options <- McmcOptions(burnin=100,
+options <- McmcOptions(burnin=10,
                        step=2,
-                       samples=500)
+                       samples=50)
 
 
 ###################################################

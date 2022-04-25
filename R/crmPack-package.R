@@ -17,8 +17,8 @@
 ##' @aliases crmPack
 ##' @docType package
 ##' @title Object-oriented implementation of CRM designs
-##' @author Daniel Sabanes Bove \email{daniel.sabanesbove@@gmx.net}, W
-##' Wai Yin Yeung \email{winnie.yeung@@roche.com}
+##' @author Daniel Sabanes Bove \email{daniel.sabanes_bove@@roche.com},
+##' Wai Yin Yeung \email{winnie.yeung@@roche.com},
 ##' Giuseppe Palermo \email{giuseppe.palermo@@roche.com},
 ##' Thomas Jaki \email{jaki.thomas@@gmail.com}
 ## @useDynLib crmPack

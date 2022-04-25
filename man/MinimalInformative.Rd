@@ -69,7 +69,7 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmin=0.2,
                                   threshmax=0.3,
                                   control=## for real case: leave out control 
-                                    list(max.time=0.1)) 
+                                    list(max.time=0.01)) 
 
 # Plotting the result
 matplot(x=coarseGrid,
