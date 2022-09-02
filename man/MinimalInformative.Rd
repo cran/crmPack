@@ -4,8 +4,15 @@
 \alias{MinimalInformative}
 \title{Construct a minimally informative prior}
 \usage{
-MinimalInformative(dosegrid, refDose, threshmin = 0.2, threshmax = 0.3,
-  probmin = 0.05, probmax = 0.05, ...)
+MinimalInformative(
+  dosegrid,
+  refDose,
+  threshmin = 0.2,
+  threshmax = 0.3,
+  probmin = 0.05,
+  probmax = 0.05,
+  ...
+)
 }
 \arguments{
 \item{dosegrid}{the dose grid}
@@ -69,7 +76,7 @@ minInfModel <- MinimalInformative(dosegrid = coarseGrid,
                                   threshmin=0.2,
                                   threshmax=0.3,
                                   control=## for real case: leave out control 
-                                    list(max.time=0.01)) 
+                                    list(max.time=0.1)) 
 
 # Plotting the result
 matplot(x=coarseGrid,
