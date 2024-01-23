@@ -15,7 +15,7 @@ pinvGamma(q, a, b, lower.tail = TRUE, log.p = FALSE)
 
 \item{lower.tail}{logical; if TRUE (default), probabilities are P[X  > x], otherwise, P[X <= x].}
 
-\item{logical;}{FLASE (default) if TRUE, probabilities/densities p are returned as log(p)}
+\item{log.p}{logical; if FALSE (default) return the probability, otherwise return the natural logarithm of the probability}
 }
 \description{
 Compute the distribution function of Inverse gamma distribution

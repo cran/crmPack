@@ -1,6 +1,6 @@
-9b071dd61815638118d637cbd24a5dbd *DESCRIPTION
+8c29f7a7d05ee84fc8e04757ecfdcf0a *DESCRIPTION
 7f14151cfd4e626d8f10d0833a8f2f38 *NAMESPACE
-a9c11210ee1d53fae79fbf7fb2c9d21f *NEWS.md
+aa9195baa48f2000d0b14646b6cac89c *NEWS.md
 5bc17c942ef3613dd9ea1b07a8a04403 *R/Data-class.R
 37d6176ab7374d1b96326731e9588057 *R/Data-methods.R
 51b0cbe01afbc0568a75b8ca3dda82ac *R/Design-class.R
@@ -20,15 +20,13 @@ bcf5c7f82f632f763fdc6922aa61fd90 *R/Simulations-methods.R
 e4d8a4cdf04c12b81b35e7621923fcf7 *R/helpers.R
 aeb8fb809b4900e2214830ffb031fb28 *R/mcmc.R
 9e497f92b20b9c823d5eb2e1856c0ad7 *R/writeModel.R
-0101abce99b534de69fc71044c9909f1 *README.md
-a19f00320e207de337e12e87bef23510 *build/vignette.rds
+ac0014bd58fdb433d924c6cb46fca9f8 *build/vignette.rds
 a7307852642c7b613eea2e4165179ef7 *inst/CITATION
-149163c1bd70c7601ac801584c136f41 *inst/crmPack.pdf
 bda97dc0ec073b0d98363db60afe48be *inst/doc/example.R
 df2d62aeca5444fa2e97339a9948a216 *inst/doc/example.Rnw
-55403c04706f58d1d56be8fe05efedab *inst/doc/example.pdf
-b98dd4f40d039a99fc75715646d81e08 *inst/doc/guidelines.Rmd
-fe1388766c14cbbc5453a3b1db7002e4 *inst/doc/guidelines.html
+afa141fa0f92833d863274e7b5958061 *inst/doc/example.pdf
+9dc67af835ba23732a0327607b4ebdee *inst/doc/guidelines.Rmd
+d67ccc2b47923d1c9150f1d465e3af9f *inst/doc/guidelines.html
 f35a724a7d40339378e842daa9a5b27c *man/AllModels-class.Rd
 523b8a19314b199fda6dcbe7aeb1ab8a *man/CohortSize-class.Rd
 f8b33b1071a94284cea3798572fc43a8 *man/CohortSizeConst-class.Rd
@@ -61,8 +59,8 @@ f004c4f34c73cd8eedf8d30243d67f2d *man/DualEndpoint-class.Rd
 ad97d4daf429fad17874e06b9f168f2d *man/DualEndpointBeta.Rd
 f880b96d4527852449561962a10d75d4 *man/DualEndpointEmax-class.Rd
 b3174d79478de5f44e060cab07563b9e *man/DualEndpointEmax.Rd
-84ba81e1283b0eee0528202e687817b6 *man/DualEndpointOld-class.Rd
-4b081f86ba7d524fd3d2358e37333d05 *man/DualEndpointRW-class.Rd
+35d16fee90905362c4dee350cb338e83 *man/DualEndpointOld-class.Rd
+2001b6f6052c9c1882034f7e1cd2b7ec *man/DualEndpointRW-class.Rd
 1a3fe8f2559c8c0893c08d1b38a16e92 *man/DualEndpointRW.Rd
 6e326fdb39d525c2821e068a0a25d7c8 *man/DualResponsesDesign-class.Rd
 7063684e1fbcc37765cb6249cdd999b5 *man/DualResponsesDesign.Rd
@@ -226,7 +224,7 @@ d1f791476cf2eb1018cf1d8897dfbcdc *man/noOverlap.Rd
 a3611c1ba26353712fef583c595c54a1 *man/or-Stopping-Stopping.Rd
 869d21738539469b7020ce49066e25a6 *man/or-Stopping-StoppingAny.Rd
 ba077e9b24491871ea9430cfebf19a04 *man/or-StoppingAny-Stopping.Rd
-e43ef172128088afb01e0b5dbf64b5a5 *man/pinvGamma.Rd
+2dd18cb48d41f26a45a9ba84aa6416f4 *man/pinvGamma.Rd
 cfd83a2b8694cf49730588c06d9241be *man/plot-Data-ModelTox-method.Rd
 298b6f3b67d3ad8b74758612bb6ed71d *man/plot-Data-missing-method.Rd
 7f083439c3585d601ca5f4dc3ad4f3bb *man/plot-DataDual-ModelEff-method.Rd
@@ -250,7 +248,7 @@ c684dbb6324cff8a2c888cf040bc306e *man/plotGain.Rd
 7f908a05f35e93e8a90171e73d07e14f *man/printVignette.Rd
 547958fa0861569b6e373cff3d09fa75 *man/prob.Rd
 272bb436d3fd2859f2d158f382c6820a *man/probit.Rd
-20fe4d4506d7e8183e59a02e9282cf10 *man/qinvGamma.Rd
+a62c74e1a921b0b72a13ea6c6486ecba *man/qinvGamma.Rd
 b62bdc4a7e1829388b44ba6a24c24532 *man/rinvGamma.Rd
 d7607f25894292ee4046a5630ac51a4d *man/safeInteger.Rd
 68116f88ed6aafebedd7fbcff4007655 *man/sampleSize.Rd
@@ -264,7 +262,7 @@ a1e8bcc2a26068de32e230dfb05b5f2b *man/show-PseudoSimulationsSummary-method.Rd
 3a7d4d2664c15d097f06eb33f5165067 *man/simulate-Design-method.Rd
 2e5c03bfe50b6ba810b894288c19f805 *man/simulate-DualDesign-method.Rd
 998a4e8ec8dd4443b3d04165af58fd63 *man/simulate-DualResponsesDesign-method.Rd
-fc5f18731f78a8158e441929627393ad *man/simulate-DualResponsesSamplesDesign-method.Rd
+3896ac758bcc5d42c0d75303bfe9b3af *man/simulate-DualResponsesSamplesDesign-method.Rd
 0429a47822d06e53a79bcd1297a0d76e *man/simulate-RuleDesign-method.Rd
 1d06359ef9233c07f112178926e4db15 *man/simulate-TDDesign-method.Rd
 ad2a04b1fdc6376742f9bbb71d03a754 *man/simulate-TDsamplesDesign-method.Rd
@@ -285,5 +283,5 @@ f9571074dfece56f31245a168949e69a *man/update-Effloglog-method.Rd
 80b0f2f5f02c226870ad177398e67de1 *man/writeModel.Rd
 df2d62aeca5444fa2e97339a9948a216 *vignettes/example.Rnw
 d52a5ee2dd6d7843ed25cb4c3881129c *vignettes/example.bib
-b98dd4f40d039a99fc75715646d81e08 *vignettes/guidelines.Rmd
+9dc67af835ba23732a0327607b4ebdee *vignettes/guidelines.Rmd
 7336885269de74e88f289194f7b44c62 *vignettes/tikzlibrarypositioning-plus.code.tex

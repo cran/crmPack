@@ -11,6 +11,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+Please note that this guideline is no longer up to date and will be revised shortly with the upcoming new CRAN release of the package.
+
 ## crmPack Development workflow (all developers)
   
 1. Pull changes from github before starting to work
@@ -33,9 +35,7 @@ editor_options:
   - then type "R CMD build crmPack"
   - Afterwards type "R CMD check --as-cran crmPack\_x.y.z.tar.gz" where you would replace x.y.z with the package version just built.
   - Correct any errors, warnings and if possible notes and iterate the check/correction cycle (also including numbers 1-3 above if Readme, vignettes or documentation/NAMESPACE were touched).
-  - Commit and push changes to git repository, to trigger Travis-CI testing:
-    + Check [https://travis-ci.org/Roche/crmPack](https://travis-ci.org/Roche/crmPack) to see if the package successfully builds
-    + Note that vignettes are not checked here (since they take too long to build)
+  - Commit and push changes to git repository, to trigger GitHub actions
 6. If this release is for CRAN, then submit the package to CRAN:
   - Go to [https://cran.r-project.org/submit.html](https://cran.r-project.org/submit.html)
   - Enter your name, email address

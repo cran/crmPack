@@ -1,3 +1,7 @@
+# Version 1.0.4
+
+* Fix minor documentation formatting errors.
+
 # Version 1.0.0
 
 * Reference JSS publication.
@@ -7,8 +11,7 @@
 * By default only use 5 cores and not all available cores on a machine. Note that
   this value can also be changed by the user.
   
-* Change of maintainer
-
+* Change of maintainer.
 
 # Version 0.2.8
 

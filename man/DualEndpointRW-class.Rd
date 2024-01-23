@@ -36,7 +36,7 @@ model.
 \describe{
 \item{\code{sigma2betaW}}{Contains the prior variance factor of the random walk
 prior for the biomarker model. If it is not a single number, it can also
-contain a vector with elements \code{a} and {b} for the inverse-gamma prior
+contain a vector with elements \code{a} and \code{b} for the inverse-gamma prior
 on \code{sigma2betaW}.}
 
 \item{\code{useRW1}}{for specifying the random walk prior on the biomarker level: if
