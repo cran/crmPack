@@ -37,20 +37,14 @@
 ##' @return Nothing, but as a side effect, the model file is written
 ##'
 ##' @export
-##' @author original idea by Jouni Kerman, modified by Uwe Ligges, DSB removed S
-##' Plus part
+##' @author original idea by Jouni Kerman, modified by Uwe Ligges,
+##'   Daniel Sabanes Bove removed S-PLUS part
 writeModel <- function(model, con = "model.bug", digits = 5)
 {
-    if (is.R()){
-        model.text <- c("model", replaceScientificNotationR(body(model),
-                                                            digits = digits))
-                                        # "[\+\-]?\d*\.?[Ee]?[\+\-]?\d*"
-    } else {
-        ## In S-PLUS the source code of a function can be obtained with
-        ## as.character(function_name).
-        ## This omits the "function_name <- function()" piece
-        model.text <- paste("model", as.character(model))
-    }
+    model.text <- c(
+      "model",
+      replaceScientificNotationR(body(model), digits = digits)
+    )                                      
     model.text <- gsub("%_%", "", model.text)
     writeLines(model.text, con = con)
 }

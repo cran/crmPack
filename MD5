@@ -1,6 +1,6 @@
-8c29f7a7d05ee84fc8e04757ecfdcf0a *DESCRIPTION
+58ae31c85e216ff3b58ad8ae2bffef89 *DESCRIPTION
 7f14151cfd4e626d8f10d0833a8f2f38 *NAMESPACE
-aa9195baa48f2000d0b14646b6cac89c *NEWS.md
+4a164888072add7485e656a43d59a16e *NEWS.md
 5bc17c942ef3613dd9ea1b07a8a04403 *R/Data-class.R
 37d6176ab7374d1b96326731e9588057 *R/Data-methods.R
 51b0cbe01afbc0568a75b8ca3dda82ac *R/Design-class.R
@@ -19,14 +19,14 @@ bcf5c7f82f632f763fdc6922aa61fd90 *R/Simulations-methods.R
 12617ce14c3bae405c420e4fe59dac2f *R/fromQuantiles.R
 e4d8a4cdf04c12b81b35e7621923fcf7 *R/helpers.R
 aeb8fb809b4900e2214830ffb031fb28 *R/mcmc.R
-9e497f92b20b9c823d5eb2e1856c0ad7 *R/writeModel.R
-ac0014bd58fdb433d924c6cb46fca9f8 *build/vignette.rds
+cde004486167d0fffc340ea225754432 *R/writeModel.R
+6d5fbbbe28351ef98691adcaceece08b *build/vignette.rds
 a7307852642c7b613eea2e4165179ef7 *inst/CITATION
 bda97dc0ec073b0d98363db60afe48be *inst/doc/example.R
 df2d62aeca5444fa2e97339a9948a216 *inst/doc/example.Rnw
-afa141fa0f92833d863274e7b5958061 *inst/doc/example.pdf
+2918973858b1a32e267e46d21a926163 *inst/doc/example.pdf
 9dc67af835ba23732a0327607b4ebdee *inst/doc/guidelines.Rmd
-d67ccc2b47923d1c9150f1d465e3af9f *inst/doc/guidelines.html
+584fd12f3992c8f241c93a763e41209d *inst/doc/guidelines.html
 f35a724a7d40339378e842daa9a5b27c *man/AllModels-class.Rd
 523b8a19314b199fda6dcbe7aeb1ab8a *man/CohortSize-class.Rd
 f8b33b1071a94284cea3798572fc43a8 *man/CohortSizeConst-class.Rd
@@ -280,7 +280,7 @@ c4aa62e4775dbb0463bbb5b776c71308 *man/update-DataParts-method.Rd
 9b584e461b397c159aae610e63fe5179 *man/update-EffFlexi-method.Rd
 f9571074dfece56f31245a168949e69a *man/update-Effloglog-method.Rd
 5f5e9ba0322640febd9bf012795593c6 *man/update-LogisticIndepBeta-method.Rd
-80b0f2f5f02c226870ad177398e67de1 *man/writeModel.Rd
+bf8587845e584ad8445be4d593c8e231 *man/writeModel.Rd
 df2d62aeca5444fa2e97339a9948a216 *vignettes/example.Rnw
 d52a5ee2dd6d7843ed25cb4c3881129c *vignettes/example.bib
 9dc67af835ba23732a0327607b4ebdee *vignettes/guidelines.Rmd

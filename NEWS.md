@@ -1,3 +1,7 @@
+# Version 1.0.5
+
+* Remove S-PLUS part from `writeModel()` to avoid using the deprecated `is.R()` function.
+
 # Version 1.0.4
 
 * Fix minor documentation formatting errors.

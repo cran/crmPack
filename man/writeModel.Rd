@@ -34,6 +34,6 @@ line \code{invisible()} to the end of the model definition. This line will be
 removed before the BUGS code is saved.
 }
 \author{
-original idea by Jouni Kerman, modified by Uwe Ligges, DSB removed S
-Plus part
+original idea by Jouni Kerman, modified by Uwe Ligges,
+Daniel Sabanes Bove removed S-PLUS part
 }

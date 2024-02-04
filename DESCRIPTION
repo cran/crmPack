@@ -16,7 +16,7 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 1.0.4
+Version: 1.0.5
 Copyright: F. Hoffmann-La Roche Ltd
 URL: https://github.com/roche/crmPack
 BugReports: https://github.com/roche/crmPack/issues
@@ -40,5 +40,5 @@ Author: Daniel Sabanes Bove [aut, cre],
   Thomas Jaki [aut]
 Maintainer: Daniel Sabanes Bove <daniel.sabanes_bove@roche.com>
 Repository: CRAN
-Packaged: 2024-01-23 19:50:16 UTC; rstudio
-Date/Publication: 2024-01-23 20:12:46 UTC
+Packaged: 2024-02-04 20:38:10 UTC; sabanesd
+Date/Publication: 2024-02-04 21:20:02 UTC
