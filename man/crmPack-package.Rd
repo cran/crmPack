@@ -15,7 +15,7 @@ Journal of Statistical Software, 89(10), 1-22.
 doi:10.18637/jss.v089.i10 (URL: http://doi.org/10.18637/jss.v089.i10).
 }
 \author{
-Daniel Sabanes Bove \email{daniel.sabanes_bove@roche.com},
+Daniel Sabanes Bove \email{daniel.sabanes_bove@rconis.com},
 Wai Yin Yeung \email{winnie.yeung@roche.com},
 Giuseppe Palermo \email{giuseppe.palermo@roche.com},
 Thomas Jaki \email{jaki.thomas@gmail.com}

@@ -3,7 +3,7 @@ License: GPL (>= 2)
 Title: Object-Oriented Implementation of CRM Designs
 LazyLoad: yes
 Authors@R: c(
-  person("Daniel", "Sabanes Bove", email = "daniel.sabanes_bove@roche.com", role = c("aut", "cre")),
+  person("Daniel", "Sabanes Bove", email = "daniel.sabanes_bove@rconis.com", role = c("aut", "cre")),
   person("Wai", "Yin Yeung", email = "winnie.yeung@roche.com", role = c("aut")),
   person("Giuseppe", "Palermo", email = "giuseppe.palermo@roche.com", role = c("aut")),
   person("Thomas", "Jaki", email = "jaki.thomas@gmail.com", role = c("aut")))
@@ -16,10 +16,10 @@ Description: Implements a wide range of model-based dose
     designs for comparison or models with non-Bayesian estimation. The whole
     package is written in a modular form in the S4 class system, making it very
     flexible for adaptation to new models, escalation or stopping rules.
-Version: 1.0.5
+Version: 1.0.6
 Copyright: F. Hoffmann-La Roche Ltd
-URL: https://github.com/roche/crmPack
-BugReports: https://github.com/roche/crmPack/issues
+URL: https://github.com/openpharma/crmPack
+BugReports: https://github.com/openpharma/crmPack/issues
 VignetteBuilder: knitr
 Depends: R (>= 3.0.0), ggplot2 (>= 2.0.0), graphics
 Imports: methods, grid, gridExtra, GenSA, mvtnorm, parallel, rjags,
@@ -34,11 +34,11 @@ Collate: 'helpers.R' 'Data-class.R' 'Data-methods.R' 'Rules-class.R'
 RoxygenNote: 7.2.1
 Encoding: UTF-8
 NeedsCompilation: no
+Packaged: 2024-06-26 14:04:16 UTC; sabanesd
 Author: Daniel Sabanes Bove [aut, cre],
   Wai Yin Yeung [aut],
   Giuseppe Palermo [aut],
   Thomas Jaki [aut]
-Maintainer: Daniel Sabanes Bove <daniel.sabanes_bove@roche.com>
+Maintainer: Daniel Sabanes Bove <daniel.sabanes_bove@rconis.com>
 Repository: CRAN
-Packaged: 2024-02-04 20:38:10 UTC; sabanesd
-Date/Publication: 2024-02-04 21:20:02 UTC
+Date/Publication: 2024-06-26 15:00:14 UTC

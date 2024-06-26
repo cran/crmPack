@@ -1,3 +1,7 @@
+# Version 1.0.6
+
+* Change maintainer's email address.
+
 # Version 1.0.5
 
 * Remove S-PLUS part from `writeModel()` to avoid using the deprecated `is.R()` function.

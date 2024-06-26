@@ -48,7 +48,7 @@ Please note that this guideline is no longer up to date and will be revised shor
   - Run "pkgdown::build\_site()" in the R console to build the website
   - Commit and push changes to git repository to release the new website
 8. Create a tag for this release:
-  - Go to [https://github.com/roche/crmPack](https://github.com/roche/crmPack) and click on "releases" (top line, next to "commits", "branches" on the left and "contributor" on the right)
+  - Go to [https://github.com/openpharma/crmPack](https://github.com/openpharma/crmPack) and click on "releases" (top line, next to "commits", "branches" on the left and "contributor" on the right)
   - Click "Create a new release"
   - Type a version number for your release – this should be "v" followed immediately without blank by the package version number "x.y.z", i.e. e.g. "v1.0.3"
   - Select the master branch.
