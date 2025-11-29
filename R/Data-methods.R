@@ -1,439 +1,1038 @@
-#####################################################################################
-## Author: Daniel Sabanes Bove [sabanesd *a*t* roche *.* com],
-##         Wai Yin Yeung [ w *.*yeung1 *a*t* lancaster *.* ac *.* uk]
-## Project: Object-oriented implementation of CRM designs
-##
-## Time-stamp: <[Data-methods.R] by DSB Mon 11/05/2015 17:43>
-##
-## Description:
-## Methods for handling the data. Plot ideas taken from bcrm package.
-##
-## History:
-## 30/01/2014   file creation
-## 06/02/2014   add method for conversion to list
-## 17/02/2014   add update methods
-## 21/07/2015   add plots using data and pseudo models
-###################################################################################
+#' @include helpers_data.R
+
+# plot ----
+
+## Data ----
+
+#' Plot Method for the [`Data`] Class
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that creates a plot for [`Data`] object.
+#'
+#' @return The [`ggplot2`] object.
+#'
+#' @aliases plot-Data
+#' @rdname plot-Data
+#' @export
+#' @example examples/Data-method-plot.R
+#'
+setMethod(
+  f = "plot",
+  signature = signature(x = "Data", y = "missing"),
+  definition = function(x, y, blind = FALSE, legend = TRUE, ...) {
+    assert_flag(blind)
+    assert_flag(legend)
+    h_plot_data_dataordinal(x, blind, legend, ...)
+  }
+)
+
+#' Plot Method for the [`DataOrdinal`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that creates a plot for [`DataOrdinal`] object.
+#'
+#' @param x (`DataOrdinal`)\cr object we want to plot.
+#' @param y (`missing`)\cr missing object, for compatibility with the generic
+#'   function.
+#' @param blind (`flag`)\cr indicates whether to blind the data.
+#'   If `TRUE`, then placebo subjects are reported at the same level
+#'   as the active dose level in the corresponding cohort,
+#'   and DLTs are always assigned to the first subjects in a cohort.
+#' @param legend (`flag`)\cr whether the legend should be added.
+#' @param tox_labels (`named list of character`)\cr the labels of the toxicity
+#' categories.
+#' @param tox_shapes (`names list of integers`)\cr the symbols used to identify
+#' the toxicity categories.
+#' @param ... not used.
+#'
+#' @note With more than 9 toxicity categories, toxicity symbols must be
+#' specified manually.\cr With more than 5 toxicity categories, toxicity labels
+#' must be specified manually.
+#'
+#' @return The [`ggplot2`] object.
+#'
+#' @rdname plot-Data
+#' @export
+#' @example examples/DataOrdinal-method-plot.R
+setMethod(
+  f = "plot",
+  signature = signature(x = "DataOrdinal", y = "missing"),
+  definition = function(
+    x,
+    y,
+    blind = FALSE,
+    legend = TRUE,
+    tox_labels = NULL,
+    tox_shapes = NULL,
+    ...
+  ) {
+    if (is.null(tox_shapes)) {
+      assert_true(length(x@yCategories) <= 9)
+      tox_shapes <- c(17L, 16L, 15L, 18L, 0L:2L, 5L, 6L)[seq_along(
+        x@yCategories
+      )]
+      names(tox_shapes) <- names(x@yCategories)
+    }
+    if (is.null(tox_labels)) {
+      assert_true(length(x@yCategories) <= 5)
+      tox_labels <- switch(
+        length(x@yCategories),
+        c("black"),
+        c("black", "red"),
+        c("black", "orange", "red"),
+        c("black", "green", "orange", "red"),
+        c("black", "green", "yellow", "orange", "red")
+      )
+      names(tox_labels) <- names(x@yCategories)
+    }
+    h_plot_data_dataordinal(
+      x,
+      blind,
+      legend,
+      tox_labels = tox_labels,
+      tox_shapes = tox_shapes,
+      ...
+    )
+  }
+)
+
+## DataDual ----
+
+#' Plot Method for the [`DataDual`] Class
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that creates a plot for [`DataDual`] object.
+#'
+#' @param x (`DataDual`)\cr object we want to plot.
+#' @param y (`missing`)\cr missing object, for compatibility with the generic
+#'   function.
+#' @param blind (`flag`)\cr indicates whether to blind the data.
+#'   If `TRUE`, then placebo subjects are reported at the same level
+#'   as the active dose level in the corresponding cohort,
+#'   and DLTs are always assigned to the first subjects in a cohort.
+#' @param ... passed to the first inherited method `plot` after this current
+#'   method.
+#'
+#' @return The [`ggplot2`] object.
+#'
+#' @aliases plot-DataDual
+#' @export
+#' @example examples/Data-method-plot-DataDual.R
+#'
+setMethod(
+  f = "plot",
+  signature = signature(x = "DataDual", y = "missing"),
+  definition = function(x, y, blind = FALSE, ...) {
+    assert_flag(blind)
+
+    # Call the superclass method, to get the first plot.
+    plot1 <- callNextMethod(x, blind = blind, legend = FALSE, ...)
+
+    # Create the second, biomarker plot.
+    df <- h_plot_data_df(x, blind, biomarker = x@w)
+
+    plot2 <- ggplot(df, aes(x = dose, y = biomarker)) +
+      geom_point(aes(shape = toxicity, colour = toxicity), size = 3) +
+      scale_colour_manual(
+        name = "Toxicity",
+        values = c(Yes = "red", No = "black")
+      ) +
+      scale_shape_manual(name = "Toxicity", values = c(Yes = 17, No = 16)) +
+      xlab("Dose Level") +
+      ylab("Biomarker")
+
+    if (!blind) {
+      plot2 <- plot2 +
+        geom_text(
+          aes(
+            y = biomarker + 0.02 * diff(range(biomarker)),
+            label = patient,
+            size = 2
+          ),
+          data = df,
+          hjust = 0,
+          vjust = 0.5,
+          angle = 90,
+          colour = "black",
+          show.legend = FALSE
+        )
+    }
+
+    # Arrange both plots side by side.
+    gridExtra::arrangeGrob(plot1, plot2, ncol = 2)
+  }
+)
+
+## DataDA ----
+
+#' Plot Method for the [`DataDA`] Class
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that creates a plot for [`DataDA`] object.
+#'
+#' @param x (`DataDA`)\cr object we want to plot.
+#' @param y (`missing`)\cr missing object, for compatibility with the generic
+#'   function.
+#' @param blind (`flag`)\cr indicates whether to blind the data.
+#'   If `TRUE`, then placebo subjects are reported at the same level
+#'   as the active dose level in the corresponding cohort,
+#'   and DLTs are always assigned to the first subjects in a cohort.
+#' @param ... passed to the first inherited method `plot` after this current
+#'   method.
+#'
+#' @return The [`ggplot2`] object.
+#'
+#' @aliases plot-DataDA
+#' @export
+#' @example examples/Data-method-plot-DataDA.R
+#'
+setMethod(
+  f = "plot",
+  signature = signature(x = "DataDA", y = "missing"),
+  definition = function(x, y, blind = FALSE, ...) {
+    assert_flag(blind)
+
+    # Call the superclass method, to get the first plot.
+    plot1 <- callNextMethod(x, blind = blind, legend = FALSE, ...)
+
+    # Prepare data set for the second, time plot.
+    df <- h_plot_data_df(x, blind, u = x@u, t0 = x@t0)
+    df$censored <- ifelse(df$u < x@Tmax & df$toxicity == 0, 1, 0)
+    df$tend <- df$t0 + df$u # `tend` stands for `time end`
+    df$t0_case <- "Start"
+    df$tend_case <- ifelse(
+      df$toxicity == "Yes",
+      "Yes",
+      ifelse(df$censored, "Censored", "No")
+    )
+
+    # Build plot object.
+    plot2 <- ggplot(df, aes(x = t0, y = patient)) +
+      geom_segment(aes(xend = tend, yend = patient)) +
+      geom_point(aes(shape = t0_case, colour = t0_case), size = 3) +
+      geom_point(
+        aes(x = tend, shape = tend_case, colour = tend_case),
+        size = 3
+      ) +
+      scale_colour_manual(
+        name = "Toxicity",
+        values = c(
+          Yes = "red",
+          No = "black",
+          Start = "black",
+          Censored = "black"
+        )
+      ) +
+      scale_shape_manual(
+        name = "Toxicity",
+        values = c(Yes = 17, No = 16, Start = 1, Censored = 4)
+      ) +
+      scale_y_continuous(breaks = df$patient, minor_breaks = NULL) +
+      xlab("Time") +
+      ylab("Patient")
+
+    plot2 <- plot2 +
+      h_plot_data_cohort_lines(df$cohort, placebo = x@placebo, vertical = FALSE)
+
+    if (!blind) {
+      plot2 <- plot2 +
+        geom_text(
+          aes(label = ID, size = 2),
+          size = 3,
+          hjust = 1.5,
+          vjust = 0,
+          angle = 0,
+          colour = "black",
+          show.legend = FALSE
+        )
+    }
+
+    # Arrange both plots side by side.
+    gridExtra::arrangeGrob(plot1, plot2, ncol = 1)
+  }
+)
+
+# update ----
+
+## Data ----
+
+#' Updating `Data` Objects
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that updates existing [`Data`] object with new data.
+#'
+#' @param object (`Data`)\cr object you want to update.
+#' @param x (`number`)\cr the dose level (one level only!).
+#' @param y (`integer`)\cr the DLT vector (0/1 vector) for all patients in this
+#'   cohort. You can also supply `numeric` vectors, but these will then be
+#'   converted to `integer` internally.
+#' @param ID (`integer`)\cr the patient IDs.
+#'   You can also supply `numeric` vectors, but these will then be converted to
+#'   `integer` internally.
+#' @param new_cohort (`flag`)\cr if `TRUE` (default) the new data are assigned
+#'   to a new cohort.
+#' @param check (`flag`)\cr whether the validation of the updated object should
+#'   be conducted. See details below.
+#' @param ... not used.
+#'
+#' @return The new, updated [`Data`] object.
+#'
+#' @details The current implementation of this `update` method allows for
+#'   updating the `Data` class object by adding a single dose level `x` only.
+#'   However, there might be some use cases where the new cohort to be added
+#'   contains a placebo and active dose. Hence, such update would need to be
+#'   performed iteratively by calling the `update` method twice. For example,
+#'   in the first call a user can add a placebo, and then in the second call,
+#'   an active dose. Since having a cohort with placebo only is not allowed,
+#'   the `update` method would normally throw the error when attempting to add
+#'   a placebo in the first call. To allow for such updates, the `check`
+#'   parameter should be then set to `FALSE` for that first call.
+#'
+#' @aliases update-Data
+#' @export
+#' @example examples/Data-method-update.R
+#'
+setMethod(
+  f = "update",
+  signature = signature(object = "Data"),
+  definition = function(
+    object,
+    x,
+    y,
+    ID = length(object@ID) + seq_along(y),
+    new_cohort = TRUE,
+    check = TRUE,
+    ...
+  ) {
+    assert_numeric(x, min.len = 0, max.len = 1)
+    assert_integerish(y, lower = 0, upper = 1, any.missing = FALSE)
+    assert_integerish(ID, len = length(y), any.missing = FALSE)
+    assert_disjunct(object@ID, ID)
+    assert_flag(new_cohort)
+    assert_flag(check)
+
+    # How many additional patients, ie. the length of the update.
+    n <- length(y)
+
+    # Which grid level is the dose?
+    gridLevel <- match_within_tolerance(x, object@doseGrid)
+    object@xLevel <- c(object@xLevel, rep(gridLevel, n))
+
+    # Add dose.
+    object@x <- c(object@x, rep(as.numeric(x), n))
+
+    # Add DLT data.
+    object@y <- c(object@y, as.integer(y))
+
+    # Add ID.
+    object@ID <- c(object@ID, as.integer(ID))
+
+    # Add cohort number.
+    new_cohort_id <- if (object@nObs == 0) {
+      1L
+    } else {
+      tail(object@cohort, 1L) + ifelse(new_cohort, 1L, 0L)
+    }
+    object@cohort <- c(object@cohort, rep(new_cohort_id, n))
+
+    # Increment sample size.
+    object@nObs <- object@nObs + n
+
+    if (check) {
+      validObject(object)
+    }
+
+    object
+  }
+)
+
+## DataOrdinal ----
+
+#' Updating `DataOrdinal` Objects
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that updates existing [`DataOrdinal`] object with new data.
+#'
+#' @param object (`DataOrdinal`)\cr object you want to update.
+#' @param x (`number`)\cr the dose level (one level only!).
+#' @param y (`integer`)\cr the vector of toxicity grades (0, 1, 2, ...) for all
+#' patients in this cohort. You can also supply `numeric` vectors, but these
+#' will then be converted to `integer` internally.
+#' @param ID (`integer`)\cr the patient IDs.
+#'   You can also supply `numeric` vectors, but these will then be converted to
+#'   `integer` internally.
+#' @param new_cohort (`flag`)\cr if `TRUE` (default) the new data are assigned
+#'   to a new cohort.
+#' @param check (`flag`)\cr whether the validation of the updated object should
+#'   be conducted. See Details below.
+#' @param ... not used.
+#'
+#' @return The new, updated [`DataOrdinal`] object.
+#'
+#' @details The current implementation of this `update` method allows for
+#'   updating the `DataOrdinal` class object by adding a single dose level `x` only.
+#'   However, there might be some use cases where the new cohort to be added
+#'   contains a placebo and active dose. Hence, such update would need to be
+#'   performed iteratively by calling the `update` method twice. For example,
+#'   in the first call a user can add a placebo, and then in the second call,
+#'   an active dose. Since having a cohort with placebo only is not allowed,
+#'   the `update` method would normally throw the error when attempting to add
+#'   a placebo in the first call. To allow for such updates, the `check`
+#'   parameter should be then set to `FALSE` for that first call.
+#'
+#' @aliases update-DataOrdinal
+#' @export
+#' @example examples/DataOrdinal-method-update.R
+#'
+setMethod(
+  f = "update",
+  signature = signature(object = "DataOrdinal"),
+  definition = function(
+    object,
+    x,
+    y,
+    ID = length(object@ID) + seq_along(y),
+    new_cohort = TRUE,
+    check = TRUE,
+    ...
+  ) {
+    assert_numeric(x, min.len = 0, max.len = 1)
+    assert_integerish(
+      y,
+      lower = 0,
+      upper = length(object@yCategories) - 1,
+      any.missing = FALSE
+    )
+    assert_integerish(ID, unique = TRUE, any.missing = FALSE, len = length(y))
+    assert_disjunct(object@ID, ID)
+    assert_flag(new_cohort)
+    assert_flag(check)
+
+    # How many additional patients, ie. the length of the update.
+    n <- length(y)
+
+    # Which grid level is the dose?
+    gridLevel <- match_within_tolerance(x, object@doseGrid)
+    object@xLevel <- c(object@xLevel, rep(gridLevel, n))
+
+    # Add dose.
+    object@x <- c(object@x, rep(as.numeric(x), n))
+
+    # Add DLT data.
+    object@y <- c(object@y, as.integer(y))
+
+    # Add ID.
+    object@ID <- c(object@ID, as.integer(ID))
+
+    # Add cohort number.
+    new_cohort_id <- if (object@nObs == 0) {
+      1L
+    } else {
+      tail(object@cohort, 1L) + ifelse(new_cohort, 1L, 0L)
+    }
+    object@cohort <- c(object@cohort, rep(new_cohort_id, n))
+
+    # Increment sample size.
+    object@nObs <- object@nObs + n
+
+    if (check) {
+      validObject(object)
+    }
+
+    object
+  }
+)
+
+## DataParts ----
+
+#' Updating `DataParts` Objects
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that updates existing [`DataParts`] object with new data.
+#'
+#' @param object (`DataParts`)\cr object you want to update.
+#' @inheritParams update,Data-method
+#' @param ... further arguments passed to `Data` update method [`update-Data`].
+#' @param check (`flag`)\cr whether the validation of the updated object
+#'   should be conducted. See help for [`update-Data`] for more details
+#'   on the use case of this parameter.
+#'
+#' @return The new, updated [`DataParts`] object.
+#'
+#' @aliases update-DataParts
+#' @export
+#' @example examples/Data-method-update-DataParts.R
+#'
+setMethod(
+  f = "update",
+  signature = signature(object = "DataParts"),
+  definition = function(object, x, y, ..., check = TRUE) {
+    assert_numeric(y)
+    assert_flag(check)
+
+    # Update slots corresponding to `Data` class.
+    object <- callNextMethod(object = object, x = x, y = y, ..., check = FALSE)
+
+    # Update the part information.
+
+    object@part <- c(object@part, rep(object@nextPart, length(y)))
+
+    # Decide which part the next cohort will belong to:
+    # only if the `nextPart` was 1, it can potentially be required
+    # to change it to 2 (once it is 2, it stays).
+    if (object@nextPart == 1L) {
+      # If there was a DLT in one of the cohorts,
+      # or if the current dose was the highest from part 1.
+      if (any(object@y == 1L) || x == max(object@part1Ladder)) {
+        # Then this closes part 1 and the next cohort will be from part 2.
+        object@nextPart <- 2L
+      }
+    }
+
+    if (check) {
+      validObject(object)
+    }
+
+    object
+  }
+)
+
+## DataDual ----
+
+#' Updating `DataDual` Objects
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that updates existing [`DataDual`] object with new data.
+#'
+#' @param object (`DataDual`)\cr object you want to update.
+#' @param w (`numeric`)\cr the continuous vector of biomarker values
+#'   for all the patients in this update.
+#' @param ... further arguments passed to `Data` update method [`update-Data`].
+#' @param check (`flag`)\cr whether the validation of the updated object
+#'   should be conducted. See help for [`update-Data`] for more details
+#'   on the use case of this parameter.
+#'
+#' @return The new, updated [`DataDual`] object.
+#'
+#' @aliases update-DataDual
+#' @export
+#' @example examples/Data-method-update-DataDual.R
+#'
+setMethod(
+  f = "update",
+  signature = signature(object = "DataDual"),
+  definition = function(object, w, ..., check = TRUE) {
+    assert_numeric(w)
+    assert_flag(check)
+
+    # Update slots corresponding to `Data` class.
+    object <- callNextMethod(object = object, ..., check = FALSE)
+
+    # Update the biomarker information.
+    object@w <- c(object@w, w)
+
+    if (check) {
+      validObject(object)
+    }
+
+    object
+  }
+)
+
+## DataDA ----
+
+#' Updating `DataDA` Objects
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that updates existing [`DataDA`] object with new data.
+#'
+#' @note This function is capable of not only adding new patients but also
+#'   updates existing ones with respect to `y`, `t0`, `u` slots.
+#'
+#' @param object (`DataDA`)\cr object you want to update.
+#' @param u (`numeric`)\cr the new DLT free survival times for all patients,
+#'   i.e. for existing patients in the `object` as well as for new patients.
+#' @param t0 (`numeric`)\cr the time that each patient starts DLT observation
+#'   window. This parameter covers all patients, i.e. existing patients in the
+#'   `object` as well as for new patients.
+#' @param trialtime (`number`)\cr current time in the trial, i.e. a followup
+#'   time.
+#' @param y (`numeric`)\cr the new DLTs for all patients, i.e. for existing
+#'   patients in the `object` as well as for new patients.
+#' @param ... further arguments passed to `Data` update method [`update-Data`].
+#'   These are used when there are new patients to be added to the cohort.
+#' @param check (`flag`)\cr whether the validation of the updated object
+#'   should be conducted. See help for [`update-Data`] for more details
+#'   on the use case of this parameter.
+#'
+#' @return The new, updated [`DataDA`] object.
+#'
+#' @aliases update-DataDA
+#' @export
+#' @example examples/Data-method-update-DataDA.R
+#'
+setMethod(
+  f = "update",
+  signature = signature(object = "DataDA"),
+  definition = function(object, u, t0, trialtime, y, ..., check = TRUE) {
+    assert_flag(check)
+    assert_numeric(y, lower = 0, upper = 1)
+    assert_true(length(y) == 0 || length(y) >= object@nObs)
+    assert_numeric(u, lower = 0, len = length(y))
+    assert_numeric(t0, lower = 0, len = length(y))
+    assert_integerish(y * (trialtime >= t0 + u))
+    if (length(y) > 0) {
+      assert_number(trialtime, lower = max(c(object@t0, t0)))
+    }
+
+    # How many additional patients.
+    n <- max(length(y) - object@nObs, 0L)
+
+    # Update slots corresponding to `Data` class.
+    object <- callNextMethod(
+      object = object,
+      y = y[object@nObs + seq_len(n)], # Empty vector when n = 0.
+      ...,
+      check = FALSE
+    )
+
+    # DLT will be observed once the followup time >= the time to DLT
+    # and y = 1 at the same time.
+    object@y <- as.integer(y * (trialtime >= t0 + u))
+
+    # Update DLT free survival time.
+    object@u <- apply(rbind(u, trialtime - t0), 2, min)
+
+    # Update t0.
+    object@t0 <- t0
+
+    if (check) {
+      validObject(object)
+    }
+
+    object
+  }
+)
+
+# getEff ----
+
+## generic ----
+
+#' Extracting Efficacy Responses for Subjects Categorized by the DLT
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A method that extracts efficacy responses for subjects and categorizes it
+#' with respect to DLT, i.e. DLT or no DLT. The efficacy responses
+#' are reported together with their corresponding dose levels.
+#'
+#' @param object (`DataDual`)\cr object from which the responses and dose levels
+#'   are extracted.
+#' @param ... further arguments passed to class-specific methods.
+#' @return `list` with efficacy responses categorized by the DLT value.
+#' @export
+#'
+setGeneric(
+  name = "getEff",
+  def = function(object, ...) {
+    standardGeneric("getEff")
+  },
+  valueClass = "list"
+)
+
+## DataDual ----
+
+#' @rdname getEff
+#'
+#' @param no_dlt (`flag`)\cr should only no DLT responses be returned? Otherwise,
+#'   all responses are returned.
+#'
+#' @aliases getEff-DataDual
+#' @example examples/Data-method-getEff.R
+#'
+setMethod(
+  f = "getEff",
+  signature = signature(object = "DataDual"),
+  definition = function(object, no_dlt = FALSE) {
+    assert_flag(no_dlt)
+
+    is_dlt <- object@y == 1L
+    is_no_dlt <- !is_dlt
+
+    eff <- if (any(is_no_dlt)) {
+      list(x_no_dlt = object@x[is_no_dlt], w_no_dlt = object@w[is_no_dlt])
+    } else {
+      list(x_no_dlt = NULL, w_no_dlt = NULL)
+    }
+
+    if (!no_dlt) {
+      eff_dlt <- if (any(is_dlt)) {
+        list(x_dlt = object@x[is_dlt], w_dlt = object@w[is_dlt])
+      } else {
+        list(x_dlt = NULL, w_dlt = NULL)
+      }
+      eff <- c(eff, eff_dlt)
+    }
+    eff
+  }
+)
+
+# ngrid ----
+
+## generic ----
+
+#' Number of Doses in Grid
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A function that gets the number of doses in grid. User can choose whether
+#' the placebo dose (if any) should be counted or not.
+#'
+#' @param object (`Data`)\cr object with dose grid.
+#' @param ignore_placebo (`flag`)\cr should placebo dose (if any) not be counted?
+#' @param ... further arguments passed to class-specific methods.
+#' @return `integer` the number of doses in grid.
+#' @export
+#'
+setGeneric(
+  name = "ngrid",
+  def = function(object, ignore_placebo = TRUE, ...) {
+    assert_flag(ignore_placebo)
+    standardGeneric("ngrid")
+  },
+  valueClass = "integer"
+)
+
+## Data ----
+
+#' @rdname ngrid
+#'
+#' @aliases ngrid-Data
+#' @example examples/Data-method-ngrid.R
+#'
+setMethod(
+  f = "ngrid",
+  signature = signature(object = "Data"),
+  definition = function(object, ignore_placebo, ...) {
+    if (ignore_placebo && object@placebo) {
+      max(object@nGrid - 1L, 0L)
+    } else {
+      object@nGrid
+    }
+  }
+)
+
+# dose_grid_range ----
+
+## generic ----
+
+#' Getting the Dose Grid Range
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' A function that returns a vector of length two with the minimum and maximum
+#' dose in a grid. It returns `c(-Inf, Inf)` if the range cannot be determined,
+#' which happens when the dose grid is empty. User can choose whether the
+#' placebo dose (if any) should be counted or not.
+#'
+#' @param object (`Data`)\cr object with dose grid.
+#' @param ... further arguments passed to class-specific methods.
+#' @return A `numeric` vector containing the minimum and maximum of all the
+#'   doses in a grid or `c(-Inf, Inf)`.
+#'
+#' @export
+#'
+setGeneric(
+  name = "dose_grid_range",
+  def = function(object, ...) {
+    standardGeneric("dose_grid_range")
+  },
+  valueClass = "numeric"
+)
+
+## Data ----
+
+#' @rdname dose_grid_range
+#'
+#' @param ignore_placebo (`flag`)\cr should placebo dose (if any) not be counted?
+#'
+#' @aliases dose_grid_range-Data
+#' @example examples/Data-method-dose_grid_range.R
+#'
+setMethod(
+  f = "dose_grid_range",
+  signature = signature(object = "Data"),
+  definition = function(object, ignore_placebo = TRUE) {
+    h_obtain_dose_grid_range(object, ignore_placebo)
+  }
+)
 
 
-## ============================================================
+## DataOrdinal ----
 
-## --------------------------------------------------
-## Converting Data object to list
-## --------------------------------------------------
+#' @include Data-methods.R
+#' @rdname dose_grid_range
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' @param ignore_placebo (`flag`)\cr should placebo dose (if any) not be counted?
+#'
+#' @aliases dose_grid_range-Data
+#' @example examples/DataOrdinal-method-dose_grid_range.R
+#'
+setMethod(
+  f = "dose_grid_range",
+  signature = signature(object = "DataOrdinal"),
+  definition = function(object, ignore_placebo = TRUE) {
+    h_obtain_dose_grid_range(object, ignore_placebo)
+  }
+)
 
+# tidy ----
 
-##' as.list method for the "GeneralData" class
-##'
-##' @param x the \code{\linkS4class{GeneralData}} object we want to convert
-##' @param \dots unused
-##' @return a list of all slots in \code{x}
-##'
-##' @example examples/Data-method-asList.R
-##' @export
-##' @keywords methods
-setMethod("as.list",
-          signature=
-          signature(x="GeneralData"),
-          def=
-          function(x, ...){
-              nams <- slotNames(x)
-              ret <- lapply(nams,
-                            function(n){
-                                slot(x, n)
-                            })
-              names(ret) <- nams
-              return(ret)
-          })
+## GeneralData ----
 
+#' Tidy Method for the [`GeneralData`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`GeneralData`] object.
+#'
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-GeneralData
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "GeneralData"),
+  definition = function(x, ...) {
+    d <- tibble::tibble(
+      ID = x@ID,
+      Cohort = x@cohort,
+      Dose = x@x,
+      XLevel = x@xLevel,
+      Tox = as.logical(x@y),
+      Placebo = x@placebo,
+      NObs = x@nObs,
+      NGrid = x@nGrid,
+      DoseGrid = list(x@doseGrid)
+    ) %>%
+      h_tidy_class(x)
+  }
+)
 
+## DataGrouped ----
 
-## ============================================================
+#' Tidy Method for the [`DataGrouped`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataGrouped`] object.
+#'
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataGrouped
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataGrouped"),
+  definition = function(x, ...) {
+    d <- callNextMethod()
+    d %>%
+      tibble::add_column(Group = x@group) %>%
+      h_tidy_class(x)
+  }
+)
 
-## --------------------------------------------------
-## Plotting the Data objects
-## --------------------------------------------------
+## DataDA ----
 
+#' Tidy Method for the [`DataDA`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataDA`] object.
+#'
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataDA
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataDA"),
+  definition = function(x, ...) {
+    d <- callNextMethod()
+    d %>%
+      tibble::add_column(U = x@u) %>%
+      tibble::add_column(T0 = x@t0) %>%
+      tibble::add_column(TMax = x@Tmax) %>%
+      h_tidy_class(x)
+  }
+)
 
-##' Plot method for the "Data" class
-##'
-##' @param x the \code{\linkS4class{Data}} object we want to plot
-##' @param y missing
-##' @param blind Logical (default FALSE) if to blind the data. If TRUE, then placebo
-##' subjects are reported by the active dose level of the corresponding cohort and
-##' DLEs are always assigned to the firsts subjects.
-##' @param \dots not used
-##' @return the \code{\link[ggplot2]{ggplot}} object
-##'
-##' @importFrom ggplot2 ggplot geom_point scale_colour_manual xlab ylab aes
-##' scale_y_continuous scale_x_continuous
-##'
-##' @example examples/Data-method-plot-Data.R
-##' @export
-##' @keywords methods
-setMethod("plot",
-          signature=
-          signature(x="Data", y="missing"),
-          def=
-          function(x, y, blind=FALSE, ...){
-              if(x@nObs == 0)
-              {
-                  return()
-              }
+## DataDA ----
 
-              df <- data.frame(patient=seq_along(x@x),
-                               dose=x@x,
-                               toxicity=ifelse(x@y==1, "Yes", "No"),
-                               ID=paste(" ", x@ID))
-              cols <- c("No" = "black","Yes" = "red")
-              
-              # If there are placebo, consider this a y=0.0 for the plot
-              if(x@placebo & !blind)
-                df$dose[df$dose == x@doseGrid[1]] <- 0.0
-              
-              # This is to blind the data
-              # For each cohort, the placebo is set to the active dose level for that cohort.
-              # In addition, all DLTs are assigned to the first subjects in the cohort
-              if(x@placebo & blind){
-                cohort.id <- unique(x@cohort)
-                for(iCoh in seq(a=cohort.id)){
-                  filter.coh <- which(x@cohort == cohort.id[iCoh]) 
-                  df[filter.coh,"dose"] <- max(df[filter.coh,"dose"])
-                  df[filter.coh,"toxicity"] <- sort(df[filter.coh,"toxicity"],
-                                                    decreasing=TRUE)
-                }
-              }
+#' Tidy Method for the [`DataDual`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataDual`] object.
+#'
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataDual
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataDual"),
+  definition = function(x, ...) {
+    d <- callNextMethod()
+    d %>%
+      tibble::add_column(W = x@w) %>%
+      h_tidy_class(x)
+  }
+)
 
-              a <- ggplot(df, aes(x=patient,y=dose)) +
-                  scale_y_continuous(breaks=
-                                     sort(unique(c(0, df$dose))),
-                                     minor_breaks=numeric(),
-                                     limits=c(0, max(df$dose) * 1.1))
+## DataParts ----
 
-              a <- a +
-                  geom_point(aes(shape=toxicity,colour=toxicity),
-                             size=3) +
-                                 scale_colour_manual(values=cols) +
-                                     xlab("Patient") + ylab("Dose Level")
+#' Tidy Method for the [`DataParts`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataParts`] object.
+#'
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataParts
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataParts"),
+  definition = function(x, ...) {
+    d <- callNextMethod()
+    d %>%
+      tibble::add_column(Part = x@part) %>%
+      tibble::add_column(NextPart = x@nextPart) %>%
+      tibble::add_column(Part1Ladder = list(x@part1Ladder)) %>%
+      h_tidy_class(x)
+  }
+)
 
-              if(!blind)
-                a <- a + geom_text(aes(label=ID, size=2),
-                                   data=df,
-                                   hjust=0, vjust=0.5,
-                                   angle=90, colour=I("black"),
-                                   show.legend = FALSE)
+## DataMixture ----
 
-              a <- a + scale_x_continuous(breaks=df$patient,
-                                          minor_breaks=numeric())
-              
-              # add a vertical lines separating sub-sequent cohorts
-              if(x@placebo & length(unique(x@cohort)) > 1)
-                a <- a + geom_vline(xintercept=head(cumsum(table(x@cohort)),n=-1) + 0.5, 
-                                    colour="green",
-                                    linetype = "longdash")
-              
-              return(a)
-          })
-
-
-## --------------------------------------------------
-## Subclass with additional biomarker information
-## --------------------------------------------------
-
-##' Plot method for the "DataDual" class
-##'
-##' @param x the \code{\linkS4class{DataDual}} object we want to plot
-##' @param y missing
-##' @param blind Logical (default FALSE) if to blind the data
-##' @param \dots not used
-##' @return the \code{\link[ggplot2]{ggplot}} object
-##'
-##' @importFrom ggplot2 ggplot geom_point scale_colour_manual xlab ylab aes
-##' @importFrom gridExtra arrangeGrob
-##'
-##' @example examples/Data-method-plot-DataDual.R
-##' @export
-##' @keywords methods
-setMethod("plot",
-          signature=
-          signature(x="DataDual", y="missing"),
-          def=
-          function(x, y, blind=FALSE, ...){
-              ## call the superclass method, to get the first plot
-              plot1 <- callNextMethod(x, blind=blind, ...)
-
-              ## now to get the second plot
-              df <- data.frame(patient=seq_along(x@x),
-                               dose=x@x,
-                               biomarker=x@w,
-                               toxicity=ifelse(x@y==1, "Yes", "No"))
-              cols <- c("No" = "black","Yes" = "red")
-              
-              # If there are placebo, consider this a y=0.0 for the plot
-              if(x@placebo & !blind)
-                df$dose[df$dose == x@doseGrid[1]] <- 0.0 
-              if(x@placebo & blind){
-                  cohort.id <- unique(x@cohort)   
-                  for(iCoh in seq(a=cohort.id)){
-                      filter.coh <- which(x@cohort == cohort.id[iCoh])  
-                      df[filter.coh,"dose"] <- max(df[filter.coh,"dose"])
-                  }
-              }
-              
-              # This is to blind the data
-              # For each cohort, the placebo is set to the active dose level for that cohort.
-
-              plot2 <- ggplot(df, aes(x=dose, y=biomarker))
-
-              plot2 <- plot2 +
-                  geom_point(aes(shape=toxicity, colour=toxicity),
-                             size=3) +
-                      scale_colour_manual(values=cols) +
-                          xlab("Dose Level") + ylab("Biomarker")
-              
-              if(!blind)
-                plot2 <- plot2 +
-                  geom_text(data=df,
-                            aes(label=patient, y=biomarker+0.02 * diff(range(biomarker)), size=2), hjust=0,
-                            vjust=0.5, angle=90, colour=I("black"),
-                            show.legend=FALSE)
-
-              ## arrange both plots side by side
-              ret <- gridExtra::arrangeGrob(plot1, plot2, ncol=2)
-              return(ret)
-          })
-
-
-
-## ============================================================
-
-## --------------------------------------------------
-## Update a Data object
-## --------------------------------------------------
-
-
-##' Update method for the "Data" class
-##'
-##' Add new data to the \code{\linkS4class{Data}} object
-##'
-##' @param object the old \code{\linkS4class{Data}} object
-##' @param x the dose level (one level only!)
-##' @param y the DLT vector (0/1 vector), for all patients in this cohort
-##' @param ID the patient IDs
-##' @param newCohort logical: if TRUE (default) the new data are assigned
-##' to a new cohort
-##' @param \dots not used
-##' @return the new \code{\linkS4class{Data}} object
-##'
-##' @example examples/Data-method-update-Data.R
-##' @export
-##' @keywords methods
-setMethod("update",
-          signature=
-          signature(object="Data"),
-          def=
-          function(object,
-                   x,
-                   y,
-                   ID=(if(length(object@ID)) max(object@ID) else 0L) + seq_along(y),
-                   newCohort=TRUE,
-                   ...){
-
-              ## some checks
-              stopifnot(is.scalar(x),
-                        all(y %in% c(0, 1)))
-
-              ## which grid level is the dose?
-              gridLevel <- matchTolerance(x, object@doseGrid)
-
-              ## add it to the data
-              if(is.na(gridLevel))
-              {
-                  stop("dose is not on grid")
-              } else {
-                  object@xLevel <- c(object@xLevel,
-                                     rep(gridLevel,
-                                         length(y)))
-              }
-
-              ## increment sample size
-              object@nObs <- object@nObs + length(y)
-
-              ## add dose
-              object@x <- c(object@x,
-                            rep(x,
-                                length(y)))
-
-              ## add DLT data
-              object@y <- c(object@y, as.integer(y))
-
-              ## add ID
-              object@ID <- c(object@ID, ID)
-
-              ## add cohort number
-              if(newCohort){
-                  object@cohort <- c(object@cohort,
-                                     rep(max(tail(object@cohort, 1L), 0L) + 1L,
-                                         length(y)))
-              }else{
-                  object@cohort <- c(object@cohort,
-                                     rep(max(tail(object@cohort, 1L), 0L),
-                                         length(y)))
-              }
-
-              ## return the object
-              return(object)
-          })
+#' Tidy Method for the [`DataMixture`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataMixture`] object.
+#' @section Usage Notes:
+#' The prior observations are indicated by a `Cohort` value of `0` in the returned
+#' `tibble`.
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataMixture
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataMixture"),
+  definition = function(x, ...) {
+    observed <- callNextMethod()
+    tibble::tibble(
+      Cohort = 0,
+      Dose = x@xshare,
+      Tox = as.logical(x@yshare),
+      ID = sort(seq_along(x@xshare)),
+      Placebo = x@placebo,
+      NObs = x@nObs,
+      NGrid = x@nGrid,
+      DoseGrid = list(x@doseGrid),
+      XLevel = which(x@doseGrid %in% x@xshare)
+    ) %>%
+      dplyr::bind_rows(observed) %>%
+      h_tidy_class(x)
+  }
+)
 
 
-## --------------------------------------------------
-## Update a DataParts object
-## --------------------------------------------------
+## DataOrdinal ----
 
-##' Update method for the "DataParts" class
-##'
-##' Add new data to the \code{\linkS4class{DataParts}} object
-##'
-##' @param object the old \code{\linkS4class{DataParts}} object
-##' @param x the dose level (one level only!)
-##' @param y the DLT vector (0/1 vector), for all patients in this cohort
-##' @param ID the patient IDs
-##' @param \dots not used
-##' @return the new \code{\linkS4class{DataParts}} object
-##'
-##' @example examples/Data-method-update-DataParts.R
-##' @export
-##' @keywords methods
-setMethod("update",
-          signature=
-          signature(object="DataParts"),
-          def=
-          function(object,
-                   x,
-                   y,
-                   ID=(if(length(object@ID)) max(object@ID) else 0L) + seq_along(y),
-                   ...){
-
-              ## first do the usual things as for Data objects
-              object <- callNextMethod(object=object, x=x, y=y, ID=ID, ...)
-
-              ## update the part information
-              object@part <- c(object@part,
-                               rep(object@nextPart,
-                                   length(y)))
-
-              ## now decide which part the next cohort will belong to:
-              ## only if the nextPart was 1, it can potentially be required to
-              ## change it to 2 (once it is 2, it stays)
-              if(object@nextPart == 1L)
-              {
-                  ## if there was a DLT in one of the cohorts,
-                  ## or if the current dose was the highest from part 1:
-                  if(any(object@y == 1L) || x == max(object@part1Ladder))
-                  {
-                      ## then this closes part 1 and the next cohort will
-                      ## be from part 2:
-                      object@nextPart <- 2L
-                  }
-              }
-
-              ## return the object
-              return(object)
-          })
-
-## --------------------------------------------------
-## Update a DataDual object
-## --------------------------------------------------
-
-##' Update method for the "DataDual" class
-##'
-##' Add new data to the \code{\linkS4class{DataDual}} object
-##'
-##' @param object the old \code{\linkS4class{DataDual}} object
-##' @param x the dose level (one level only!)
-##' @param y the DLT vector (0/1 vector), for all patients in this cohort
-##' @param w the biomarker vector, for all patients in this cohort
-##' @param ID the patient IDs
-##' @param newCohort logical: if TRUE (default) the new data are assigned 
-##' to a new cohort
-##' @param \dots not used
-##' @return the new \code{\linkS4class{DataDual}} object
-##'
-##' @example examples/Data-method-update-DataDual.R
-##' @export
-##' @keywords methods
-setMethod("update",
-          signature=
-          signature(object="DataDual"),
-          def=
-          function(object,
-                   x,
-                   y,
-                   w,
-                   newCohort=TRUE,
-                   ID=(if(length(object@ID)) max(object@ID) else 0L) + seq_along(y),
-                   ...){
-
-              ## first do the usual things as for Data objects
-              object <- callNextMethod(object=object, x=x, y=y, ID=ID, 
-                                       newCohort=newCohort, ...)
-
-              ## update the biomarker information
-              object@w <- c(object@w,
-                            w)
-
-              ## return the object
-              return(object)
-          })
-
-## -----------------------------------------------------------------------------------------
-## Extracting efficacy responses for subjects without DLE observed
-## ---------------------------------------------------------------------------------
-
-##' Extracting efficacy responses for subjects without or with a DLE. This is a class where we separate
-##' efficacy responses with or without a DLE. It outputs the efficacy responses and their corresponding 
-##' dose levels treated at in two categories (with or without DLE)
-##' 
-##' @param object for data input from \code{\linkS4class{DataDual}} object
-##' @param \dots unused
-##' 
-##' @export
-##' @keywords methods
-setGeneric("getEff",
-           def=function(object,...){
-             standardGeneric("getEff")},
-           valueClass="list")
-
-##' @rdname getEff
-##' @param x todo
-##' @param y todo
-##' @param w todo
-##' @example examples/Data-method-getEff.R
-setMethod("getEff",
-          signature=
-            signature(object="DataDual"),
-          def=
-            function(object,
-                     x,
-                     y,
-                     w,...){
-              if (length(which(object@y == 1))==0){
-                wNoDLE<-object@w
-                wDLE<-NULL
-                xNoDLE<- object@x
-                xDLE<-NULL
-              } else {##with observed efficacy response and DLE observed
-                IndexDLE<-which(object@y==1)
-                ##Take efficacy responses with no DLE observed
-                wNoDLE<-object@w[-IndexDLE]
-                wDLE<-object@w[IndexDLE]
-                ##Take the corresponding dose levels
-                xNoDLE<-object@x[-IndexDLE]
-                xDLE<-object@x[IndexDLE]
-              }
-              ret<-list(wDLE=wDLE,xDLE=xDLE,wNoDLE=wNoDLE,xNoDLE=xNoDLE)
-              return(ret)
-            })
-
-
-
+#' Tidy Method for the [`DataMixture`] Class
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' A method that tidies a [`DataOrdinal`] object.
+#' @section Usage Notes:
+#' @return The [`tibble`] object.
+#'
+#' @aliases tidy-DataOrdinal
+#' @rdname tidy
+#' @export
+#' @example examples/GeneralData-method-tidy.R
+#'
+setMethod(
+  f = "tidy",
+  signature = signature(x = "DataOrdinal"),
+  definition = function(x, ...) {
+    y <- tibble::tibble(
+      ID = x@ID,
+      Cohort = x@cohort,
+      Dose = x@x,
+      Tox = x@y,
+      Placebo = x@placebo,
+      NObs = x@nObs,
+      NGrid = x@nGrid,
+      DoseGrid = list(x@doseGrid),
+      XLevel = x@xLevel
+    ) %>%
+      tidyr::pivot_wider(
+        names_from = "Tox",
+        values_from = "Tox",
+        names_prefix = "Cat",
+        values_fill = 0
+      )
+    if (nrow(y) > 0) {
+      y <- y %>%
+        dplyr::mutate(
+          dplyr::across(tidyselect::matches("Cat\\d+"), \(x) x > 0)
+        ) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(
+          AnyTox = any(dplyr::across(
+            c(tidyselect::starts_with("Cat"), -tidyselect::all_of("Cat0")),
+            any
+          )),
+          # Direct assignment fails on GitHub
+          Cat0 = !.data$AnyTox
+        ) %>%
+        dplyr::select(-tidyselect::all_of("AnyTox")) %>%
+        dplyr::ungroup()
+    }
+    y <- y %>% h_tidy_class(x)
+    y
+  }
+)

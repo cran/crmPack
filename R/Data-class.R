@@ -1,410 +1,691 @@
-#####################################################################################
-## Author: Daniel Sabanes Bove [sabanesd *a*t* roche *.* com]
-## Project: Object-oriented implementation of CRM designs
-##
-## Time-stamp: <[Data-class.R] by DSB Mon 11/05/2015 17:42>
-##
-## Description:
-## Encapsulate the data input in formal classes.
-##
-## History:
-## 29/01/2014   file creation
-## 07/02/2014   add cohort indices
-###################################################################################
+#' @include helpers.R
+#' @include Data-validity.R
+#' @include CrmPackClass-class.R
+NULL
 
-##' @include helpers.R
-{}
+# GeneralData-class ----
 
-## ============================================================
+#' `GeneralData`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`GeneralData`] is a class for general data input.
+#'
+#' @slot ID (`integer`)\cr unique patient IDs.
+#' @slot cohort (`integer`)\cr the cohort (non-negative sorted) indices.
+#' @slot nObs (`integer`)\cr number of observations, a single value.
+#'
+#' @aliases GeneralData
+#' @export
+#'
+.GeneralData <- setClass(
+  Class = "GeneralData",
+  slots = c(
+    ID = "integer",
+    cohort = "integer",
+    nObs = "integer"
+  ),
+  prototype = prototype(
+    ID = integer(),
+    cohort = integer(),
+    nObs = 0L
+  ),
+  contains = "CrmPackClass",
+  validity = v_general_data
+)
 
+## default constructor ----
 
-## --------------------------------------------------
-## Class for general data input
-## --------------------------------------------------
-
-
-##' Class for general data input
-##'
-##' @slot ID unique patient IDs (integer vector)
-##' @slot cohort the cohort indices (sorted values from 0, 1, 2, ...)
-##' @slot nObs number of observations
-##'
-##' @export
-##' @keywords classes
-.GeneralData <-
-    setClass(Class="GeneralData",
-             representation(ID="integer",
-                            cohort="integer",
-                            nObs="integer"),
-             prototype(ID=integer(),
-                       cohort=integer(),
-                       nObs=0L),
-             validity=
-                 function(object){
-                     o <- Validate()
-
-                     o$check(all(! duplicated(object@ID)),
-                             "IDs must be unique")
-                     o$check(all(object@cohort >= 0),
-                             "cohort indices must be non-negative")
-                     o$check(! is.unsorted(object@cohort,
-                                           strictly=FALSE),
-                             "cohort indices must be sorted")
-                     for(thisSlot in c("cohort", "ID"))
-                         o$check(identical(object@nObs, length(slot(object, thisSlot))),
-                                 paste(thisSlot, "must have length nObs"))
-
-                     o$result()
-                 })
-validObject(.GeneralData())
-
-
-## ============================================================
-
-
-## --------------------------------------------------
-## Class for the data input
-## --------------------------------------------------
-
-
-##' Class for the data input
-##'
-##' This class inherits from \code{\linkS4class{GeneralData}}.
-##'
-##' @slot x the doses for the patients
-##' @slot y the vector of toxicity events (0 or 1 integers)
-##' @slot doseGrid the vector of all possible doses (sorted), i.e. the dose
-##' grid
-##' @slot nGrid number of gridpoints
-##' @slot xLevel the levels for the doses the patients have been given
-##' @slot placebo logical value: if TRUE the first dose level in the grid is
-##' considered as PLACEBO
-##' 
-##' @example examples/Data-class.R
-##' @export
-##' @keywords classes
-.Data <-
-    setClass(Class="Data",
-             representation(x="numeric",
-                            y="integer",
-                            doseGrid="numeric",
-                            nGrid="integer",
-                            xLevel="integer",
-                            placebo="logical"),
-             prototype(x=numeric(),
-                       y=integer(),
-                       doseGrid=numeric(),
-                       nGrid=0L,
-                       xLevel=integer(),
-                       placebo=FALSE),
-             contains="GeneralData",
-             validity=
-                 function(object){
-                     o <- Validate()
-
-                     o$check(all(object@y %in% c(0, 1)),
-                             "DLT vector y can only have 0 or 1 values")
-                     if(!object@placebo){
-                        o$check(all(tapply(X=object@x,
-                                           INDEX=object@cohort,
-                                           FUN=
-                                            function(doses){length(unique(doses))}) == 1),
-                             "there must be only one dose level per cohort")
-                     }else{
-                        o$check(all(tapply(X=object@x,
-                                          INDEX=object@cohort,
-                                          FUN=
-                                            function(doses){
-                                              doses <- doses[doses != object@doseGrid[1]]
-                                              length(unique(doses))}) == 1),
-                               "There must be only one dose level, other than placebo, per cohort. In addition a cohort with only placebo is not allowed")
-                     }
-                     
-                     o$check(all(object@x %~% object@doseGrid),
-                             "dose values in x must be from doseGrid (tolerance 1e-10)")
-                     o$check(! is.unsorted(object@doseGrid,
-                                           strictly=TRUE),
-                             "doseGrid must be sorted and without duplicate values")
-                     for(thisSlot in c("x", "y"))
-                         o$check(identical(object@nObs, length(slot(object, thisSlot))),
-                                 paste(thisSlot, "must have length nObs"))
-                     o$check(identical(object@nGrid, length(object@doseGrid)),
-                             "doseGrid must have length nGrid")
-                     o$check(all.equal(object@x,
-                                       object@doseGrid[object@xLevel],
-                                       tolerance=1e-10,
-                                       check.names=FALSE,
-                                       check.attributes=FALSE),
-                             "x must be doseGrid[xLevel] (tolerance 1e-10)")
-
-                     o$result()
-                 })
-validObject(.Data())
-
-##' Initialization function for the "Data" class
-##'
-##' This is the function for initializing a "Data" class object.
-##'
-##' Note that \code{ID} and \code{cohort} can be missing, then a warning
-##' will be issued and the variables will be filled with default
-##' IDs and best guesses, respectively.
-##'
-##' @param x the doses for the patients
-##' @param y the vector of toxicity events (0 or 1 integers). You can also
-##' normal numeric vectors, but these will then be converted to integers.
-##' @param ID unique patient IDs (integer vector)
-##' @param cohort the cohort indices (sorted values from 0, 1, 2, ...)
-##' @param doseGrid the vector of all possible doses
-##' @param placebo logical value: if TRUE the first dose level in the grid is 
-##' considered as PLACEBO
-##' @param \dots not used
-##' @return the initialized \code{\linkS4class{Data}} object
-##'
-##' @export
-##' @keywords programming
-Data <- function(x=numeric(),
-                 y=integer(),
-                 ID=integer(),
-                 cohort=integer(),
-                 doseGrid=numeric(),
-                 placebo=FALSE,
-                 ...){
-    ## sort the dose grid
-    doseGrid <- as.numeric(sort(unique(doseGrid)))
-
-    ## check IDs
-    if((missing(ID) || length(ID) == 0) && length(x))
-    {
-        warning("Used default patient IDs!")
-        ID <- seq_along(x)
-    }
-
-    ## check cohort indices
-    if((missing(cohort) || length(cohort) == 0) && length(x))
-    {
-        warning("Used best guess cohort indices!")
-        ## This is just assuming that consecutive patients
-        ## in the data set are in the same cohort if they
-        ## have the same dose. Note that this could be wrong,
-        ## if two subsequent cohorts are at the same dose.
-        cohort <- as.integer(c(1, 1 + cumsum(diff(x) != 0)))
-    }
-
-    ## then initialize the Data object
-    ## (in this case just putting arguments into slots)
-    ret <- .Data(x=as.numeric(x),
-                 y=safeInteger(y),
-                 ID=safeInteger(ID),
-                 cohort=safeInteger(cohort),
-                 doseGrid=doseGrid,
-                 nObs=length(x),
-                 nGrid=length(doseGrid),
-                 xLevel=matchTolerance(x=x, table=doseGrid),
-                 placebo=placebo)
-    return(ret)
+#' @rdname GeneralData-class
+#' @note Typically, end users will not use the `.DefaultDataGeneral()` function.
+#' @export
+.DefaultDataGeneral <- function() {
+  stop(paste0(
+    "Class DataGeneral cannot be instantiated directly.  Please use one of its subclasses instead."
+  ))
 }
-validObject(Data())
 
+# Data ----
 
-## ============================================================
+## class ----
 
+#' `Data`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`Data`] is a class for the data input.
+#' It inherits from [`GeneralData`].
+#'
+#' @slot x (`numeric`)\cr the doses for the patients.
+#' @slot y (`integer`)\cr the vector of toxicity events (0 or 1 integers).
+#' @slot doseGrid (`numeric`)\cr the vector of all possible doses (sorted),
+#'   i.e. the dose grid.
+#' @slot nGrid (`integer`)\cr number of gridpoints.
+#' @slot xLevel (`integer`)\cr the levels for the doses the patients have been given,
+#'   w.r.t `doseGrid`.
+#' @slot placebo (`logical`)\cr if `TRUE` the first dose level
+#'   in the `doseGrid`is considered as PLACEBO.
+#'
+#' @aliases Data
+#' @export
+#'
+.Data <- setClass(
+  Class = "Data",
+  contains = "GeneralData",
+  slots = c(
+    x = "numeric",
+    y = "integer",
+    doseGrid = "numeric",
+    nGrid = "integer",
+    xLevel = "integer",
+    placebo = "logical"
+  ),
+  prototype = prototype(
+    x = numeric(),
+    y = integer(),
+    doseGrid = numeric(),
+    nGrid = 0L,
+    xLevel = integer(),
+    placebo = FALSE
+  ),
+  validity = v_data
+)
 
-## --------------------------------------------------
-## Subclass with additional biomarker information
-## --------------------------------------------------
+## constructor ----
 
-##' Class for the dual endpoint data input
-##'
-##' This is a subclass of \code{\linkS4class{Data}}, so contains all
-##' slots from \code{\linkS4class{Data}}, and in addition biomarker
-##' values.
-##'
-##' @slot w the continuous vector of biomarker values
-##' 
-##' @example examples/Data-class-DataDual.R
-##' @export
-##' @keywords classes
-.DataDual <-
-    setClass(Class="DataDual",
-             representation=
-                 representation(w="numeric"),
-             contains="Data",
-             validity=
-                 function(object){
-                     o <- Validate()
+#' @rdname Data-class
+#'
+#' @details The `cohort` can be missing if and only if `placebo` is equal to
+#'   `FALSE`.
+#'
+#' @note `ID` and `cohort` can be missing. Then a message will be issued
+#'   and the variables will be filled with default IDs and best guesses cohort,
+#'   i.e. a sorted (in ascending order) sequence of values from `{1, 2, ...}`.
+#'
+#' @param x (`numeric`)\cr the doses for the patients.
+#' @param y (`integer`)\cr the vector of toxicity events (0 or 1).
+#'   You can also supply `numeric` vectors, but these will then be converted to
+#'   `integer` internally.
+#' @param ID (`integer`)\cr unique patient IDs.
+#'   You can also supply `numeric` vectors, but these will then be converted to
+#'   `integer` internally.
+#' @param cohort (`integer`)\cr the cohort (non-negative sorted) indices.
+#'   You can also supply `numeric` vectors, but these will then be converted to
+#'   `integer` internally.
+#' @param doseGrid (`numeric`)\cr all possible doses.
+#' @param placebo (`flag`)\cr if `TRUE` the first dose level
+#'   in the `doseGrid` is considered as placebo.
+#' @param ... not used.
+#'
+#' @export
+#' @example examples/Data-class.R
+#'
+Data <- function(
+  x = numeric(),
+  y = integer(),
+  ID = integer(),
+  cohort = integer(),
+  doseGrid = numeric(),
+  placebo = FALSE,
+  ...
+) {
+  assert_numeric(x)
+  assert_integerish(y, lower = 0, upper = 1, any.missing = FALSE)
+  assert_integerish(ID, unique = TRUE, any.missing = FALSE)
+  assert_integerish(cohort)
+  if (length(x) > 0) {
+    assert_numeric(doseGrid, any.missing = FALSE, unique = TRUE, min.len = 1)
+  } else {
+    assert_numeric(doseGrid, any.missing = FALSE, unique = TRUE)
+  }
+  assert_flag(placebo)
 
-                     o$check(identical(object@nObs, length(object@w)),
-                             "w must have length nObs")
+  doseGrid <- sort(doseGrid)
+  assert_subset(x, doseGrid)
 
-                     o$result()
-                 })
-validObject(.DataDual())
+  if (length(ID) == 0 && length(x) > 0) {
+    message("Used default patient IDs!")
+    ID <- seq_along(x)
+  } else {
+    assert_integerish(ID, unique = TRUE)
+  }
 
-##' Initialization function for the "DataDual" class
-##'
-##' This is the function for initializing a "DataDual" class object.
-##'
-##' @param w the continuous vector of biomarker values
-##' @param \dots additional parameters from \code{\link{Data}}
-##' @return the initialized \code{\linkS4class{DataDual}} object
-##'
-##' @export
-##' @keywords programming
-DataDual <- function(w=numeric(),
-                     ...)
-{
-    start <- Data(...)
-    .DataDual(start,
-              w=w)
+  if (!placebo && length(cohort) == 0 && length(x) > 0) {
+    message("Used best guess cohort indices!")
+    # This is just assuming that consecutive patients
+    # in the data set are in the same cohort if they
+    # have the same dose. Note that this could be wrong,
+    # if two subsequent cohorts are at the same dose.
+    cohort <- as.integer(c(1, 1 + cumsum(diff(x) != 0)))
+  } else {
+    assert_integerish(cohort)
+  }
+
+  .Data(
+    x = as.numeric(x),
+    y = as.integer(y),
+    ID = as.integer(ID),
+    cohort = as.integer(cohort),
+    doseGrid = as.numeric(doseGrid),
+    nObs = length(x),
+    nGrid = length(doseGrid),
+    xLevel = match_within_tolerance(x, doseGrid),
+    placebo = placebo
+  )
 }
-validObject(DataDual())
 
-## ============================================================
+## default constructor ----
 
-
-## --------------------------------------------------
-## Subclass with additional two parts information
-## --------------------------------------------------
-
-##' Class for the data with two study parts
-##'
-##' This is a subclass of \code{\linkS4class{Data}}, so contains all
-##' slots from \code{\linkS4class{Data}}, and in addition information on the two
-##' study parts.
-##'
-##' @slot part integer vector; which part does each of the patients belong to?
-##' @slot nextPart integer; what is the part for the next cohort?
-##' @slot part1Ladder sorted numeric vector; what is the escalation ladder for
-##' part 1? This shall be a subset of the \code{doseGrid}.
-##'
-##' @example examples/Data-class-DataParts.R
-##' @export
-##' @keywords classes
-.DataParts <-
-    setClass(Class="DataParts",
-             representation(part="integer",
-                            nextPart="integer",
-                            part1Ladder="numeric"),
-             prototype(part=integer(),
-                       nextPart=1L,
-                       part1Ladder=numeric()),
-             contains="Data",
-             validity=
-                 function(object){
-                     o <- Validate()
-
-                     o$check(identical(length(object@part), length(object@x)),
-                             "part and x must have same length")
-                     o$check(all(object@part %in% as.integer(c(1, 2))),
-                             "part must have entries 1 or 2")
-                     o$check(is.scalar(object@nextPart) &&
-                                 (object@nextPart %in% as.integer(c(1, 2))),
-                             "nextPart must be scalar 1 or 2")
-                     o$check(all(object@part1Ladder %in% object@doseGrid),
-                             "part1Ladder must have entries from doseGrid")
-                     o$check(! is.unsorted(object@part1Ladder,
-                                           strictly=TRUE),
-                             "part1Ladder must be sorted and have unique values")
-
-                     o$result()
-                 })
-validObject(.DataParts())
-
-
-##' Initialization function for the "DataParts" class
-##'
-##' This is the function for initializing a \code{\linkS4class{DataParts}}
-##' object.
-##'
-##' @param part which part does each of the patients belong to?
-##' @param nextPart what is the part for the next cohort? (1 or 2)
-##' @param part1Ladder what is the escalation ladder for
-##' part 1?
-##' @param \dots additional parameters from \code{\link{Data}}
-##' @return the initialized \code{\linkS4class{DataParts}} object
-##'
-##' @export
-##' @keywords programming
-DataParts <- function(part=integer(),
-                      nextPart=1L,
-                      part1Ladder=numeric(),
-                      ...)
-{
-    start <- Data(...)
-    .DataParts(start,
-               part=part,
-               nextPart=nextPart,
-               part1Ladder=part1Ladder)
+#' @rdname Data-class
+#' @note Typically, end users will not use the `.DefaultData()` function.
+#' @export
+.DefaultData <- function() {
+  Data(
+    doseGrid = c(1, 3, 5, 10, 15, 20, 25, 40, 50, 80, 100),
+    ID = 1L:3L,
+    cohort = 1L:3L,
+    x = c(1, 3, 5),
+    y = rep(0L, 3)
+  )
 }
-validObject(DataParts())
 
-## ============================================================
+# DataDual ----
 
-## --------------------------------------------------
-## Subclass with additional data for mixture
-## --------------------------------------------------
+## class ----
 
+#' `DataDual`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`DataDual`] is a class for the dual endpoint data.
+#' It inherits from [`Data`] and it contains additional biomarker information.
+#'
+#' @slot w (`numeric`)\cr the continuous vector of biomarker values.
+#'
+#' @aliases DataDual
+#' @export
+#'
+.DataDual <- setClass(
+  Class = "DataDual",
+  slots = c(w = "numeric"),
+  prototype = prototype(w = numeric()),
+  contains = "Data",
+  validity = v_data_dual
+)
 
-##' Class for the data with mixture sharing
-##' 
-##' @slot xshare the doses for the share patients
-##' @slot yshare the vector of toxicity events (0 or 1 integers) for the share
-##' patients
-##' @slot nObsshare number of share patients
-##'
-##' @seealso \code{\linkS4class{LogisticLogNormalMixture}} for the explanation
-##' how to use this data class
-##' @export
-##' @example examples/Model-class-LogisticLogNormalMixture.R
-##' @keywords classes
-.DataMixture <-
-  setClass(Class="DataMixture",
-           representation(xshare="numeric",
-                          yshare="integer",
-                          nObsshare="integer"),
-           prototype(xshare=numeric(),
-                     yshare=integer(),
-                     nObsshare=0L),
-           contains="Data",
-           validity=
-             function(object){
-               o <- Validate()
-               
-               o$check(all(object@yshare %in% c(0, 1)),
-                       "DLT vector yshare can only have 0 or 1 values")
-               o$check(all(object@xshare %in% object@doseGrid),
-                       "dose values in xshare must be from doseGrid")
-               for(thisSlot in c("xshare", "yshare"))
-                 o$check(identical(object@nObsshare, length(slot(object, thisSlot))),
-                         paste(thisSlot, "must have length nObs"))
-               
-               o$result()
-             })
-validObject(.DataMixture())
+## constructor ----
 
-##' Initialization function for the "DataMixture" class
-##'
-##' This is the function for initializing a "DataMixture" class object.
-##'
-##' @param xshare see \code{\linkS4class{DataMixture}}
-##' @param yshare see \code{\linkS4class{DataMixture}}
-##' @param \dots additional arguments for the underlying Data slots
-##' 
-##' @return the initialized \code{\linkS4class{DataMixture}} object
-##'
-##' @export
-##' @keywords programming
-DataMixture <- function(xshare=numeric(),
-                        yshare=integer(),
-                        ...){
-  start <- Data(...)
-  ret <- .DataMixture(start,
-                      xshare=as.numeric(xshare),
-                      yshare=safeInteger(yshare),
-                      nObsshare=length(xshare))
-  return(ret)
+#' @rdname DataDual-class
+#'
+#' @param w (`numeric`)\cr the continuous vector of biomarker values.
+#' @param ... parameters passed to [Data()].
+#'
+#' @export
+#' @example examples/Data-class-DataDual.R
+#'
+DataDual <- function(w = numeric(), ...) {
+  d <- Data(...)
+  .DataDual(d, w = w)
 }
-validObject(DataMixture())
 
-## ============================================================
 
+## default constructor ----
+
+#' @rdname DataDual-class
+#' @note Typically, end users will not use the `.DefaultDataDual()` function.
+#' @export
+.DefaultDataDual <- function() {
+  set.seed(1230)
+  DataDual(
+    x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+    y = c(0, 0, 0, 0, 0, 0, 1, 0),
+    w = rnorm(8),
+    doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2)),
+    ID = 1L:8L,
+    cohort = as.integer(c(1, 2, 3, 4, 5, 6, 6, 6))
+  )
+}
+
+# DataParts ----
+
+## class ----
+
+#' `DataParts`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`DataParts`] is a class for the data with two study parts.
+#' It inherits from [`Data`] and it contains additional information
+#' on the two study parts.
+#'
+#' @slot part (`integer`)\cr which part does each of the patients belong to?
+#' @slot nextPart (`count`)\cr what is the part for the next cohort (1 or 2)?
+#' @slot part1Ladder (`numeric`)\cr what is the escalation ladder for
+#'   part 1? This shall be an ordered subset of the `doseGrid`.
+#'
+#' @aliases DataParts
+#' @export
+#'
+.DataParts <- setClass(
+  Class = "DataParts",
+  slots = c(
+    part = "integer",
+    nextPart = "integer",
+    part1Ladder = "numeric"
+  ),
+  prototype = prototype(
+    part = integer(),
+    nextPart = 1L,
+    part1Ladder = numeric()
+  ),
+  contains = "Data",
+  validity = v_data_parts
+)
+
+## constructor ----
+
+#' @rdname DataParts-class
+#'
+#' @param part (`integer`)\cr which part does each of the patients belong to?
+#' @param nextPart (`count`)\cr what is the part for the next cohort (1 or 2)?
+#' @param part1Ladder (`numeric`)\cr what is the escalation ladder for part 1?
+#'   This shall be an ordered subset of the `doseGrid`.
+#' @param ... parameters passed to [Data()].
+#'
+#' @export
+#' @example examples/Data-class-DataParts.R
+#'
+DataParts <- function(
+  part = integer(),
+  nextPart = 1L,
+  part1Ladder = numeric(),
+  ...
+) {
+  d <- Data(...)
+  .DataParts(
+    d,
+    part = part,
+    nextPart = nextPart,
+    part1Ladder = part1Ladder
+  )
+}
+
+## default constructor ----
+
+#' @rdname DataParts-class
+#' @note Typically, end users will not use the `.DefaultDataParts()` function.
+#' @export
+.DefaultDataParts <- function() {
+  DataParts(
+    x = c(0.1, 0.5, 1.5),
+    y = c(0, 0, 0),
+    ID = 1:3,
+    cohort = 1:3,
+    doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2)),
+    part = c(1L, 1L, 1L),
+    nextPart = 1L,
+    part1Ladder = c(0.1, 0.5, 1.5, 3, 6, 10)
+  )
+}
+
+
+# DataMixture ----
+
+## class ----
+
+#' `DataMixture`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`DataMixture`] is a class for the data with mixture sharing.
+#' It inherits from [`Data`] and it contains additional information
+#' on the mixture sharing.
+#'
+#' @slot xshare (`numeric`)\cr the doses for the share patients.
+#' @slot yshare (`integer`)\cr the vector of toxicity events (0 or 1)
+#'   for the share patients.
+#' @slot nObsshare (`count`)\cr number of share patients.
+#'
+#' @aliases DataMixture
+#' @export
+#'
+.DataMixture <- setClass(
+  Class = "DataMixture",
+  slots = c(
+    xshare = "numeric",
+    yshare = "integer",
+    nObsshare = "integer"
+  ),
+  prototype = prototype(
+    xshare = numeric(),
+    yshare = integer(),
+    nObsshare = 0L
+  ),
+  contains = "Data",
+  validity = v_data_mixture
+)
+
+## constructor ----
+
+#' @rdname DataMixture-class
+#'
+#' @param xshare (`numeric`)\cr the doses for the share patients.
+#' @param yshare (`integer`)\cr the vector of toxicity events (0 or 1)
+#'   for the share patients. You can also supply `numeric` vectors,
+#'   but these will then be converted to `integer` internally.
+#' @param ... parameters passed to [Data()].
+#'
+#' @export
+#' @example examples/Data-class-DataMixture.R
+#'
+DataMixture <- function(xshare = numeric(), yshare = integer(), ...) {
+  d <- Data(...)
+  assert_integerish(yshare)
+  assert_numeric(xshare)
+  .DataMixture(
+    d,
+    xshare = as.numeric(xshare),
+    yshare = as.integer(yshare),
+    nObsshare = length(xshare)
+  )
+}
+
+## default constructor ----
+
+#' @rdname DataMixture-class
+#' @note Typically, end users will not use the `.DefaultDataMixture()` function.
+#' @export
+.DefaultDataMixture <- function() {
+  DataMixture(
+    xshare = c(12, 14, 16, 18.0),
+    yshare = c(0L, 1L, 1L, 1L),
+    nObsshare = 4L,
+    x = c(0.1, 0.5, 1.5),
+    y = c(0, 0, 0),
+    ID = 1L:3L,
+    cohort = 1L:3L,
+    doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+  )
+}
+
+
+# DataDA ----
+
+## class ----
+
+#' `DataDA`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`DataDA`] is a class for the time-to-DLT augmented data.
+#' It inherits from [`Data`] and it contains additional DLT free survival times.
+#'
+#' @note `survival time` here refers to the time period for which the subject
+#'   did not experience any DLT, and is not referring to deaths.
+#'
+#' @slot u (`numeric`)\cr the continuous vector of DLT free survival times.
+#' @slot t0 (`numeric`)\cr time of initial dosing for each patient.
+#'   Non-negative values sorted in ascending order.
+#' @slot Tmax (`number`)\cr the DLT observation period.
+#'
+#' @aliases DataDA
+#' @export
+#'
+.DataDA <- setClass(
+  Class = "DataDA",
+  slots = c(
+    u = "numeric",
+    t0 = "numeric",
+    Tmax = "numeric"
+  ),
+  prototype = prototype(
+    u = numeric(),
+    t0 = numeric(),
+    Tmax = 0 + .Machine$double.xmin
+  ),
+  contains = "Data",
+  validity = v_data_da
+)
+
+## constructor ----
+
+#' @rdname DataDA-class
+#'
+#' @param u (`numeric`)\cr the continuous vector of DLT free survival times.
+#' @param t0 (`numeric`)\cr time of initial dosing for each patient.
+#'   Non-negative values sorted in ascending order.
+#'   Default to vector of 0s of length equal to length of `u`.
+#' @param Tmax (`number`)\cr the DLT observation period.
+#' @param ... parameters passed to [Data()].
+#'
+#' @export
+#' @example examples/Data-class-DataDA.R
+#'
+DataDA <- function(
+  u = numeric(),
+  t0 = numeric(length(u)),
+  Tmax = 0 + .Machine$double.xmin,
+  ...
+) {
+  d <- Data(...)
+  .DataDA(
+    d,
+    u = as.numeric(u),
+    t0 = as.numeric(t0),
+    Tmax = as.numeric(Tmax)
+  )
+}
+
+## default constructor ----
+
+#' @rdname DataDA-class
+#' @note Typically, end users will not use the `.DefaultDataDA()` function.
+#' @export
+.DefaultDataDA <- function() {
+  DataDA(
+    u = c(42, 30, 15, 5, 20, 25, 30, 60),
+    t0 = c(0, 15, 30, 40, 55, 70, 75, 85),
+    Tmax = 60,
+    x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+    y = c(0, 0, 1, 1, 0, 0, 1, 0),
+    doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2)),
+    ID = 1L:8L,
+    cohort = as.integer(c(1, 2, 3, 4, 5, 6, 6, 6))
+  )
+}
+
+# DataOrdinal ----
+
+## class ----
+
+#' `DataOrdinal`
+#'
+#' @description `r lifecycle::badge("experimental")`
+#'
+#' [`DataOrdinal`] is a class for ordinal toxicity data.
+#' It inherits from [`GeneralData`] and it describes toxicity responses on an
+#' ordinal rather than binary scale.
+#'
+#' @note This class has been implemented as a sibling of the existing `Data` class
+#' (rather than as a parent or child) to minimise the risk of unintended side
+#' effects on existing classes and methods.
+#'
+#' The default setting for the `yCategories` slot replicates the behaviour
+#' of the existing `Data` class.
+#'
+#' @aliases DataOrdinal
+#' @export
+.DataOrdinal <- setClass(
+  Class = "DataOrdinal",
+  contains = "GeneralData",
+  slots = c(
+    x = "numeric",
+    y = "integer",
+    doseGrid = "numeric",
+    nGrid = "integer",
+    xLevel = "integer",
+    yCategories = "integer",
+    placebo = "logical"
+  ),
+  prototype = prototype(
+    x = numeric(),
+    y = integer(),
+    doseGrid = numeric(),
+    nGrid = 0L,
+    xLevel = integer(),
+    yCategories = c("No DLT" = 0L, "DLT" = 1L),
+    placebo = FALSE
+  ),
+  validity = v_data_ordinal
+)
+
+## constructor ----
+
+#' @rdname DataOrdinal-class
+#' @param yCategories (named `integer`)\cr the names and codes for the
+#' toxicity categories used in the data.  Category labels are taken from the
+#' names of the vector.  The names of the vector must be unique and its values
+#' must be sorted and take the values 0, 1, 2, ...
+#' @inheritParams Data
+#' @inherit Data details note params
+#' @example examples/Data-class-DataOrdinal.R
+#' @export
+DataOrdinal <- function(
+  x = numeric(),
+  y = integer(),
+  ID = integer(),
+  cohort = integer(),
+  doseGrid = numeric(),
+  placebo = FALSE,
+  yCategories = c("No DLT" = 0L, "DLT" = 1L),
+  ...
+) {
+  assert_numeric(doseGrid, any.missing = FALSE, unique = TRUE)
+  assert_integerish(
+    yCategories,
+    any.missing = FALSE,
+    unique = TRUE,
+    names = "unique",
+    min.len = 2
+  )
+  assert_flag(placebo)
+
+  doseGrid <- as.numeric(sort(doseGrid))
+
+  if (length(ID) == 0 && length(x) > 0) {
+    message("Used default patient IDs!")
+    ID <- seq_along(x)
+  } else {
+    assert_integerish(ID, unique = TRUE)
+  }
+
+  if (!placebo && length(cohort) == 0 && length(x) > 0) {
+    message("Used best guess cohort indices!")
+    # This is just assuming that consecutive patients
+    # in the data set are in the same cohort if they
+    # have the same dose. Note that this could be wrong,
+    # if two subsequent cohorts are at the same dose.
+    cohort <- as.integer(c(1, 1 + cumsum(diff(x) != 0)))
+  } else {
+    assert_integerish(cohort)
+  }
+
+  .DataOrdinal(
+    x = as.numeric(x),
+    y = as.integer(y),
+    ID = as.integer(ID),
+    cohort = as.integer(cohort),
+    doseGrid = doseGrid,
+    nObs = length(x),
+    nGrid = length(doseGrid),
+    xLevel = match_within_tolerance(x = x, table = doseGrid),
+    placebo = placebo,
+    yCategories = yCategories
+  )
+}
+
+
+## default constructor ----
+
+#' @rdname DataOrdinal-class
+#' @note Typically, end users will not use the `.DefaultDataOrdinal()` function.
+#' @export
+.DefaultDataOrdinal <- function() {
+  DataOrdinal(
+    x = c(10, 20, 30, 40, 50, 50, 50, 60, 60, 60),
+    y = as.integer(c(0, 0, 0, 0, 0, 1, 0, 0, 1, 2)),
+    ID = 1L:10L,
+    cohort = as.integer(c(1:4, 5, 5, 5, 6, 6, 6)),
+    doseGrid = c(seq(from = 10, to = 100, by = 10)),
+    yCategories = c("No tox" = 0L, "Sub-tox AE" = 1L, "DLT" = 2L),
+    placebo = FALSE
+  )
+}
+
+# DataGrouped ----
+
+## class ----
+
+#' `DataGrouped`
+#'
+#' @description `r lifecycle::badge("stable")`
+#'
+#' [`DataGrouped`] is a class for a two groups dose escalation data set,
+#' comprised of a monotherapy (`mono`) and a combination therapy (`combo`)
+#' arm. It inherits from [`Data`] and it contains the additional group information.
+#'
+#' @slot group (`factor`)\cr whether `mono` or `combo` was used.
+#'
+#' @aliases DataGrouped
+#' @export
+.DataGrouped <- setClass(
+  Class = "DataGrouped",
+  slots = c(
+    group = "factor"
+  ),
+  prototype = prototype(
+    group = factor(levels = c("mono", "combo"))
+  ),
+  contains = "Data",
+  validity = v_data_grouped
+)
+
+#' @rdname DataGrouped-class
+#'
+#' @param group (`factor` or `character`)\cr whether `mono` or `combo` was used.
+#'   If `character` then will be coerced to `factor` with the correct levels
+#'   internally.
+#' @param ... parameters passed to [Data()].
+#'
+#' @export
+#' @example examples/Data-class-DataGrouped.R
+#'
+DataGrouped <- function(group = character(), ...) {
+  d <- Data(...)
+  if (!is.factor(group)) {
+    assert_character(group)
+    assert_subset(group, choices = c("mono", "combo"))
+    group <- factor(group, levels = c("mono", "combo"))
+  }
+  .DataGrouped(
+    d,
+    group = group
+  )
+}
+
+## default constructor ----
+
+#' @rdname DataGrouped-class
+#' @note Typically, end users will not use the `.DefaultDataGrouped()` function.
+#' @export
+.DefaultDataGrouped <- function() {
+  DataGrouped(
+    group = c("mono", "mono", "combo"),
+    x = c(1, 3, 5),
+    y = c(0, 0, 0),
+    ID = 1L:3L,
+    cohort = 1L:3L,
+    doseGrid = c(1, 3, 5, 10, 15, 20, 25, 40, 50, 80, 100),
+    placebo = FALSE
+  )
+}

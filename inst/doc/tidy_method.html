@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Using tidy</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using tidy</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">library</span>(crmPack)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">library</span>(knitr)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">library</span>(tidyr)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">library</span>(magrittr)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>})</span></code></pre></div>
+<div id="introducing-tidy-methods-to-crmpack" class="section level1">
+<h1>Introducing tidy methods to crmPack</h1>
+<p>The latest release of <code>crmPack</code> introduces
+<code>broom</code>-like tidy methods for all <code>crmPack</code>
+classes. These methods convert the underlying S4 classes to (lists of)
+<code>tibble</code>s. This should facilitate reporting of all aspects of
+CRM trials as well as making it easier to integrate <code>crmPack</code>
+with other packages such as <code>ggplot2</code>.</p>
+<div id="basic-approach" class="section level2">
+<h2>Basic approach</h2>
+<p>The following is the general approach we take to tidying
+<code>crmPack</code> classes:</p>
+<ul>
+<li>All slots that are not functions are converted to
+<code>tibble</code>s or a list of <code>tibble</code>s.</li>
+<li>If the slot’s value is a <code>list</code>, these rules are applied
+to each element of the list in turn.</li>
+<li>If the slot’s value is scalar, the slot is converted to a 1x1
+<code>tibble</code>. This will ease downstream operations such as
+<code>row_bind</code>ing.</li>
+<li>If the object being tidied contains multiple slots of (potentially)
+different lengths, the result is a list of <code>tibble</code>s. The
+list may be nested to multiple levels. (See, for example,
+<code>LogisticLogNormal</code>.)</li>
+<li>The column names of the tidied <code>tibble</code> correspond to the
+slot names of the parent object.
+<ul>
+<li>Exception: where the slot has name in the plural and contains a
+<code>vector</code> or <code>list</code>, the column name will be
+singular. See, for example, <code>CohortSizeParts</code> below.</li>
+</ul></li>
+<li>When the value of a slot has not been set, a zero-row
+<code>tibble</code> is returned.</li>
+<li>When the value of a slot has scalar attributes, these attributes are
+added as columns of the <code>tibble</code>, whose name is the name of
+the attribute and whose value is the value of the attribute for every
+row of the tibble. Vector attributes can be added, by default, as a
+nested tibble. The nested tibble is 1 row x n column, with column names
+defined by the name of the attribute and values given by the value of
+the corresponding attribute.</li>
+<li><code>tbl_&lt;className&gt;</code> is prepended to the class of the
+(list of) tidy <code>tibble</code>(s).</li>
+</ul>
+</div>
+<div id="exceptions" class="section level2">
+<h2>Exceptions</h2>
+<ul>
+<li>Where a vector slot (or series of vector slots) define a range ()for
+example, the <code>intervals</code> slot in various
+<code>CohortSize</code> and <code>Increments</code> classes, then the
+naming convention described above is not followed. Instead, columns
+named <code>min</code> and <code>max</code> define the extent of the
+range.</li>
+</ul>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p><code>CohortSizeConst</code> is a trivial example and illustrates the
+default approach for all classes.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">CohortSizeConst</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;    size</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 1     3</span></span></code></pre></div>
+<p><code>IncrementsRelative</code> illustrate how ranges are
+handled.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">IncrementsRelative</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">intervals =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">increments =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.33</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">tidy</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;     min   max increment</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 1     0    20      1   </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 2    20   Inf      0.33</span></span></code></pre></div>
+<p><code>CohortSizeMax</code> contains a slot whose value is a list.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cs_max <span class="ot">&lt;-</span> <span class="fu">maxSize</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">CohortSizeConst</span>(<span class="dv">3</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">CohortSizeDLT</span>(<span class="at">intervals =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">cohort_size =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>cs_max <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;    size</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 1     3</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;     min   max cohort_size</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;       &lt;int&gt;</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 1     0     1           1</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 2     1   Inf           3</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; [1] &quot;tbl_CohortSizeMax&quot; &quot;tbl_CohortSizeMax&quot; &quot;list&quot;</span></span></code></pre></div>
+<p>The <code>Samples</code> class likely to the most useful when making
+presentations not yet supported by <code>crmPack</code> directly.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">burnin =</span> <span class="dv">100</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">step =</span> <span class="dv">1</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">samples =</span> <span class="dv">2000</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>emptydata <span class="ot">&lt;-</span> <span class="fu">Data</span>(<span class="at">doseGrid =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">80</span>, <span class="dv">100</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">LogisticLogNormal</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">mean =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.85</span>, <span class="dv">1</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="at">cov =</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>    <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>      <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>    ),</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  <span class="at">ref_dose =</span> <span class="dv">56</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>)</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(emptydata, model, options)</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>tidySamples <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>tidySamples <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; $data</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2,000 × 10</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;    Iteration Chain alpha0 alpha1 nChains nParameters nIterations nBurnin nThin</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;        &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;int&gt;       &lt;int&gt;       &lt;int&gt;   &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;  1         1     1 -1.56   3.06        1           1        2100     100     1</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;  2         2     1 -0.873  8.39        1           1        2100     100     1</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;  3         3     1 -1.44  17.2         1           1        2100     100     1</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;  4         4     1  1.59   1.49        1           1        2100     100     1</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;  5         5     1 -0.908  2.72        1           1        2100     100     1</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;  6         6     1 -0.403  0.883       1           1        2100     100     1</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt;  7         7     1 -1.46   2.08        1           1        2100     100     1</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;  8         8     1  0.156  0.438       1           1        2100     100     1</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;  9         9     1  0.736  0.824       1           1        2100     100     1</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; 10        10     1 -1.98   3.57        1           1        2100     100     1</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,990 more rows</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: parallel &lt;lgl&gt;</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt; $options</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 5</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt;   iterations burnin  step rng_kind rng_seed</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt;        &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;int&gt;</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt; 1       2100    100     1 &lt;NA&gt;           NA</span></span></code></pre></div>
+</div>
+<div id="using-tidy-crmpack-data" class="section level2">
+<h2>Using tidy <code>crmPack</code> data</h2>
+<p>Tidy <code>crmPack</code> data can be easily reported using
+<code>knitr</code> or similar packages in the obvious way.</p>
+<div id="cohort-size" class="section level3">
+<h3>Cohort size</h3>
+<p>The cohort size for this trial is determined by the dose to be used
+in the current cohort according to the rules described in the table
+below:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">CohortSizeRange</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">intervals =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">300</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">cohort_size =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Min&quot;</span>, <span class="st">&quot;Max&quot;</span>, <span class="st">&quot;Cohort size&quot;</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Rules for selecting the cohort size&quot;</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">&quot;Dose&quot;</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">&quot; &quot;</span> <span class="ot">=</span> <span class="dv">1</span>))</span></code></pre></div>
+<table>
+<caption>
+Rules for selecting the cohort size
+</caption>
+<thead>
+<tr>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Dose
+</div>
+</th>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+</tr>
+<tr>
+<th style="text-align:right;">
+Min
+</th>
+<th style="text-align:right;">
+Max
+</th>
+<th style="text-align:right;">
+Cohort size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Or presentations not directly supported by <code>crmPack</code> can
+be easily produced. Here, we create plots of the dose-specific PDFs for
+prior probabilities of toxicity after the first DLT is observed in a
+fictional trial.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">burnin =</span> <span class="dv">5000</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">step =</span> <span class="dv">1</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">samples =</span> <span class="dv">40000</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">Data</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">doseGrid =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">80</span>, <span class="dv">100</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">15</span>, <span class="dv">15</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">ID =</span> <span class="dv">1</span><span class="dt">L</span><span class="sc">:</span><span class="dv">7</span><span class="dt">L</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>))</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>)</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">LogisticLogNormal</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="at">mean =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="at">cov =</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>    <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="sc">-</span><span class="fl">0.1</span>, <span class="dv">4</span>),</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>      <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>    ),</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>  <span class="at">ref_dose =</span> <span class="dv">56</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>)</span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(data, model, options)</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>tidySamples <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co"># The magrittr pipe is necessary here</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>tidySamples<span class="sc">$</span>data <span class="sc">%&gt;%</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>  <span class="fu">expand</span>(</span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>    <span class="fu">nesting</span>(<span class="sc">!!!</span>.[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]),</span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>    <span class="at">Dose =</span> data<span class="sc">@</span>doseGrid[<span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>]</span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Prob =</span> <span class="fu">probFunction</span>(model, <span class="at">alpha0 =</span> alpha0, <span class="at">alpha1 =</span> alpha1)(Dose)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> Prob, <span class="at">colour =</span> <span class="fu">as.factor</span>(Dose)), <span class="at">adjust =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Posterior dose-specific PDFs for p(Tox)&quot;</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Dose 1 omitted as p(Tox) is essentially 0&quot;</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;p(Tox)&quot;</span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a>  <span class="fu">scale_colour_discrete</span>(<span class="st">&quot;Dose&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a>    <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+</div>
+<div id="environment" class="section level1">
+<h1>Environment</h1>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; R version 4.5.1 (2025-06-13 ucrt)</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 11 x64 (build 26200)</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;   LAPACK version 3.12.1</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=C                        LC_CTYPE=German_Switzerland.utf8   </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=German_Switzerland.utf8 LC_NUMERIC=C                       </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=German_Switzerland.utf8    </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; time zone: Asia/Taipei</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; [1] dplyr_1.1.4      magrittr_2.0.4   tidyr_1.3.1      kableExtra_1.4.0</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; [5] knitr_1.50       crmPack_2.0.0    ggplot2_4.0.1   </span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt;  [1] gtable_0.3.6         xfun_0.52            bslib_0.9.0         </span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt;  [4] processx_3.8.6       lattice_0.22-7       vctrs_0.6.5         </span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt;  [7] tools_4.5.1          Rdpack_2.6.4         ps_1.9.1            </span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; [10] generics_0.1.4       parallel_4.5.1       tibble_3.3.0        </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; [13] pkgconfig_2.0.3      checkmate_2.3.3      RColorBrewer_1.1-3  </span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; [16] S7_0.2.0             lifecycle_1.0.4      compiler_4.5.1      </span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; [19] farver_2.1.2         stringr_1.6.0        textshaping_1.0.4   </span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; [22] htmltools_0.5.8.1    sass_0.4.10          yaml_2.3.10         </span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; [25] later_1.4.2          pillar_1.11.1        jquerylib_0.1.4     </span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; [28] cachem_1.1.0         parallelly_1.45.1    tidyselect_1.2.1    </span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; [31] digest_0.6.37        mvtnorm_1.3-3        stringi_1.8.7       </span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; [34] purrr_1.1.0          bookdown_0.44        labeling_0.4.3      </span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; [37] quarto_1.5.1         fastmap_1.2.0        grid_4.5.1          </span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; [40] cli_3.6.5            utf8_1.2.6           GenSA_1.1.14.1      </span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt; [43] withr_3.0.2          scales_1.4.0         backports_1.5.0     </span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; [46] rmarkdown_2.30       lambda.r_1.2.4       gridExtra_2.3       </span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt; [49] futile.logger_1.4.3  rjags_4-17           coda_0.19-4.1       </span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="co">#&gt; [52] evaluate_1.0.5       rbibutils_2.4        viridisLite_0.4.2   </span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt; [55] rlang_1.1.6          futile.options_1.0.1 Rcpp_1.1.0          </span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co">#&gt; [58] glue_1.8.0           formatR_1.14         xml2_1.3.8          </span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="co">#&gt; [61] svglite_2.2.1        rstudioapi_0.17.1    jsonlite_2.0.0      </span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="co">#&gt; [64] R6_2.6.1             systemfonts_1.3.1</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

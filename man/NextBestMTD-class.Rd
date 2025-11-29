@@ -4,30 +4,44 @@
 \name{NextBestMTD-class}
 \alias{NextBestMTD-class}
 \alias{.NextBestMTD}
-\title{The class with the input for finding the next best MTD estimate}
+\alias{NextBestMTD}
+\alias{.DefaultNextBestMTD}
+\title{\code{NextBestMTD}}
+\usage{
+NextBestMTD(target, derive)
+
+.DefaultNextBestMTD()
+}
+\arguments{
+\item{target}{(\code{proportion})\cr see slot definition.}
+
+\item{derive}{(\code{function})\cr see slot definition.}
+}
 \description{
-The class with the input for finding the next best MTD estimate
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{NextBestMTD}} is the class for next best dose based on MTD estimate.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{target}}{the target toxicity probability}
+\item{\code{target}}{(\code{proportion})\cr target toxicity probability, except 0 or 1.}
 
-\item{\code{derive}}{the function which derives from the input, a vector of
-posterior MTD samples called \code{mtdSamples}, the final next best MTD
-estimate.}
+\item{\code{derive}}{(\code{function})\cr a function which derives the final next best MTD
+estimate, based on vector of posterior MTD samples. It must therefore accept
+one and only one argument, which is a numeric vector, and return a number.}
 }}
 
-\examples{
-
-# In the example below the MTD is defined as the dose for which prob(DLE)=0.33 and
-# we will use the 25th quantile of the posterior of MTD as our next best dose.
-mtdNextBest <- NextBestMTD(target=0.33,
-                           derive=
-                             function(mtdSamples){
-                               quantile(mtdSamples, probs=0.25)
-                             })
-
-
+\note{
+Typically, end users will not use the \code{.DefaultNextBestMTD()} function.
 }
-\keyword{classes}
+\examples{
+# In the example below, the MTD is defined as the dose for which prob(DLE) = 0.33
+# and we will use the 25th quantile of the posterior of MTD as our next best dose.
+next_best_mtd <- NextBestMTD(
+  target = 0.33,
+  derive = function(mtd_samples) {
+    quantile(mtd_samples, probs = 0.25)
+  }
+)
+}

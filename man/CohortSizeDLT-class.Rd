@@ -4,28 +4,39 @@
 \name{CohortSizeDLT-class}
 \alias{CohortSizeDLT-class}
 \alias{.CohortSizeDLT}
-\title{Cohort size based on number of DLTs}
+\alias{CohortSizeDLT}
+\alias{.DefaultCohortSizeDLT}
+\title{\code{CohortSizeDLT}}
+\usage{
+CohortSizeDLT(intervals, cohort_size)
+
+.DefaultCohortSizeDLT()
+}
+\arguments{
+\item{intervals}{(\code{numeric})\cr see slot definition.}
+
+\item{cohort_size}{(\code{numeric})\cr see slot definition.}
+}
 \description{
-Cohort size based on number of DLTs
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{CohortSizeDLT}} is the class for cohort size based on number of DLTs.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{DLTintervals}}{an integer vector with the left bounds of the relevant
-DLT intervals}
+\item{\code{intervals}}{(\code{integer})\cr a vector with the left bounds of the
+relevant DLT intervals.}
 
-\item{\code{cohortSize}}{an integer vector of the same length with the cohort
-sizes in the \code{DLTintervals}}
+\item{\code{cohort_size}}{(\code{integer})\cr a vector with the cohort sizes corresponding
+to the elements of \code{intervals}.}
 }}
 
-\examples{
-
-# As example, here is the rule for: 
-#   having cohort of size 1 until no DLT were observed
-#   and having cohort of size 3 as soon as 1 DLT is observed
-
-mySize <- CohortSizeDLT(DLTintervals = c(0, 1),
-                        cohortSize = c(1, 3))
-
+\note{
+Typically, end users will not use the \code{.DefaultCohortSizeDLT()} function.
 }
-\keyword{classes}
+\examples{
+# Rule for having cohort of size 1 until no DLT is observed and having cohort
+# of size 3 as soon as 1 DLT is observed.
+my_size <- CohortSizeDLT(intervals = c(0, 1), cohort_size = c(1, 3))
+}

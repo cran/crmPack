@@ -3,48 +3,44 @@
 \name{minSize}
 \alias{minSize}
 \alias{minSize,CohortSize-method}
-\title{"MIN" combination of cohort size rules}
+\alias{minSize-CohortSize}
+\title{"MIN" Combination of Cohort Size Rules}
 \usage{
 minSize(...)
 
 \S4method{minSize}{CohortSize}(...)
 }
 \arguments{
-\item{\dots}{Objects of class \code{\linkS4class{CohortSize}}}
+\item{...}{Objects of class \code{\link{CohortSize}}.}
 }
 \value{
-the combination as an object of class
-\code{\linkS4class{CohortSizeMin}}
+The combination as an object of class \code{\link{CohortSizeMin}}.
 }
 \description{
-This function combines cohort size rules by taking
-the minimum of all sizes.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function combines cohort size rules by taking the minimum of all sizes.
 }
 \section{Functions}{
 \itemize{
-\item \code{minSize(CohortSize)}: The method combining cohort size rules by taking minimum
+\item \code{minSize(CohortSize)}: The method combining cohort size rules by taking minimum.
 
 }}
 \examples{
-
-# Here is the rule for: 
+# Here is the rule for:
 #   having cohort of size 1 for doses <30
 #   and having cohort of size 3 for doses >=30
-mySize1 <- CohortSizeRange(intervals = c(0, 30),
-                           cohortSize = c(1, 3))
+mySize1 <- CohortSizeRange(intervals = c(0, 30), cohort_size = c(1, 3))
 
-# Here is the rule for: 
+# Here is the rule for:
 #   having cohort of size 1 until no DLT were observed
 #   and having cohort of size 3 as soon as 1 DLT is observed
-mySize2 <- CohortSizeDLT(DLTintervals=c(0, 1),
-                         cohortSize=c(1, 3))
+mySize2 <- CohortSizeDLT(intervals = c(0, 1), cohort_size = c(1, 3))
 
 # This is combining the two rules above by taking the minimum of the sample sizes of
 # the single rules
 mySize <- minSize(mySize1, mySize2)
-
 }
 \seealso{
-\code{\link{maxSize}}
+\code{\link[=maxSize]{maxSize()}}
 }
-\keyword{methods}

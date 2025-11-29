@@ -4,46 +4,66 @@
 \name{GeneralModel-class}
 \alias{GeneralModel-class}
 \alias{.GeneralModel}
-\title{No Intitialization function for this
-General class for model input}
-\description{
-This is the general model class, from which all other specific models for 
-involving BUGS (the software) for computing result. 
-It inherits all slots from \code{\linkS4class{AllModels}}
+\alias{GeneralModel}
+\alias{.DefaultGeneralModel}
+\title{\code{GeneralModel}}
+\usage{
+.DefaultGeneralModel()
 }
-\details{
-The \code{datamodel} must obey the convention that the data input is
-called exactly as in the corresponding data class.
-All prior distributions for parameters should be contained in the
-model function \code{priormodel}. The background is that this can
-be used to simulate from the prior distribution, before obtaining any
-data.
+\description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{GeneralModel}} is a general model class, from which all other specific
+model-like classes inherit.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{datamodel}}{a function representing the BUGS data model specification
-(see the details above)}
+\item{\code{datamodel}}{(\code{function})\cr a function representing the \code{JAGS} data model
+specification.}
 
-\item{\code{priormodel}}{a function representing the BUGS prior specification
-(see the details above)}
+\item{\code{priormodel}}{(\code{function})\cr a function representing the \code{JAGS} prior
+specification.}
 
-\item{\code{modelspecs}}{a function computing the list of the data model and prior
-model specifications that are required for fully specifying them (e.g. prior
-parameters, reference dose, etc.), based on the data
-slots that are then required as arguments of this function. This will then
-be passed to BUGS for the computations.}
+\item{\code{modelspecs}}{(\code{function})\cr a function computing the list of the data
+model and prior model specifications that are required to be specified
+completely (e.g. prior parameters, reference dose, etc.), based on the data
+slots that are required as arguments of this function.
+Apart of data arguments, this function can be specified with one additional
+(optional) argument \code{from_prior} of type \code{logical} and length one. This
+\code{from_prior} flag can be used to differentiate the output of the \code{modelspecs},
+as its value is taken directly from the \code{from_prior} argument of the \code{mcmc}
+method that invokes \code{modelspecs} function. That is, when \code{from_prior} is
+\code{TRUE}, then only \code{priormodel} JAGS model is used (\code{datamodel} is not used)
+by the \code{mcmc}, and hence \code{modelspecs} function should return all the parameters
+that are required by the \code{priormodel} only. If the value of \code{from_prior} is
+\code{FALSE}, then both JAGS models \code{datamodel} and \code{priormodel} are used in the
+MCMC sampler, and hence \code{modelspecs} function should return all the parameters
+required by both \code{datamodel} and \code{priormodel}.}
 
-\item{\code{init}}{a function computing the list of starting values for parameters
-required to be initialized in the MCMC sampler, based on the
-data slots that are then required as arguments of this
-function}
+\item{\code{init}}{(\code{function})\cr a function computing the list of starting values
+for parameters required to be initialized in the MCMC sampler, based on the
+data slots that are required as arguments of this function.}
 
-\item{\code{sample}}{names of all parameters from which you would like to save the
-MCMC samples.}
+\item{\code{datanames}}{(\code{character})\cr the names of all data slots that are used
+by \code{datamodel} JAGS function. No other names should be specified here.}
+
+\item{\code{datanames_prior}}{(\code{character})\cr the names of all data slots that are
+used by \code{priormodel} JAGS function. No other names should be specified here.}
+
+\item{\code{sample}}{(\code{character})\cr names of all parameters from which you would
+like to save the MCMC samples.}
 }}
 
-\seealso{
-\code{\linkS4class{Model}}
+\note{
+The \code{datamodel} must obey the convention that the data input is
+called exactly in the same way as in the corresponding data class.
+All prior distributions for parameters should be contained in the
+model function \code{priormodel}. The background is that this can
+be used to simulate from the prior distribution, before obtaining any data.
+
+Typically, end users will not use the \code{.DefaultGeneralModel()} function.
 }
-\keyword{classes}
+\seealso{
+\code{\link{ModelPseudo}}.
+}

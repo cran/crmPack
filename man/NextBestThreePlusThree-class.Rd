@@ -4,17 +4,25 @@
 \name{NextBestThreePlusThree-class}
 \alias{NextBestThreePlusThree-class}
 \alias{.NextBestThreePlusThree}
-\title{The class with the input for finding the next dose in target interval}
+\alias{NextBestThreePlusThree}
+\alias{.DefaultNextBestThreePlusThree}
+\title{\code{NextBestThreePlusThree}}
+\usage{
+NextBestThreePlusThree()
+
+.DefaultNextBestThreePlusThree()
+}
 \description{
-Implements the classical 3+3 dose recommendation.
-No input is required, hence this class has no slots.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{NextBestThreePlusThree}} is the class for next best dose that
+implements the classical 3+3 dose recommendation. No input is required,
+hence this class has no slots.
+}
+\note{
+Typically, end users will not use the \code{.DefaultNextBestThreePlusThree()} function.
 }
 \examples{
-
-## Choose the next best dose using the  classical 3+3 design.
-## No input is required, hence this function has no parameters.
-myNextBest <- NextBestThreePlusThree()
-
-
+# Next best dose class object using the classical 3+3 design.
+my_next_best <- NextBestThreePlusThree()
 }
-\keyword{classes}

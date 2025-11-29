@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Ordinal CRM</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Ordinal CRM</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(crmPack)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: ggplot2</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Warning: package &#39;ggplot2&#39; was built under R version 4.5.2</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; systemfonts and textshaping have been compiled with different versions of Freetype. Because of this, textshaping will not use the font cache provided by systemfonts</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Registered S3 method overwritten by &#39;crmPack&#39;:</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt;   method       from  </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt;   print.gtable gtable</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; Type crmPackHelp() to open help browser</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; Type crmPackExample() to open example</span></span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The original CRM model introduced by <span class="citation">(O’Quigley, Pepe, and Fisher 1990)</span> dichotomises
+toxicity events as either “Not toxic” or “DLT”. The ordinal CRM
+generalises this model by classifying toxicities on an ordinal scale
+with an arbitrary number of categories (though use of more than three or
+four would be unusual).</p>
+<p>This approach is particularly useful in non-oncology settings, where
+there is a greater interest in adverse events that are not dose limiting
+but are nonetheless undesirable.</p>
+</div>
+<div id="implementation" class="section level1">
+<h1>Implementation</h1>
+<div id="ordinal-data" class="section level2">
+<h2>Ordinal data</h2>
+<p><code>crmPack</code> uses the <code>DataOrdinal</code> class to
+record data observed during an ordinal CRM trial. The
+<code>OrdinalData</code> class differs from the <code>Data</code> class
+only in that it contains an extra slot, <code>yCategories</code>, that
+defines both the number of toxicity grades and their labels.For
+example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>empty_ordinal_data <span class="ot">&lt;-</span> <span class="fu">DataOrdinal</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="at">doseGrid =</span> <span class="fu">c</span>(<span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>)),</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">yCategories =</span> <span class="fu">c</span>(<span class="st">&quot;No tox&quot;</span> <span class="ot">=</span> <span class="dv">0</span><span class="dt">L</span>, <span class="st">&quot;Sub-tox AE&quot;</span> <span class="ot">=</span> <span class="dv">1</span><span class="dt">L</span>, <span class="st">&quot;DLT&quot;</span> <span class="ot">=</span> <span class="dv">2</span><span class="dt">L</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">placebo =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span></code></pre></div>
+<p>defines a <code>DataOrdinal</code> object with three toxicity grades,
+labelled “No tox`”, “Sub-tox AE” and “DLT”.</p>
+<blockquote>
+<p>Note that the <code>yCategories</code> slot must be an integer vector
+with values ordered from <code>0</code> to
+<code>length(yCategories) - 1</code>. Its labels must be unique. The
+first entry, which must have value <code>0</code>, is always regarded as
+the “no event” category. See [The LogisticLogNormalOrdinal class]
+below.</p>
+</blockquote>
+<p>The <code>update</code>, <code>plot</code> and
+<code>dose_grid_range</code> methods work exactly as they do for
+<code>Data</code> objects:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">dose_grid_range</span>(empty_ordinal_data)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1]  10 100</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(empty_ordinal_data, <span class="at">x =</span> <span class="dv">10</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(ordinal_data, <span class="at">x =</span> <span class="dv">20</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(ordinal_data, <span class="at">x =</span> <span class="dv">30</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(ordinal_data, <span class="at">x =</span> <span class="dv">40</span>, <span class="at">y =</span> <span class="dv">0</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(ordinal_data, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">update</span>(ordinal_data, <span class="at">x =</span> <span class="dv">60</span>, <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">plot</span>(ordinal_data)</span></code></pre></div>
+<p><img role="img" aria-label="A graph showing Patient ID on the x axis and dose administered on the y axis.  The shape and colour of the symbols indicate the toxicity status of the patient: red triangles for DLTs, orange circles for sub-toxic AEs and black triangles for no reported toxicities.  Patients 1 to 4 are dosed at 10, 20, 30 and 40, with no toxicitis reported.  patients 5 to 7 are dosed at 50, with patient 6 reporting a sub-toxic AE.  Patients 8 to 10 are treated at 60.  Patient 9 reports a sub-toxic AE and patient 10 a DLT." src="data:image/png;base64,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" alt="A graph showing Patient ID on the x axis and dose administered on the y axis.  The shape and colour of the symbols indicate the toxicity status of the patient: red triangles for DLTs, orange circles for sub-toxic AEs and black triangles for no reported toxicities.  Patients 1 to 4 are dosed at 10, 20, 30 and 40, with no toxicitis reported.  patients 5 to 7 are dosed at 50, with patient 6 reporting a sub-toxic AE.  Patients 8 to 10 are treated at 60.  Patient 9 reports a sub-toxic AE and patient 10 a DLT." /></p>
+</div>
+<div id="the-logisticlognormalordinal-class" class="section level2">
+<h2>The <code>LogisticLogNormalOrdinal</code> class</h2>
+<p><code>crmPack</code> fits a constrained logistic log normal model to
+ordinal data. The logit of the probability of toxicity at each grade for
+a given dose is modelled in the log odds space as a linear regression
+with common slope and a different intercept for each toxicity grade.</p>
+<blockquote>
+<p>Note, unlike other model classes,
+<code>LogisticLogNormalOrdinal</code> requires a diagonal covariance
+matrix. This is because the constraints on the $alpha;s - the intercept
+parameters - imposes a correlation on the model’s parameters. Thus, any
+covariance structure requested by the end user could not be honoured by
+the model.</p>
+</blockquote>
+<p>Let p<sub>k</sub>(d) be the probability that the response of a
+patient treated at dose d is in category k <em><em>or higher</em></em>,
+k=0, …, K; d=1, …, D.</p>
+<p>Then</p>
+<p><span class="math display">\[ \log \left( \frac{p}{1-p}\right) =
+\alpha_k + \beta \cdot \log \left( \frac{d}{d_{ref}} \right)  \]</span>
+for k=1, …, K [p<sub>0</sub>(d) = 1 by definition] where d<sub>ref</sub>
+is a reference dose.</p>
+<p>The αs are constrained such that α<sub>1</sub> &gt; α<sub>2</sub>
+&gt; … &gt; α<sub>K</sub>.</p>
+<p>The priors for the model’s parameters are:</p>
+<p><span class="math display">\[ \alpha_k \sim N(\mu_{\alpha_k},
+\sigma_{\alpha_k}^2) \]</span></p>
+<p>and</p>
+<p><span class="math display">\[ \log(\beta) \sim N(\mu_\beta,
+\sigma_\beta^2) \]</span></p>
+<p>A <code>LogisticLogOrdinal</code> is initialised in exactly the same
+way as a <code>LogisticLogNormal</code> object:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>ordinal_model <span class="ot">&lt;-</span> <span class="fu">LogisticLogNormalOrdinal</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">0</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">cov =</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>)),</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">ref_dose =</span> <span class="dv">55</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>)</span></code></pre></div>
+<p>The entries in the <code>mean</code> and <code>cov</code> parameters
+define the hyper priors for α<sub>1</sub> to α<sub>K-1</sub> and β in
+that order.</p>
+</div>
+<div id="model-fitting" class="section level2">
+<h2>Model fitting</h2>
+<p><code>mcmc</code> works as expected with ordinal models:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>opts <span class="ot">&lt;-</span> <span class="fu">.DefaultMcmcOptions</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(ordinal_data, ordinal_model, opts)</span></code></pre></div>
+<blockquote>
+<p>The warning message is expected and can be ignored. It will be
+suppressed in a future version of <code>crmPack</code>. See issue
+748.</p>
+</blockquote>
+<p>The <code>Samples</code> object returned by <code>mcmc</code> is a
+standard <code>Samples object</code>. The names of the entries in its
+<code>data</code> slot are</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">names</span>(samples<span class="sc">@</span>data)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;alpha1&quot; &quot;alpha2&quot; &quot;beta&quot;</span></span></code></pre></div>
+<p>It can be passed to the <code>fit</code> method, using the
+<code>grade</code> parameter to specify the toxicity grade for which
+cumulative probabilities of toxicity are required:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">fit</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt;    dose     middle        lower     upper</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; 1    10 0.04262833 6.045402e-09 0.2702889</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; 2    20 0.08344062 1.214164e-05 0.3509043</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; 3    30 0.14193764 9.275345e-04 0.4396111</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; 4    40 0.23068945 2.146909e-02 0.5237204</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; 5    50 0.36214824 1.286657e-01 0.6537305</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 6    60 0.51019472 2.091073e-01 0.8346039</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 7    70 0.61641364 2.410234e-01 0.9598204</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 8    80 0.68447219 2.595682e-01 0.9909790</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 9    90 0.73029581 2.771272e-01 0.9969731</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 10  100 0.76306566 2.920994e-01 0.9990262</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="fu">fit</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">2</span><span class="dt">L</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;    dose     middle        lower     upper</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; 1    10 0.02183743 2.529269e-09 0.1624108</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 2    20 0.04339098 6.101742e-06 0.2178902</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; 3    30 0.07494743 4.746146e-04 0.2652294</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; 4    40 0.12498703 8.864813e-03 0.3365967</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; 5    50 0.20874017 5.428729e-02 0.4337404</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; 6    60 0.33237065 8.999435e-02 0.6589112</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; 7    70 0.44952087 1.100259e-01 0.8922830</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; 8    80 0.53365256 1.267199e-01 0.9747681</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; 9    90 0.59380901 1.448974e-01 0.9921736</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; 10  100 0.63853815 1.560367e-01 0.9975519</span></span></code></pre></div>
+<p>The <code>cumulative</code> flag can be used to request
+grade-specific probabilities.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">fit</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>, <span class="at">cumulative =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;    dose     middle        lower     upper</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1    10 0.02079090 2.356011e-09 0.1616296</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; 2    20 0.04004964 3.166291e-06 0.2332938</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; 3    30 0.06699021 1.899370e-04 0.2908568</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 4    40 0.10570241 2.182773e-03 0.3573764</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; 5    50 0.15340807 5.108084e-03 0.4429634</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; 6    60 0.17782407 6.022518e-03 0.4952638</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 7    70 0.16689276 4.691431e-03 0.4757227</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; 8    80 0.15081963 3.080210e-03 0.4507554</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; 9    90 0.13648679 1.065634e-03 0.4373733</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; 10  100 0.12452751 4.843088e-04 0.4204440</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="fu">fit</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">2</span><span class="dt">L</span>, <span class="at">cumulative =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;    dose     middle        lower     upper</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; 1    10 0.02183743 2.529269e-09 0.1624108</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; 2    20 0.04339098 6.101742e-06 0.2178902</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; 3    30 0.07494743 4.746146e-04 0.2652294</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; 4    40 0.12498703 8.864813e-03 0.3365967</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; 5    50 0.20874017 5.428729e-02 0.4337404</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; 6    60 0.33237065 8.999435e-02 0.6589112</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; 7    70 0.44952087 1.100259e-01 0.8922830</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; 8    80 0.53365256 1.267199e-01 0.9747681</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; 9    90 0.59380901 1.448974e-01 0.9921736</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; 10  100 0.63853815 1.560367e-01 0.9975519</span></span></code></pre></div>
+<blockquote>
+<p>Note that, for <code>grade == K - 1</code>, the cumulative and
+grade-specific probabilities of toxicities are identical.</p>
+</blockquote>
+<p>The <code>plot</code> method also takes <code>grade</code> and
+<code>cumulative</code> parameters.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">plot</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">2</span><span class="dt">L</span>)</span></code></pre></div>
+<p><img role="img" aria-label="A graph of the posterior probability of toxicity (DLT only) against dose.  The mean probability of toxicity is barely above 0% at a dose of zero and rises in a sigmoidal curve to around 65% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 15% to 100% for a dose of 100." src="data:image/png;base64,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" alt="A graph of the posterior probability of toxicity (DLT only) against dose.  The mean probability of toxicity is barely above 0% at a dose of zero and rises in a sigmoidal curve to around 65% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 15% to 100% for a dose of 100." /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">plot</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>)</span></code></pre></div>
+<p><img role="img" aria-label="A graph of the posterior cumulative probability of toxicity (sub-toxic AE or DLT) against dose.  The mean probability of toxicity is barely above 0% at a dose of zero and rises in a sigmoidal curve to around 75% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 30% to 100% for a dose of 100." src="data:image/png;base64,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" alt="A graph of the posterior cumulative probability of toxicity (sub-toxic AE or DLT) against dose.  The mean probability of toxicity is barely above 0% at a dose of zero and rises in a sigmoidal curve to around 75% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 30% to 100% for a dose of 100." /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">plot</span>(samples, ordinal_model, ordinal_data, <span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>, <span class="at">cumulative =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><img role="img" aria-label="A graph of the posterior probability of sub toxic AE against dose.  The mean probability of toxicity is barely above 0% at a dose of zero, rises to a peak of about 18% at a dose of 60 before falling to around 12% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 30% to 100% for a dose of 100." src="data:image/png;base64,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" alt="A graph of the posterior probability of sub toxic AE against dose.  The mean probability of toxicity is barely above 0% at a dose of zero, rises to a peak of about 18% at a dose of 60 before falling to around 12% at a dose of 100.  The confidence interval is relatively narrow for low doses but widens considerably for doses over 60, extending from around 30% to 100% for a dose of 100." /></p>
+</div>
+<div id="rules-classes-for-ordinal-models" class="section level2">
+<h2><code>Rules</code> classes for ordinal models</h2>
+<p>For each class of <code>Rule</code> (that is,
+<code>CohortSize</code>, <code>Increments</code>, <code>NextBest</code>
+and <code>Stopping</code>), <code>crmPack</code> provides a single
+wrapper class that allows the <code>Rule</code> to be applied in trials
+using ordinal CRM models. The wrapper class has the name
+<code>&lt;Rule&gt;Ordinal</code> and takes two parameters,
+<code>rule</code> and <code>grade</code>. <code>rule</code> defines the
+standard <code>crmPck</code> <code>Rule</code> and <code>grade</code>
+the toxicity grade at which the rule should be applied.</p>
+<p>For example</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>dlt_rule <span class="ot">&lt;-</span> <span class="fu">CohortSizeDLT</span>(<span class="at">intervals =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">cohort_size =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>ordinal_rule_1 <span class="ot">&lt;-</span> <span class="fu">CohortSizeOrdinal</span>(<span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>, <span class="at">rule =</span> dlt_rule)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>ordinal_rule_2 <span class="ot">&lt;-</span> <span class="fu">CohortSizeOrdinal</span>(<span class="at">grade =</span> <span class="dv">2</span><span class="dt">L</span>, <span class="at">rule =</span> dlt_rule)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="fu">size</span>(ordinal_rule_1, <span class="dv">50</span>, empty_ordinal_data)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="fu">size</span>(ordinal_rule_2, <span class="dv">50</span>, empty_ordinal_data)</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="fu">size</span>(ordinal_rule_1, <span class="dv">50</span>, ordinal_data)</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="fu">size</span>(ordinal_rule_2, <span class="dv">50</span>, ordinal_data)</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<p><code>Rules</code> based on different toxicity grades can be combined
+to produce complex rules. Here we define two <code>Increments</code>
+rules, one based on toxicity grade 1, the other on toxicity grade 2.
+Recall two sub toxic AEs and one DLT have been reported in the example
+data set.</p>
+<p>Thus, the rule based on sub-toxic AEs allows a maximum increment of
+0.67 because three events have been reported, giving a maximum permitted
+dose of 100.2. As only one DLT has been reported, the second rule allows
+an increment of 0.5, giving a maximum permitted dose of 90.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>ordinal_rule_1 <span class="ot">&lt;-</span> <span class="fu">IncrementsOrdinal</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">grade =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">rule =</span> <span class="fu">IncrementsRelativeDLT</span>(<span class="at">intervals =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">increments =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">1.5</span>, <span class="fl">0.67</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="fu">maxDose</span>(ordinal_rule_1, ordinal_data)</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; [1] 100.2</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>ordinal_rule_2 <span class="ot">&lt;-</span> <span class="fu">IncrementsOrdinal</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="at">grade =</span> <span class="dv">2</span><span class="dt">L</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="at">rule =</span> <span class="fu">IncrementsRelativeDLT</span>(<span class="at">intervals =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">increments =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">0.5</span>))</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>)</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="fu">maxDose</span>(ordinal_rule_2, ordinal_data)</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; [1] 90</span></span></code></pre></div>
+<p>The two grade-specific rules can be combined into a single rule using
+<code>IncrementsMin</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>trial_rule <span class="ot">&lt;-</span> <span class="fu">IncrementsMin</span>(<span class="fu">list</span>(ordinal_rule_1, ordinal_rule_2))</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">maxDose</span>(trial_rule, ordinal_data)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; [1] 90</span></span></code></pre></div>
+</div>
+</div>
+<div id="on-the-need-for-a-diagonal-covariance-matrix" class="section level1">
+<h1>On the need for a diagonal covariance matrix</h1>
+<p>Consider a standard logistic log Normal CRM model:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">LogisticLogNormal</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">mean =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">1</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">cov =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">ref_dose =</span> <span class="dv">45</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>)</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>model<span class="sc">@</span>params<span class="sc">@</span>cov</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; [1,]  4.0 -0.5</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt; [2,] -0.5  3.0</span></span></code></pre></div>
+<p>We can estimate the prior using an empty <code>Data</code>
+object…</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">Data</span>(<span class="at">doseGrid =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="at">samples =</span> <span class="dv">30000</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="at">rng_kind =</span> <span class="st">&quot;Mersenne-Twister&quot;</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="at">rng_seed =</span> <span class="dv">8191316</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(data, model, options)</span></code></pre></div>
+<p>and then obtain the correlation between the model’s parameters
+[recalling that the prior is defined in terms of log(alpha1)]…</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">cbind</span>(samples<span class="sc">@</span>data<span class="sc">$</span>alpha0, <span class="fu">log</span>(samples<span class="sc">@</span>data<span class="sc">$</span>alpha1)))</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>sigmaHat <span class="ot">&lt;-</span> <span class="fu">cov</span>(d)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>sigmaHat</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt;            [,1]       [,2]</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt; [1,]  4.0094331 -0.5416752</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; [2,] -0.5416752  3.0363958</span></span></code></pre></div>
+<p>So we requested a covariance of -0.5 and got -0.5416755.2. Pretty
+good!</p>
+<p>Now look an ordinal CRM model with non-zero correlation between its
+parameters.</p>
+<p>To begin, take a copy of the current
+<code>LogisticLogNormalOrdinal</code> model and give it a non-diagonal
+covariance matrix by accessing its <code>params@cov</code> slot
+directly, deliberately avoiding object validation.</p>
+<blockquote>
+<p>NB This is poor practice and not recommended. It is done here purely
+for illustration.</p>
+</blockquote>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>ordinal_model_temp <span class="ot">&lt;-</span> ordinal_model</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>ordinal_model_temp<span class="sc">@</span>params<span class="sc">@</span>cov <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>ordinal_model_temp<span class="sc">@</span>params<span class="sc">@</span>cov</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3]</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">#&gt; [1,]  4.0 -0.5 -0.5</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt; [2,] -0.5  3.0 -0.5</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt; [3,] -0.5 -0.5  1.0</span></span></code></pre></div>
+<p>Fit the revised model to obtain the prior.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>ordinal_data <span class="ot">&lt;-</span> <span class="fu">DataOrdinal</span>(<span class="at">doseGrid =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>ordinal_samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(ordinal_data, ordinal_model_temp, options)</span></code></pre></div>
+<p>Finally, look at the covariance matrix, remembering to use
+<code>log(beta)</code> rather than <code>beta</code>…</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>ordinalD <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">cbind</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    ordinal_samples<span class="sc">@</span>data<span class="sc">$</span>alpha1,</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    ordinal_samples<span class="sc">@</span>data<span class="sc">$</span>alpha2,</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>    <span class="fu">log</span>(ordinal_samples<span class="sc">@</span>data<span class="sc">$</span>beta)</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>  )</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>sigmaHat <span class="ot">&lt;-</span> <span class="fu">cov</span>(ordinalD)</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>sigmaHat</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt;             [,1]        [,2]         [,3]</span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co">#&gt; [1,]  4.00158899 2.768345336 -0.001112980</span></span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a><span class="co">#&gt; [2,]  2.76834534 2.924696828  0.008697924</span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="co">#&gt; [3,] -0.00111298 0.008697924  1.012033823</span></span></code></pre></div>
+<p>The correlations are nothing like what we requested. This is due to
+the constraints imposed on the intercepts by the model. The situation
+will most likely worsen as the number of toxicity categories
+increases.</p>
+<p>We have an open issue - #755 -to examine options for allowing end
+users to specify correlation structures for ordinal CRM models. If you
+would like to contribute, please do so.</p>
+</div>
+<div id="some-observations" class="section level1">
+<h1>Some observations</h1>
+<ul>
+<li>We are currently considering the need for making grade-specific
+functionality available across more <code>crmPack</code> methods. If you
+have a specific use case that is not currently supported, please contact
+us.</li>
+<li>If you have a need for ordinal CRM in dual endpoint models, please
+let us know.</li>
+<li>Had <code>crmPack</code> supported ordinal CRM from the outset, the
+classes that support standard, binary, CRM models would have been
+sub-classes of the more general ordinal implementations. We did consider
+taking this approach when adding support for ordinal CRM models to the
+existing code. We decided against doing so for purely defensive and
+conservative reasons. Had we introduced the ordinal classes as parents
+of the existing classes, changes to the code base would have been much
+more substantial and we were concerned that we might miss some implicit
+assumptions about the dimensionality of the existing models. We
+therefore chose to implement ordinal classes as siblings, rather than
+parents, of the existing classes. This approach minimises the risk of
+breaking existing end-user code at the risk of slightly greater
+complexity in using the new classes.</li>
+</ul>
+</div>
+<div id="environment" class="section level1">
+<h1>Environment</h1>
+<pre><code>#&gt; R version 4.5.1 (2025-06-13 ucrt)
+#&gt; Platform: x86_64-w64-mingw32/x64
+#&gt; Running under: Windows 11 x64 (build 26200)
+#&gt; 
+#&gt; Matrix products: default
+#&gt;   LAPACK version 3.12.1
+#&gt; 
+#&gt; locale:
+#&gt; [1] LC_COLLATE=C                        LC_CTYPE=German_Switzerland.utf8   
+#&gt; [3] LC_MONETARY=German_Switzerland.utf8 LC_NUMERIC=C                       
+#&gt; [5] LC_TIME=German_Switzerland.utf8    
+#&gt; 
+#&gt; time zone: Asia/Taipei
+#&gt; tzcode source: internal
+#&gt; 
+#&gt; attached base packages:
+#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
+#&gt; 
+#&gt; other attached packages:
+#&gt; [1] crmPack_2.0.0 ggplot2_4.0.1
+#&gt; 
+#&gt; loaded via a namespace (and not attached):
+#&gt;  [1] sass_0.4.10          generics_0.1.4       xml2_1.3.8          
+#&gt;  [4] futile.options_1.0.1 lattice_0.22-7       stringi_1.8.7       
+#&gt;  [7] digest_0.6.37        magrittr_2.0.4       evaluate_1.0.5      
+#&gt; [10] grid_4.5.1           RColorBrewer_1.1-3   bookdown_0.44       
+#&gt; [13] mvtnorm_1.3-3        fastmap_1.2.0        jsonlite_2.0.0      
+#&gt; [16] processx_3.8.6       backports_1.5.0      ps_1.9.1            
+#&gt; [19] formatR_1.14         gridExtra_2.3        viridisLite_0.4.2   
+#&gt; [22] scales_1.4.0         textshaping_1.0.4    jquerylib_0.1.4     
+#&gt; [25] Rdpack_2.6.4         cli_3.6.5            rlang_1.1.6         
+#&gt; [28] rbibutils_2.4        futile.logger_1.4.3  parallelly_1.45.1   
+#&gt; [31] withr_3.0.2          cachem_1.1.0         yaml_2.3.10         
+#&gt; [34] parallel_4.5.1       tools_4.5.1          coda_0.19-4.1       
+#&gt; [37] checkmate_2.3.3      dplyr_1.1.4          lambda.r_1.2.4      
+#&gt; [40] kableExtra_1.4.0     vctrs_0.6.5          R6_2.6.1            
+#&gt; [43] lifecycle_1.0.4      stringr_1.6.0        GenSA_1.1.14.1      
+#&gt; [46] rjags_4-17           pkgconfig_2.0.3      pillar_1.11.1       
+#&gt; [49] bslib_0.9.0          later_1.4.2          gtable_0.3.6        
+#&gt; [52] glue_1.8.0           Rcpp_1.1.0           systemfonts_1.3.1   
+#&gt; [55] xfun_0.52            tibble_3.3.0         tidyselect_1.2.1    
+#&gt; [58] rstudioapi_0.17.1    knitr_1.50           farver_2.1.2        
+#&gt; [61] htmltools_0.5.8.1    quarto_1.5.1         labeling_0.4.3      
+#&gt; [64] rmarkdown_2.30       svglite_2.2.1        compiler_4.5.1      
+#&gt; [67] S7_0.2.0</code></pre>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-oquigley1990" class="csl-entry">
+O’Quigley, John, Margaret Pepe, and Lloyd Fisher. 1990. <span>“Continual
+Reassessment Method: A Practical Design for Phase 1 Clinical Trials in
+Cancer.”</span> <em>Biometrics</em> 46 (1): 33–48.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

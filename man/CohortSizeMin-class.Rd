@@ -4,39 +4,44 @@
 \name{CohortSizeMin-class}
 \alias{CohortSizeMin-class}
 \alias{.CohortSizeMin}
-\title{Size based on minimum of multiple cohort size rules}
-\description{
-This class can be used to combine multiple cohort size rules with the MIN
-operation.
+\alias{CohortSizeMin}
+\alias{.DefaultCohortSizeMin}
+\title{\code{CohortSizeMin}}
+\usage{
+CohortSizeMin(cohort_sizes)
+
+.DefaultCohortSizeMin()
 }
-\details{
-\code{cohortSizeList} contains all cohort size rules, which are again
-objects of class \code{\linkS4class{CohortSize}}. The minimum of these
-individual cohort sizes is taken to give the final cohort size.
+\arguments{
+\item{cohort_sizes}{(\code{list})\cr see slot definition.}
+}
+\description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{CohortSizeMin}} is the class for cohort size that is based on minimum of
+multiple cohort size rules. The \code{cohort_sizes} slot stores a set of cohort
+size rules, which are again the objects of class \code{\link{CohortSize}}. The minimum
+of these individual cohort sizes is taken to give the final cohort size.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{cohortSizeList}}{list of cohort size rules}
+\item{\code{cohort_sizes}}{(\code{list})\cr a list of cohort size rules, i.e. objects
+of class \code{\link{CohortSize}}.}
 }}
 
-\examples{
-
-# Rule for having cohort of size 1 for doses <30
-#      and having cohort of size 3 for doses >=30
-mySize1 <- CohortSizeRange(intervals = c(0, 10),
-                           cohortSize = c(1, 3))
-
-# Rule for having cohort of size 1 until no DLT were observed
-#      and having cohort of size 3 as soon as 1 DLT is observed
-mySize2 <- CohortSizeDLT(DLTintervals=c(0, 1),
-                         cohortSize=c(1, 3))
-
-# Create a list of cohort size rules of class 'CohortSizeMax' which will then be 
-# combined with the 'min' operation
-mySize <- CohortSizeMin(cohortSizeList=list(mySize1, 
-                                            mySize2))
-
-
+\note{
+Typically, end users will not use the \code{.DefaultCohortSizeMin()} function.
 }
-\keyword{classes}
+\examples{
+# Rule for cohort of size 1 for doses <30 and cohort of size 3 for doses >=30.
+my_size1 <- CohortSizeRange(intervals = c(0, 10), cohort_size = c(1, 3))
+
+# Rule for cohort of size 1 until no DLT were observed and cohort of size 3
+# as soon as 1 DLT is observed.
+my_size2 <- CohortSizeDLT(intervals = c(0, 1), cohort_size = c(1, 3))
+
+# Cohort size rules of class 'CohortSizeMin' which will then be combined with
+# the 'min' operation.
+my_size <- CohortSizeMin(cohort_sizes = list(my_size1, my_size2))
+}

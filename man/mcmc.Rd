@@ -3,29 +3,48 @@
 \name{mcmc}
 \alias{mcmc}
 \alias{mcmc,GeneralData,GeneralModel,McmcOptions-method}
+\alias{mcmc-GeneralData}
+\alias{mcmc,GeneralData,DualEndpointRW,McmcOptions-method}
+\alias{mcmc-GeneralData-DualEndpointRW}
+\alias{mcmc,GeneralData,DualEndpointBeta,McmcOptions-method}
+\alias{mcmc-GeneralData-DualEndpointBeta}
+\alias{mcmc,GeneralData,DualEndpointEmax,McmcOptions-method}
+\alias{mcmc-GeneralData-DualEndpointEmax}
+\alias{mcmc,GeneralData,OneParLogNormalPrior,McmcOptions-method}
+\alias{mcmc-GeneralData-OneParLogNormalPrior}
+\alias{mcmc,GeneralData,OneParExpPrior,McmcOptions-method}
+\alias{mcmc-GeneralData-OneParExpPrior}
 \alias{mcmc,DataMixture,GeneralModel,McmcOptions-method}
+\alias{mcmc-DataMixture}
 \alias{mcmc,Data,LogisticIndepBeta,McmcOptions-method}
+\alias{mcmc-Data-LogisticIndepBeta}
 \alias{mcmc,DataDual,Effloglog,McmcOptions-method}
+\alias{mcmc-DataDual-Effloglog}
 \alias{mcmc,DataDual,EffFlexi,McmcOptions-method}
-\title{Obtain posterior samples for all model parameters}
+\alias{mcmc-DataDual-EffFlexi}
+\alias{mcmc,DataOrdinal,LogisticLogNormalOrdinal,McmcOptions-method}
+\alias{mcmc-DataOrdinal-LogisticLogNormalOrdinal}
+\title{Obtaining Posterior Samples for all Model Parameters}
 \usage{
 mcmc(data, model, options, ...)
 
-\S4method{mcmc}{GeneralData,GeneralModel,McmcOptions}(
-  data,
-  model,
-  options,
-  program = c("JAGS"),
-  verbose = FALSE,
-  fromPrior = data@nObs == 0L,
-  ...
-)
+\S4method{mcmc}{GeneralData,GeneralModel,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{GeneralData,DualEndpointRW,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{GeneralData,DualEndpointBeta,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{GeneralData,DualEndpointEmax,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{GeneralData,OneParLogNormalPrior,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
+
+\S4method{mcmc}{GeneralData,OneParExpPrior,McmcOptions}(data, model, options, from_prior = data@nObs == 0L, ...)
 
 \S4method{mcmc}{DataMixture,GeneralModel,McmcOptions}(
   data,
   model,
   options,
-  fromPrior = data@nObs == 0L & data@nObsshare == 0L,
+  from_prior = data@nObs == 0L & data@nObsshare == 0L,
   ...
 )
 
@@ -34,141 +53,292 @@ mcmc(data, model, options, ...)
 \S4method{mcmc}{DataDual,Effloglog,McmcOptions}(data, model, options, ...)
 
 \S4method{mcmc}{DataDual,EffFlexi,McmcOptions}(data, model, options, ...)
+
+\S4method{mcmc}{DataOrdinal,LogisticLogNormalOrdinal,McmcOptions}(data, model, options, ...)
 }
 \arguments{
-\item{data}{The data input, an object of class \code{\linkS4class{GeneralData}}}
+\item{data}{(\code{GeneralData})\cr an input data.}
 
-\item{model}{The model input, an object of class \code{\linkS4class{GeneralModel}}}
+\item{model}{(\code{GeneralModel})\cr an input model.}
 
-\item{options}{MCMC options, an object of class
-\code{\linkS4class{McmcOptions}}}
+\item{options}{(\code{McmcOptions})\cr MCMC options.}
 
-\item{\dots}{unused}
+\item{...}{not used.}
 
-\item{program}{the program which shall be used: currently only \dQuote{JAGS}
-is supported}
-
-\item{verbose}{shall progress bar and messages be printed? (not default)}
-
-\item{fromPrior}{sample from the prior only? Defaults to checking if nObs is
-0. For some models it might be necessary to specify it manually here though.}
+\item{from_prior}{(\code{flag})\cr sample from the prior only? Default to \code{TRUE}
+when number of observations in \code{data} is \code{0}. For some models it might be
+necessary to specify it manually here though.}
 }
 \value{
-The posterior samples, an object of class
-\code{\linkS4class{Samples}}.
+The posterior samples, an object of class \code{\link{Samples}}.
 }
 \description{
-This is the function to actually run the MCMC machinery to produce posterior
-samples from all model parameters and required derived values. It is a
-generic function, so that customized versions may be conveniently defined
-for specific subclasses of GeneralData, GeneralModel, and McmcOptions input.
-}
-\details{
-Reproducible samples can be obtained by setting the seed via
-\code{\link{set.seed}} before in the user code as usual. However, note that
-because the RNG sampler used is external to R, running this MCMC function
-will not change the seed position -- that is, the repeated call to this
-function will then result in exactly the same output.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This is the function that actually runs the \code{JAGS} MCMC machinery to produce
+posterior samples from all model parameters and required derived values.
+It is a generic function, so that customized versions may be conveniently
+defined for specific subclasses of \code{\link{GeneralData}}, \code{\link{GeneralModel}}, and
+\code{\link{McmcOptions}} input.
 }
 \section{Functions}{
 \itemize{
-\item \code{mcmc(data = GeneralData, model = GeneralModel, options = McmcOptions)}: Standard method which uses JAGS
+\item \code{mcmc(data = GeneralData, model = GeneralModel, options = McmcOptions)}: Standard method which uses JAGS.
 
-\item \code{mcmc(data = DataMixture, model = GeneralModel, options = McmcOptions)}: Method for DataMixture with different fromPrior default
+\item \code{mcmc(data = GeneralData, model = DualEndpointRW, options = McmcOptions)}: Standard method which uses JAGS. For the
+\code{\link{DualEndpointRW}} model, it is required that there are at least two (in
+case of random walk prior of the first order on the biomarker level) or
+three doses in the grid.
 
-\item \code{mcmc(data = Data, model = LogisticIndepBeta, options = McmcOptions)}: Obtain posterior samples for the model parameters based on the pseudo 'LogisticsIndepBeta'
-DLE model. The joint prior and posterior probability density function of 
-the intercept \eqn{\phi_1} (phi1) and the slope \eqn{\phi_2} (phi2) are given in Whitehead and 
-Williamson (1998) and TsuTakawa (1975). However, since asymptotically, the joint posterior probability density 
-will be bivariate normal and we will use the bivariate normal distribution to
-generate posterior samples of the intercept and the slope parameters. For the prior samples of 
-of the intercept and the slope a bivariate normal distribution with mean and the covariance matrix given in Whitehead and 
-Williamson (1998) is used.
+\item \code{mcmc(data = GeneralData, model = DualEndpointBeta, options = McmcOptions)}: Standard method which uses JAGS. For the
+\code{\link{DualEndpointBeta}} model, it is required that the value of \code{ref_dose_beta}
+slot is greater than the maximum dose in a grid. This requirement comes from
+definition of the beta function that is used to model dose-biomarker
+relationship in \code{\link{DualEndpointBeta}} model. The other requirement is that
+there must be at least one dose in the grid.
 
-\item \code{mcmc(data = DataDual, model = Effloglog, options = McmcOptions)}: Obtain the posterior samples for the model parameters in the 
-Efficacy log log model. Given the value of \eqn{\nu}, the precision of the efficacy responses,
-the joint prior or the posterior probability of the intercept \eqn{\theta_1} (theta1) and 
-the slope \eqn{\theta_2} (theta2) is a bivariate normal distribtuion. The  \eqn{\nu} (nu), 
-the precision of the efficacy responses is either a fixed value or has a gamma distribution.
-If a gamma distribution is used, the samples of nu will be first generated. 
-Then the mean of the of the nu samples 
-will be used the generate samples of the intercept and slope parameters of the model
+\item \code{mcmc(data = GeneralData, model = DualEndpointEmax, options = McmcOptions)}: Standard method which uses JAGS. For the
+\code{\link{DualEndpointEmax}} model, it is required that there is at least one dose
+in the grid.
 
-\item \code{mcmc(data = DataDual, model = EffFlexi, options = McmcOptions)}: Obtain the posterior samples for the estimates in the Efficacy Flexible form.
-This is the mcmc procedure based on what is described in Lang and Brezger (2004) such that 
-samples of the mean efficacy responses at all dose levels, samples of sigma2 \eqn{sigma^2}, 
-the variance of the efficacy response and samples of sigma2betaW \eqn{sigma^2_{beta_W}}, the variance of
-the random walk model will
-be generated. Please refer to Lang and Brezger (2004) for the procedures and the form of 
-the joint prior and posterior probability density for the mean efficay responses. In addition,
-both sigma2 and sigma2betaW acan be fixed or having an inverse-gamma prior and posterior distribution. 
-Therefore, if the inverse gamma distribution(s) are used, the parameters in the distribution will be 
-first updated and then samples of sigma2 and sigma2betaW will be generated using the updated parameters.
+\item \code{mcmc(data = GeneralData, model = OneParLogNormalPrior, options = McmcOptions)}: Standard method which uses JAGS. For the
+\code{\link{OneParLogNormalPrior}} model, it is required that the length of
+skeleton prior probabilities vector should be equal to the length of the
+number of doses.
+
+\item \code{mcmc(data = GeneralData, model = OneParExpPrior, options = McmcOptions)}: Standard method which uses JAGS. For the
+\code{\link{OneParExpPrior}} model, it is required that the length of
+skeleton prior probabilities vector should be equal to the length of the
+number of doses.
+
+\item \code{mcmc(data = DataMixture, model = GeneralModel, options = McmcOptions)}: Method for \code{\link{DataMixture}} with different \code{from_prior} default.
+Samples from the prior only when both the number of observations and the
+number of shared observations are zero.
+
+\item \code{mcmc(data = Data, model = LogisticIndepBeta, options = McmcOptions)}: Obtain posterior samples for the model parameters based on
+the pseudo \code{\link{LogisticIndepBeta}} DLE model. The joint prior and posterior
+probability density function of the intercept \eqn{\phi_1} (\code{phi1}) and the
+slope \eqn{\phi_2} (\code{phi2}) are given in
+\insertCite{WhiteheadWilliamson1998;textual}{crmPack}. However, since
+asymptotically, the joint posterior probability density will be bivariate
+normal, we use the bivariate normal distribution to generate posterior
+samples of the intercept and the slope parameters. For the prior samples of
+the intercept and the slope, a bivariate normal distribution with mean and
+the covariance matrix given in
+\insertCite{WhiteheadWilliamson1998;textual}{crmPack} is used.
+
+\item \code{mcmc(data = DataDual, model = Effloglog, options = McmcOptions)}: Obtain the posterior samples for the model parameters in the
+\code{\link{Effloglog}} model. Given the value of \eqn{\nu}, the precision of the
+efficacy responses, the joint prior or the posterior probability of the
+intercept \eqn{\theta_1} (\code{theta1}) and the slope \eqn{\theta_2} (\code{theta2})
+is a bivariate normal distribution. The \eqn{\nu} (\code{nu}), the precision of
+the efficacy responses is either a fixed value or has a gamma distribution.
+If a gamma distribution is used, the samples of \code{nu} will be first generated.
+Then the mean of the \code{nu} samples will be used to generate samples of the
+intercept and slope parameters of the model.
+
+\item \code{mcmc(data = DataDual, model = EffFlexi, options = McmcOptions)}: Obtain the posterior samples for the estimates in the
+\code{\link{EffFlexi}} model. This is the MCMC procedure based on what is described
+in \insertCite{LangBrezger2004;textual}{crmPack} such that samples of the
+mean efficacy responses at all dose levels, samples of \code{sigma2}
+\eqn{\sigma^2}, the variance of the efficacy response and samples of
+\code{sigma2betaW} \eqn{\sigma^2_{\beta_W}}, the variance of the random walk
+model will be generated. Please refer to
+\insertCite{LangBrezger2004;textual}{crmPack} for the procedures and the
+form of the joint prior and posterior probability density for the mean
+efficacy responses. In addition, both \code{sigma2} and \code{sigma2betaW} can be
+fixed or have an inverse-gamma prior and posterior distribution. Therefore,
+if the inverse gamma distribution(s) are used, the parameters in the
+distribution will be first updated and then samples of \code{sigma2} and
+\code{sigma2betaW} will be generated using the updated parameters.
+
+\item \code{mcmc(
+  data = DataOrdinal,
+  model = LogisticLogNormalOrdinal,
+  options = McmcOptions
+)}: Obtain the posterior samples for the model parameters in the
+\code{\link{LogisticLogNormalOrdinal}} model.
+
+The generic \code{mcmc} method returns a \code{\link{Samples}} object with elements of the
+\code{data} slot named \code{alpha[1]}, \code{alpha[2]}, ..., \code{alpha[k]} and \code{beta} when
+passed a \code{\link{LogisticLogNormalOrdinal}} object. This makes the "alpha elements"
+awkward to access and is inconsistent with other model objects. So rename
+the alpha elements to \code{alpha1}, \code{alpha2}, ..., \verb{alpha<k>} for ease and
+consistency.
 
 }}
+\note{
+The type of Random Number Generator (RNG) and its initial seed used by
+\code{JAGS} are taken from the \code{options} argument. If no initial values are
+supplied (i.e RNG kind or seed slot in \code{options} has \code{NA}), then they will
+be generated automatically by \code{JAGS}.
+}
 \examples{
+# Create some data from the class `Data`.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
 
-# create some data from the class 'Data'
-myData <- Data(x=c(0.1,0.5,1.5,3,6,10,10,10),
-               y=c(0,0,0,0,0,0,1,0),
-               doseGrid=c(0.1,0.5,1.5,3,6,
-                          seq(from=10,to=80,by=2)))
+# Initialize the CRM model.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
 
-# Initialize the CRM model 
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
+# Sample from the posterior distribution.
+my_options <- McmcOptions(
+  burnin = 100,
+  step = 2,
+  samples = 1000
+)
 
+samples <- mcmc(data = my_data, model = my_model, options = my_options)
+samples
+# Create some data from the class `DataDual`.
+plcb <- 0.001
+my_data <- DataDual(
+  w = c(13, 77, 86, 26, 27, 36, 37, 97, 21, 49, 87, 48),
+  x = c(plcb, 25, 25, 25, plcb, 50, 50, 50, plcb, 100, 100, 100),
+  y = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L),
+  doseGrid = c(plcb, seq(25, 300, 25)),
+  placebo = TRUE,
+  ID = 1:12,
+  cohort = c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L)
+)
 
-# Sample from the posterior distribution
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=1000)
+# Initialize the CRM model.
+my_model <- DualEndpointRW(
+  mean = c(0, 1),
+  cov = matrix(c(1, 0, 0, 1), nrow = 2),
+  sigma2W = c(a = 0.1, b = 0.1),
+  rho = c(a = 1, b = 1),
+  sigma2betaW = 0.01,
+  rw1 = TRUE
+)
 
-samples <- mcmc(data = myData, model = model, options=options)
+# Sample from the posterior distribution.
+my_options <- McmcOptions(
+  burnin = 50,
+  step = 2,
+  samples = 4,
+  rng_kind = "Mersenne-Twister",
+  rng_seed = 1
+)
 
+samples <- mcmc(data = my_data, model = my_model, options = my_options)
+samples
+# Create some data from the class `DataDual`.
+plcb <- 0.001
+my_data <- DataDual(
+  w = c(13, 77, 86, 26, 27, 36, 37, 97, 21, 49, 87, 48),
+  x = c(plcb, 25, 25, 25, plcb, 50, 50, 50, plcb, 100, 100, 100),
+  y = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L),
+  doseGrid = c(plcb, seq(25, 300, 25)),
+  placebo = TRUE,
+  ID = 1:12,
+  cohort = c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L)
+)
 
+# Initialize the CRM model.
+my_model <- DualEndpointBeta(
+  mean = c(0, 1),
+  cov = diag(2),
+  ref_dose = 2,
+  use_log_dose = FALSE,
+  sigma2W = c(a = 1, b = 2),
+  rho = c(a = 1.5, b = 2.5),
+  E0 = 2,
+  Emax = 50,
+  delta1 = 6,
+  mode = 9,
+  ref_dose_beta = my_data@doseGrid[my_data@nGrid] + 10
+)
+
+# Sample from the posterior distribution.
+my_options <- McmcOptions(
+  burnin = 50,
+  step = 2,
+  samples = 4,
+  rng_kind = "Mersenne-Twister",
+  rng_seed = 1
+)
+
+samples <- mcmc(data = my_data, model = my_model, options = my_options)
+samples
 ##obtain mcmc DLE samples given the data, LogisticIndepBeta (DLE model) and mcmc simulations options
 ## data must be of 'Data' class
-data<-Data(x=c(25,50,50,75,100,100,225,300),y=c(0,0,0,0,1,1,1,1),
-           doseGrid=seq(25,300,25))
+data <- Data(
+  x = c(25, 50, 50, 75, 100, 100, 225, 300),
+  y = c(0, 0, 0, 0, 1, 1, 1, 1),
+  doseGrid = seq(25, 300, 25)
+)
 ## model must be of 'LogisticIndepBeta' class
-model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
+model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = data
+)
 ## options must be ''McmcOptions' class
-options<-McmcOptions(burnin=100,step=2,samples=200)
+options <- McmcOptions(burnin = 100, step = 2, samples = 200)
 set.seed(94)
-samples<-mcmc(data=data,model=model,options=options)
+samples <- mcmc(data = data, model = model, options = options)
+# nolint start
 ##obtain mcmc efficacy samples given the data, 'Effloglog' model (efficacy model) and
 ## mcmc simulations options data must be of 'DataDual' class
-data<-DataDual(x=c(25,50,25,50,75,300,250,150),
-              y=c(0,0,0,0,0,1,1,0),
-              w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-              doseGrid=seq(25,300,25),placebo=FALSE)
+data <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  doseGrid = seq(25, 300, 25),
+  placebo = FALSE
+)
 ## model must be of 'Effloglog' class
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
+Effmodel <- Effloglog(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  nu = c(a = 1, b = 0.025),
+  data = data
+)
 
 ## options must be ''McmcOptions' class
-options<-McmcOptions(burnin=100,step=2,samples=200)
+options <- McmcOptions(burnin = 100, step = 2, samples = 200)
 set.seed(94)
-samples<-mcmc(data=data,model=Effmodel,options=options)
-##obtain mcmc efficacy samples given the data, 'EffFlexi' model (efficacy model) and 
+samples <- mcmc(data = data, model = Effmodel, options = options)
+# nolint end
+## obtain mcmc efficacy samples given the data, 'EffFlexi' model (efficacy model) and
 ## mcmc simulations options
 ## data must be of 'DataDual' class
-data<-DataDual(x=c(25,50,25,50,75,300,250,150),
-               y=c(0,0,0,0,0,1,1,0),
-               w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-               doseGrid=seq(25,300,25))
+data <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  doseGrid = seq(25, 300, 25)
+)
 ## model must be of 'EffFlexi' class
 
-Effmodel<- EffFlexi(Eff=c(1.223, 2.513),Effdose=c(25,300),
-                    sigma2=c(a=0.1,b=0.1),sigma2betaW=c(a=20,b=50),smooth="RW2",data=data)
+effmodel <- EffFlexi(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  sigma2W = c(a = 0.1, b = 0.1),
+  sigma2betaW = c(a = 20, b = 50),
+  rw1 = FALSE,
+  data = data
+)
 
 ## options must be ''McmcOptions' class
-options<-McmcOptions(burnin=100,step=2,samples=200)
+options <- McmcOptions(burnin = 100, step = 2, samples = 200)
 set.seed(94)
-samples<-mcmc(data=data,model=Effmodel,options=options)
+samples <- mcmc(data = data, model = effmodel, options = options)
+ordinal_data <- .DefaultDataOrdinal()
+ordinal_model <- .DefaultLogisticLogNormalOrdinal()
+mcmc_options <- .DefaultMcmcOptions()
+
+samples <- mcmc(ordinal_data, ordinal_model, mcmc_options)
 }
-\keyword{methods}
-\keyword{regression}
+\references{
+\insertAllCited{}
+}

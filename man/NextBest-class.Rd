@@ -3,14 +3,25 @@
 \docType{class}
 \name{NextBest-class}
 \alias{NextBest-class}
-\title{The virtual class for finding next best dose}
+\alias{NextBest}
+\alias{.DefaultNextBest}
+\title{\code{NextBest}}
+\usage{
+.DefaultNextBest()
+}
 \description{
-The virtual class for finding next best dose
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{NextBest}} is a virtual class for finding next best dose, from which all
+other specific next best dose classes inherit.
+}
+\note{
+Typically, end users will not use the \code{DefaultNextBest()} function.
 }
 \seealso{
-\code{\linkS4class{NextBestMTD}},
-\code{\linkS4class{NextBestNCRM}},
-\code{\linkS4class{NextBestDualEndpoint}},
-\code{\linkS4class{NextBestThreePlusThree}}
+\code{\link{NextBestEWOC}}, \code{\link{NextBestMTD}}, \code{\link{NextBestNCRM}},
+\code{\link{NextBestNCRMLoss}}, \code{\link{NextBestThreePlusThree}}, \code{\link{NextBestDualEndpoint}},
+\code{\link{NextBestMinDist}}, \code{\link{NextBestInfTheory}}, \code{\link{NextBestTD}},
+\code{\link{NextBestTDsamples}}, \code{\link{NextBestMaxGain}}, \code{\link{NextBestMaxGainSamples}},
+\code{\link{NextBestProbMTDLTE}}, \code{\link{NextBestProbMTDMinDist}}, \code{\link{NextBestOrdinal}}.
 }
-\keyword{classes}

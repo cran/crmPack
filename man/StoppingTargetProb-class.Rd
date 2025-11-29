@@ -4,25 +4,46 @@
 \name{StoppingTargetProb-class}
 \alias{StoppingTargetProb-class}
 \alias{.StoppingTargetProb}
-\title{Stop based on probability of target tox interval}
+\alias{StoppingTargetProb}
+\alias{.DefaultStoppingTargetProb}
+\title{\code{StoppingTargetProb}}
+\usage{
+StoppingTargetProb(
+  target = c(0.2, 0.35),
+  prob = 0.4,
+  report_label = NA_character_
+)
+
+.DefaultStoppingTargetProb()
+}
+\arguments{
+\item{target}{(\code{number})\cr see slot definition.}
+
+\item{prob}{(\code{proportion})\cr see slot definition.}
+
+\item{report_label}{(\code{string} or \code{NA})\cr see slot definition.}
+}
 \description{
-Stop based on probability of target tox interval
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{StoppingTargetProb}} is the class for stopping based on the probability of
+the DLT rate being in the target toxicity interval.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{target}}{the target toxicity interval, e.g. \code{c(0.2, 0.35)}}
+\item{\code{target}}{(\code{number})\cr the target toxicity interval, e.g. \code{c(0.2, 0.35)}.}
 
-\item{\code{prob}}{required target toxicity probability (e.g. \code{0.4})
-for reaching sufficient precision}
+\item{\code{prob}}{(\code{proportion})\cr required target toxicity probability (except 0 or 1)
+for reaching sufficient precision.}
 }}
 
-\examples{
-# As example, here is the rule for: 
-#   stopping the study if the posterior probability that [0.2 =< Prob(DLT | dose) <= 0.35] 
-#   for the next best dose is above 0.5
-
-myStopping <- StoppingTargetProb(target=c(0.2, 0.35),
-                                 prob=0.5)
+\note{
+Typically, end users will not use the \code{.DefaultStoppingTargetProb()} function.
 }
-\keyword{classes}
+\examples{
+# As example, here is the rule for stopping the study if the posterior
+# probability that [0.2 =< Prob(DLT | dose) <= 0.35] for the next best dose
+# is above 0.5.
+my_stopping <- StoppingTargetProb(target = c(0.2, 0.35), prob = 0.5)
+}

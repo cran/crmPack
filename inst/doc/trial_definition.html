@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Trial Definition</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Trial Definition</h1>
+
+
+
+<div id="defining-the-design" class="section level2">
+<h2>Defining the design</h2>
+<p>A CRM study consists of six basic elements:</p>
+<ul>
+<li>The dose grid</li>
+<li>The dose-toxicity model</li>
+<li>The increment rule_<sup>1</sup></li>
+<li>The dose recommendation rule<sup>1</sup></li>
+<li>The cohort size<sup>1</sup></li>
+<li>The stopping rule</li>
+</ul>
+<p>1: Note that in <code>crmPack</code>, the increment, dose selection
+and cohort size rules are collectively known as the <i>escalation
+rules</i>.</p>
+<p>There are many, many possible choices for each element. In this
+introduction, we make simple choices for the value of each element.</p>
+<p>We start by loading the <code>crmPack</code> package …</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(crmPack)</span></code></pre></div>
+<p>… and defining each element in turn.</p>
+<div id="the-dose-grid" class="section level3">
+<h3>The dose grid</h3>
+<p>First, we list the doses that <em>might</em> be used during the
+trial.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Define the dose grid.</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>empty_data <span class="ot">&lt;-</span> <span class="fu">Data</span>(<span class="at">doseGrid =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">45</span>, <span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">100</span>))</span></code></pre></div>
+<p>There is no commitment to use every dose in the grid. Here we define
+a grid of 9 doses ranging between 1 and 100. <code>crmPack</code> is
+agnostic with respect to the units used to measure the doses. The only
+requirements are that the dose grid is ordered and one dimensional.</p>
+<p>Additional doses can be added whilst the trial is running. This will
+not affect the validity of the results of the trial prior to the
+addition, but will probably affect the trial’s operating
+characteristics.</p>
+</div>
+<div id="the-dose-toxicity-model" class="section level3">
+<h3>The dose toxicity model</h3>
+<p>Next, define the dose toxicity model.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Initialize the CRM model.</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">LogisticLogNormal</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">mean =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.85</span>, <span class="dv">1</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">cov =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">2</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">ref_dose =</span> <span class="dv">56</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>)</span></code></pre></div>
+<p>In <code>crmPack</code>, the <code>LogisticLogNormal</code> class
+fits a model of the following form:</p>
+<p><span class="math display">\[log(\frac{p_i}{1 - p_i}) = \alpha +
+\beta log(d_i / d^*)\]</span></p>
+<p>where <span class="math inline">\(d^*\)</span> is a reference dose
+(specified by the <code>ref_dose</code> argument to the
+<code>LogisticLogNormal</code> function above) and the prior joint
+distribution of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> is</p>
+<p><span class="math display">\[\begin{bmatrix}
+\alpha \\
+log(\beta)
+\end{bmatrix}   \sim
+N\begin{pmatrix}
+\begin{bmatrix}
+\mu_{\alpha}\\ \mu_{\beta}
+\end{bmatrix}   ,
+\begin{bmatrix}
+\sigma_{\alpha\alpha} &amp; \sigma_{\alpha\beta} \\
+\sigma_{{\beta\alpha}} &amp; \sigma_{\beta\beta}
+\end{bmatrix}   
+\end{pmatrix}.
+\]</span></p>
+<p>The mean and covariance matrices are defined by the <code>mean</code>
+and <code>cov</code> parameters to the <code>LogisticLogNormal</code>
+call. So the code above defines the prior joint distribution of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(log(\beta)\)</span> to be</p>
+<p><span class="math display">\[
+N\begin{pmatrix}
+\begin{bmatrix}
+-0.85\\0
+\end{bmatrix}   ,
+\begin{bmatrix}
+1 &amp; -0.5 \\
+-0.5 &amp; 1
+\end{bmatrix}   
+\end{pmatrix}.
+\]</span></p>
+<p>It is easy to obtain a visual representation of the prior:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>vignetteMcmcOptions <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(<span class="at">burnin =</span> <span class="dv">100</span>, <span class="at">step =</span> <span class="dv">2</span>, <span class="at">samples =</span> <span class="dv">1000</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>prior_samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">data =</span> empty_data,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">model =</span> model,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">options =</span> vignetteMcmcOptions</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">plot</span>(prior_samples, model, empty_data)</span></code></pre></div>
+<p><img role="img" aria-label="A visual representation of the prior.  The prior mean estimate of toxicity rises form almost zero for a dose of 0 to just under 0.75 for a dose of 100.  The confidence intervals are wide." src="data:image/png;base64,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" alt="A visual representation of the prior.  The prior mean estimate of toxicity rises form almost zero for a dose of 0 to just under 0.75 for a dose of 100.  The confidence intervals are wide." /></p>
+</div>
+<div id="the-escalation-rules" class="section level3">
+<h3>The escalation rules</h3>
+<div id="the-maximum-increment" class="section level4">
+<h4>The maximum increment</h4>
+<p>Now, we define the maximum possible increment between the dose used
+in current cohort and the dose used in the next, regardless of likely
+toxicity.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Choose the rule for dose increments.</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>my_increments <span class="ot">&lt;-</span> <span class="fu">IncrementsRelative</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">intervals =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">increments =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="fl">0.5</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span></code></pre></div>
+<p>The rule we have chosen here defines the maximum possible increment
+in terms of multiples of the highest dose so far administered: for doses
+greater than <code>0</code> and less than <code>20</code>, the maximum
+increment is 100% x 2, or 200% of the highest dose used so far (or an
+escalation to 100% x (1 + 2) = 300% of the highest dose used so far).
+For doses of <code>20</code> or more, the maximum increment is 100% x
+0.5, or 50% of the highest dose used so far, to a dose no more than 100%
+x (1 + 0.5) = 150% of the highest dose used so far.</p>
+<blockquote>
+<p>Note that a 2-fold <em>increment</em> corresponds to a 3-fold
+<em>escalation</em>.</p>
+</blockquote>
+<p>In tabular form, based on the dose grid defined above, the maximum
+permitted escalation is</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">Highest dose<br>administered so far</th>
+<th align="right">Maximum permitted increment</th>
+<th align="right">Maximum permitted dose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">2.0</td>
+<td align="right">3.0</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">6.0</td>
+<td align="right">9.0</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">18.0</td>
+<td align="right">27.0</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="right">40.0</td>
+<td align="right">60.0</td>
+</tr>
+<tr class="odd">
+<td align="right">30</td>
+<td align="right">45.0</td>
+<td align="right">75.0</td>
+</tr>
+<tr class="even">
+<td align="right">45</td>
+<td align="right">67.5</td>
+<td align="right">112.5</td>
+</tr>
+<tr class="odd">
+<td align="right">60</td>
+<td align="right">90.0</td>
+<td align="right">150.0</td>
+</tr>
+<tr class="even">
+<td align="right">80</td>
+<td align="right">120.0</td>
+<td align="right">200.0</td>
+</tr>
+<tr class="odd">
+<td align="right">100</td>
+<td align="right">200.0</td>
+<td align="right">Not applicable</td>
+</tr>
+</tbody>
+</table>
+<p>So, if the highest dose used so far is <code>9</code>, the highest
+dose in the dose grid that can be used in the next cohort is
+<code>20</code>, even if <code>30</code> or higher doses are deemed safe
+by the <code>NextBest</code> rule.</p>
+<p>Next, we define the rule for choosing the <em>best</em> dose for the
+<em>next</em> cohort</p>
+</div>
+<div id="the-nextbest-rule-for-recommending-the-best-dose-for-the-next-cohort" class="section level4">
+<h4>The NextBest rule for recommending the best dose for the next
+cohort</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Choose the rule for selecting the next dose.</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>my_next_best <span class="ot">&lt;-</span> <span class="fu">NextBestNCRM</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">target =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.35</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">overdose =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="dv">1</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">max_overdose_prob =</span> <span class="fl">0.25</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>)</span></code></pre></div>
+<p>Here, we choose to use Neuenschwander’s rule <span class="citation">(Neuenschwander, Branson, and Gsponer 2008)</span>, in
+which the dose for the next cohort to be the dose (amongst those doses
+that are eligible for selection according to the escalation rule) that
+has the highest posterior chance of having a probability of toxicity in
+the target range - here [0.2, 0.35) - provided that the dose’s chance of
+having a probability of toxicity in the overdose range - here [0.35,
+1.0] - is less than 0.25.</p>
+</div>
+<div id="the-cohort-size" class="section level4">
+<h4>The cohort size</h4>
+<p>Now, we define the rule for choosing the size of the next cohort.</p>
+<blockquote>
+<p>Note, the term “cohort size” is somewhat anachronistic. It is a
+hangover from the days of the 3+3 design. In the context of CRM trials,
+it is best interpreted as “the largest permitted interval between CRM
+model updates”. In a CRM trial, the model can be updated <em>at any
+time</em> and there is no mathematical need to halt recruitment to allow
+the model to be updated.</p>
+</blockquote>
+<p>We elect to define the cohort size using a compound rule. Both the
+dose to be used and the number of DLTs so far observed contribute to the
+decision. The first part of the compound rule (<code>my_size_1</code>),
+based on the dose to be used, permits the use a single patient run-in up
+to and including a dose of <code>20</code>. For doses above
+<code>20</code>, the minimum cohort size is <code>3</code>. The second
+part of the compound rule (<code>my_size_2</code>) also permits a single
+patient run-in, so long as no DLTs have so far been observed. As soon as
+the first DLT is reported, the minimum cohort size is <code>3</code>. To
+determine the <em>actual</em> size of the next cohort, the larger number
+required by the two parts of the compound rule is used.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Choose the rule for the cohort size.</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>my_size_1 <span class="ot">&lt;-</span> <span class="fu">CohortSizeRange</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">intervals =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">cohort_size =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>my_size_2 <span class="ot">&lt;-</span> <span class="fu">CohortSizeDLT</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">intervals =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">cohort_size =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>my_size <span class="ot">&lt;-</span> <span class="fu">maxSize</span>(my_size_1, my_size_2)</span></code></pre></div>
+<p>In other words, provided the dose is <code>20</code> or below and no
+DLTs have been observed, a single patient cohort is permitted. In all
+other cases, the required cohort size is <code>3</code>.</p>
+</div>
+</div>
+<div id="the-stopping-rules" class="section level3">
+<h3>The stopping rules</h3>
+<p>Now we create the rules that define when the trial’s objectives have
+been met (or when it should be stopped for futility).<br />
+The futility rule is the easiest to explain: if twenty patients have
+been recruited, the study should stop (<code>my_stopping_3</code>). The
+success rule requires both of the following conditions to have been
+met:</p>
+<ul>
+<li>At least three cohorts must have been treated</li>
+<li>The probability that the current estimate of the MTD is in the
+target toxicity range must be at least 0.5.</li>
+</ul>
+<p>The trial will stop of either the futility rule or <em>both</em>
+components of the success rule are satisfied.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Choose the rule for stopping.</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>my_stopping_1 <span class="ot">&lt;-</span> <span class="fu">StoppingMinCohorts</span>(<span class="at">nCohorts =</span> <span class="dv">3</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>my_stopping_2 <span class="ot">&lt;-</span> <span class="fu">StoppingTargetProb</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">target =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.35</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="at">prob =</span> <span class="fl">0.5</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>my_stopping_3 <span class="ot">&lt;-</span> <span class="fu">StoppingMinPatients</span>(<span class="at">nPatients =</span> <span class="dv">20</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>my_stopping <span class="ot">&lt;-</span> (my_stopping_1 <span class="sc">&amp;</span> my_stopping_2) <span class="sc">|</span> my_stopping_3</span></code></pre></div>
+</div>
+<div id="the-overall-trial-design" class="section level3">
+<h3>The overall trial design</h3>
+<p>Finally, we combine all six elements of the design, together with the
+starting dose, to define the trial.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Initialize the design.</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">Design</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">model =</span> model,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">nextBest =</span> my_next_best,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="at">stopping =</span> my_stopping,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">increments =</span> my_increments,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">cohort_size =</span> my_size,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="at">data =</span> empty_data,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">startingDose =</span> <span class="dv">3</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>)</span></code></pre></div>
+<p>We are now ready to use our trial definition, either to analyse a
+real trial or to simulate the long term operating characteristics of the
+design. These processes are described in their own vignettes <a href="trial_analysis.html">here</a> and <a href="trial_simulation.html">here</a>.</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Neuenschwander2008" class="csl-entry">
+Neuenschwander, Beat, Michael Branson, and Thomas Gsponer. 2008.
+<span>“<span class="nocase">Critical aspects of the Bayesian approach to
+phase I cancer trials.</span>”</span> <em>Statistics in Medicine</em> 27
+(13): 2420–39. <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.3230">https://onlinelibrary.wiley.com/doi/10.1002/sim.3230</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

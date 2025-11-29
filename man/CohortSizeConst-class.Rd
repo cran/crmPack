@@ -4,20 +4,32 @@
 \name{CohortSizeConst-class}
 \alias{CohortSizeConst-class}
 \alias{.CohortSizeConst}
-\title{Constant cohort size}
+\alias{CohortSizeConst}
+\alias{.DefaultCohortSizeConst}
+\title{\code{CohortSizeConst}}
+\usage{
+CohortSizeConst(size)
+
+.DefaultCohortSizeConst()
+}
+\arguments{
+\item{size}{(\code{number})\cr see slot definition.}
+}
 \description{
-This class is used when the cohort size should be kept constant.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{CohortSizeConst}} is the class for fixed and constant size of cohort.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{size}}{the constant integer size}
+\item{\code{size}}{(\code{integer})\cr cohort size.}
 }}
 
-\examples{
-
-# This is to have along the study a constant cohort size of 3
-mySize <- CohortSizeConst(size=3)
-
+\note{
+Typically, end users will not use the \code{.DefaultCohortSizeConst()} function.
 }
-\keyword{classes}
+\examples{
+# Cohort of size 3, constant along the study.
+my_size <- CohortSizeConst(size = 3)
+}

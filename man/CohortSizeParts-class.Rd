@@ -4,21 +4,35 @@
 \name{CohortSizeParts-class}
 \alias{CohortSizeParts-class}
 \alias{.CohortSizeParts}
-\title{Cohort size based on the parts}
+\alias{CohortSizeParts}
+\alias{.DefaultCohortSizeParts}
+\title{\code{CohortSizeParts}}
+\usage{
+CohortSizeParts(cohort_sizes)
+
+.DefaultCohortSizeParts()
+}
+\arguments{
+\item{cohort_sizes}{(\code{numeric})\cr see slot definition.}
+}
 \description{
-This class is used when the cohort size should change for the second part of
-the dose escalation. Only works in conjunction with
-\code{\linkS4class{DataParts}} objects.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{CohortSizeParts}} is the class for cohort size that changes for the second
+part of the dose escalation. It works only in conjunction with \code{\link{DataParts}}
+objects.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{sizes}}{the two sizes for part 1 and part 2}
+\item{\code{cohort_sizes}}{(\code{integer})\cr a vector of length two with two sizes, one for
+part 1, and one for part 2 respectively.}
 }}
 
-\examples{
-
-mySize <- CohortSizeParts(sizes=c(1,3))
-
+\note{
+Typically, end users will not use the \code{.DefaultCohortSizeParts()} function.
 }
-\keyword{classes}
+\examples{
+# Part 1 cohort size = 1, Part 2 cohort size = 3.
+my_size <- CohortSizeParts(cohort_sizes = c(1, 3))
+}

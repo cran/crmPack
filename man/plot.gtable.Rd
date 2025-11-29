@@ -2,15 +2,25 @@
 % Please edit documentation in R/helpers.R
 \name{plot.gtable}
 \alias{plot.gtable}
-\title{Plots gtable objects}
+\alias{print.gtable}
+\title{Plot \code{gtable} Objects}
 \usage{
 \method{plot}{gtable}(x, ...)
+
+\method{print}{gtable}(x, ...)
 }
 \arguments{
-\item{x}{the gtable object}
+\item{x}{(\code{gtable})\cr object to print.}
 
-\item{\dots}{additional parameters for \code{\link[grid]{grid.draw}}}
+\item{...}{additional parameters passed to \code{\link[=plot.gtable]{plot.gtable()}}.}
+}
+\value{
+Called for side effects.
 }
 \description{
-Plots gtable objects
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This is needed because \code{crmPack} uses \code{\link[gridExtra:arrangeGrob]{gridExtra::arrangeGrob()}} to combine
+\code{ggplot2} plots, and the resulting \code{gtable} object is not plotted otherwise
+when implicitly printing it in the console.
 }

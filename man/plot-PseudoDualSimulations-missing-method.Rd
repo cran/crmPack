@@ -2,130 +2,155 @@
 % Please edit documentation in R/Simulations-methods.R
 \name{plot,PseudoDualSimulations,missing-method}
 \alias{plot,PseudoDualSimulations,missing-method}
-\title{Plot simulations}
+\alias{plot-PseudoDualSimulations-missing}
+\title{Plot \code{PseudoDualSimulations}}
 \usage{
 \S4method{plot}{PseudoDualSimulations,missing}(x, y, type = c("trajectory", "dosesTried", "sigma2"), ...)
 }
 \arguments{
-\item{x}{the \code{\linkS4class{PseudoDualSimulations}} object we want
-to plot from}
+\item{x}{(\code{PseudoDualSimulations})\cr the object we want to plot from.}
 
-\item{y}{missing}
+\item{y}{(\code{missing})\cr missing object, not used.}
 
-\item{type}{the type of plots you want to obtain.}
+\item{type}{(\code{character})\cr the type of plots you want to obtain.}
 
-\item{\dots}{not used}
+\item{...}{not used.}
 }
 \value{
-A single \code{\link[ggplot2]{ggplot}} object if a single plot is
-asked for, otherwise a \code{gtable} object.
+A single \code{ggplot2} object if a single plot is asked for, otherwise a
+\code{gtable} object.
 }
 \description{
-Summarize the simulations with plots
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Summarize the simulations with plots.
+
+This plot method can be applied to \code{\link{PseudoDualSimulations}} objects in
+order to summarize them graphically. Possible \code{type}s of plots at the moment
+are:
+\describe{
+\item{trajectory}{Summary of the trajectory of the simulated trials}
+\item{dosesTried}{Average proportions of the doses tested in patients}
+\item{sigma2}{The variance of the efficacy responses}
 }
-\details{
-This plot method can be applied to \code{\linkS4class{PseudoDualSimulations}}
-objects in order to summarize them graphically. Possible \code{type}s of
-plots at the moment are: \describe{ \item{trajectory}{Summary of the
-trajectory of the simulated trials} \item{dosesTried}{Average proportions of
-the doses tested in patients} \item{sigma2}{The variance of the efficacy responses}} 
-You can specify one or both of these in the
-\code{type} argument.
+You can specify one or both of these in the \code{type} argument.
 }
 \examples{
-##obtain the plot for the simulation results
-##If DLE and efficacy responses are considered in the simulations
-##Specified your simulations when no samples are used
-## we need a data object with doses >= 1:
-data <- DataDual(doseGrid=seq(25,300,25),placebo=FALSE)
-##First for the DLE model 
-##The DLE model must be of 'ModelTox' (e.g 'LogisticIndepBeta') class 
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
+# Obtain the plot for the simulation results if DLE and efficacy responses
+# are considered in the simulations.
 
-##The efficacy model of 'ModelEff' (e.g 'Effloglog') class 
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),
-                    nu=c(a=1,b=0.025),data=data,c=0)
+# Example to run simulations when no samples are used. The data object
+# must be defined with doses >= 1:
+emptydata <- DataDual(doseGrid = seq(25, 300, 25), placebo = FALSE)
 
-##The escalation rule using the 'NextBestMaxGain' class
-mynextbest<-NextBestMaxGain(DLEDuringTrialtarget=0.35,
-                            DLEEndOfTrialtarget=0.3)
+# The DLE model must be of 'ModelTox' (e.g 'LogisticIndepBeta') class.
+dle_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = emptydata
+)
 
+# The efficacy model must be of 'ModelEff' (e.g 'Effloglog') class.
+eff_model <- Effloglog(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  nu = c(a = 1, b = 0.025),
+  data = emptydata
+)
 
-##The increments (see Increments class examples) 
-## 200\% allowable increase for dose below 300 and 200\% increase for dose above 300
-myIncrements<-IncrementsRelative(intervals=c(25,300),
-                                 increments=c(2,2))
-##cohort size of 3
-mySize<-CohortSizeConst(size=3)
-##Stop only when 36 subjects are treated
-myStopping <- StoppingMinPatients(nPatients=36)
-##Now specified the design with all the above information and starting with a dose of 25
+# The escalation rule using the 'NextBestMaxGain' class.
+my_next_best <- NextBestMaxGain(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3
+)
 
-##Specified the design(for details please refer to the 'DualResponsesDesign' example)
-design <- DualResponsesDesign(nextBest=mynextbest,
-                              model=DLEmodel,
-                              Effmodel=Effmodel,
-                              stopping=myStopping,
-                              increments=myIncrements,
-                              cohortSize=mySize,
-                              data=data,startingDose=25)
-##Specify the true DLE and efficacy curves
-myTruthDLE<- function(dose)
-{ DLEmodel@prob(dose, phi1=-53.66584, phi2=10.50499)
+# Allow increase of 200\%.
+my_increments <- IncrementsRelative(intervals = 0, increments = 2)
+
+# Cohort size of 3.
+my_size <- CohortSizeConst(size = 3)
+
+# Stop only when 36 subjects are treated or next dose is NA.
+my_stopping <- StoppingMinPatients(nPatients = 36) | StoppingMissingDose()
+
+# Now specify the design with all the above information and starting with a
+# dose of 25 (for details please refer to the 'DualResponsesDesign' example).
+my_design <- DualResponsesDesign(
+  nextBest = my_next_best,
+  model = dle_model,
+  eff_model = eff_model,
+  stopping = my_stopping,
+  increments = my_increments,
+  cohort_size = my_size,
+  data = emptydata,
+  startingDose = 25
+)
+
+# Specify the true DLE and efficacy curves.
+my_truth_dle <- probFunction(dle_model, phi1 = -53.66584, phi2 = 10.50499)
+my_truth_eff <- efficacyFunction(
+  eff_model,
+  theta1 = -4.818429,
+  theta2 = 3.653058
+)
+
+# Run simulations (for illustration purpose only 1 simulation is produced).
+my_sim <- simulate(
+  object = my_design,
+  args = NULL,
+  trueDLE = my_truth_dle,
+  trueEff = my_truth_eff,
+  trueNu = 1 / 0.025,
+  nsim = 1,
+  seed = 819,
+  parallel = FALSE
+)
+
+# Plot the simulation results.
+print(plot(my_sim))
+
+# Example if DLE and efficacy samples are involved.
+# The escalation rule using the 'NextBestMaxGainSamples' class.
+my_next_best <- NextBestMaxGainSamples(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3,
+  derive = function(samples) {
+    as.numeric(quantile(samples, prob = 0.3))
+  },
+  mg_derive = function(mg_samples) {
+    as.numeric(quantile(mg_samples, prob = 0.5))
+  }
+)
+
+# The design of 'DualResponsesSamplesDesign' class.
+my_design <- DualResponsesSamplesDesign(
+  nextBest = my_next_best,
+  cohort_size = my_size,
+  startingDose = 25,
+  model = dle_model,
+  eff_model = eff_model,
+  data = emptydata,
+  stopping = my_stopping,
+  increments = my_increments
+)
+
+# Options for MCMC.
+my_options <- McmcOptions(burnin = 10, step = 1, samples = 20)
+
+# For illustration purpose only 1 simulation is produced (nsim = 1).
+my_sim <- simulate(
+  object = my_design,
+  args = NULL,
+  trueDLE = my_truth_dle,
+  trueEff = my_truth_eff,
+  trueNu = 1 / 0.025,
+  nsim = 1,
+  mcmcOptions = my_options,
+  seed = 819,
+  parallel = FALSE
+)
+
+# Plot the simulation results.
+print(plot(my_sim))
 }
-
-myTruthEff<- function(dose)
-{Effmodel@ExpEff(dose,theta1=-4.818429,theta2=3.653058)
-}
-
-## Then specified the simulations and generate the trial
-##For illustration purpose only 1 simulation is produced (nsim=1). 
-mySim <-simulate(object=design,
-                 args=NULL,
-                 trueDLE=myTruthDLE,
-                 trueEff=myTruthEff,
-                 trueNu=1/0.025,
-                 nsim=1,
-                 seed=819,
-                 parallel=FALSE)
-
-##plot the simulation results
-print(plot(mySim))
-
-##If DLE and efficacy samples are involved
-##The escalation rule using the 'NextBestMaxGainSamples' class
-mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,
-                                   DLEEndOfTrialtarget=0.3,
-                                   TDderive=function(TDsamples){
-                                     quantile(TDsamples,prob=0.3)},
-                                   Gstarderive=function(Gstarsamples){
-                                     quantile(Gstarsamples,prob=0.5)})
-##The design of 'DualResponsesSamplesDesign' class
-design <- DualResponsesSamplesDesign(nextBest=mynextbest,
-                                     cohortSize=mySize,
-                                     startingDose=25,
-                                     model=DLEmodel,
-                                     Effmodel=Effmodel,
-                                     data=data,
-                                     stopping=myStopping,
-                                     increments=myIncrements)
-##options for MCMC
-options<-McmcOptions(burnin=10,step=1,samples=20)
-##The simulations
-##For illustration purpose only 1 simulation is produced (nsim=1). 
-mySim<-simulate(design,
-                args=NULL,
-                trueDLE=myTruthDLE,
-                trueEff=myTruthEff,
-                trueNu=1/0.025,
-                nsim=1,
-                mcmcOptions=options,
-                seed=819,
-                parallel=FALSE)
-##plot the simulation results
-print(plot(mySim))
-}
-\keyword{methods}

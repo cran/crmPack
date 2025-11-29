@@ -14,22 +14,22 @@
   mcmcOptions = McmcOptions(),
   parallel = FALSE,
   nCores = min(parallel::detectCores(), 5),
+  derive = list(),
   ...
 )
 }
 \arguments{
-\item{object}{the \code{\linkS4class{Design}} object we want to simulate
-data from}
+\item{object}{the \code{\link{Design}} object we want to simulate data from}
 
-\item{nsim}{the number of simulations (default: 1)}
+\item{nsim}{(\code{count})\cr the number of simulations (default: 1)}
 
-\item{seed}{see \code{\link{setSeed}}}
+\item{seed}{see \code{\link[=set_seed]{set_seed()}}}
 
-\item{truth}{a function which takes as input a dose (vector) and returns the
+\item{truth}{(\code{function})\cr a function which takes as input a dose (vector) and returns the
 true probability (vector) for toxicity. Additional arguments can be supplied
 in \code{args}.}
 
-\item{args}{data frame with arguments for the \code{truth} function. The
+\item{args}{(\code{data.frame})\cr data frame with arguments for the \code{truth} function. The
 column names correspond to the argument names, the rows to the values of the
 arguments. The rows are appropriately recycled in the \code{nsim}
 simulations. In order to produce outcomes from the posterior predictive
@@ -37,92 +37,112 @@ distribution, e.g, pass an \code{object} that contains the data observed so
 far, \code{truth} contains the \code{prob} function from the model in
 \code{object}, and \code{args} contains posterior samples from the model.}
 
-\item{firstSeparate}{enroll the first patient separately from the rest of
+\item{firstSeparate}{(\code{flag})\cr enroll the first patient separately from the rest of
 the cohort? (not default) If yes, the cohort will be closed if a DLT occurs
 in this patient.}
 
-\item{mcmcOptions}{object of class \code{\linkS4class{McmcOptions}},
+\item{mcmcOptions}{(\link{McmcOptions})\cr object of class \code{\link{McmcOptions}},
 giving the MCMC options for each evaluation in the trial. By default,
 the standard options are used}
 
-\item{parallel}{should the simulation runs be parallelized across the
+\item{parallel}{(\code{flag})\cr should the simulation runs be parallelized across the
 clusters of the computer? (not default)}
 
-\item{nCores}{how many cores should be used for parallel computing?
+\item{nCores}{(\code{count})\cr how many cores should be used for parallel computing?
 Defaults to the number of cores on the machine, maximum 5.}
 
-\item{\dots}{not used}
+\item{derive}{(\code{list})\cr a named list of functions which derives statistics, based on the
+vector of posterior MTD samples. Each list element must therefore accept
+one and only one argument, which is a numeric vector, and return a number.}
+
+\item{...}{not used}
 }
 \value{
-an object of class \code{\linkS4class{Simulations}}
+an object of class \code{\link{Simulations}}
 }
 \description{
-Simulate outcomes from a CRM design
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
+# nolint start
 
 # Define the dose-grid
 emptydata <- Data(doseGrid = c(1, 3, 5, 10, 15, 20, 25, 40, 50, 80, 100))
 
-# Initialize the CRM model 
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
+# Initialize the CRM model
+model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
 
-# Choose the rule for selecting the next dose 
-myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
-                           overdose=c(0.35, 1),
-                           maxOverdoseProb=0.25)
+# Choose the rule for selecting the next dose
+myNextBest <- NextBestNCRM(
+  target = c(0.2, 0.35),
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.25
+)
 
-# Choose the rule for the cohort-size 
-mySize1 <- CohortSizeRange(intervals=c(0, 30),
-                           cohortSize=c(1, 3))
-mySize2 <- CohortSizeDLT(DLTintervals=c(0, 1),
-                         cohortSize=c(1, 3))
+# Choose the rule for the cohort-size
+mySize1 <- CohortSizeRange(
+  intervals = c(0, 30),
+  cohort_size = c(1, 3)
+)
+mySize2 <- CohortSizeDLT(
+  intervals = c(0, 1),
+  cohort_size = c(1, 3)
+)
 mySize <- maxSize(mySize1, mySize2)
 
 # Choose the rule for stopping
-myStopping1 <- StoppingMinCohorts(nCohorts=3)
-myStopping2 <- StoppingTargetProb(target=c(0.2, 0.35),
-                                  prob=0.5)
-myStopping3 <- StoppingMinPatients(nPatients=20)
+myStopping1 <- StoppingMinCohorts(nCohorts = 3)
+myStopping2 <- StoppingTargetProb(
+  target = c(0.2, 0.35),
+  prob = 0.5
+)
+myStopping3 <- StoppingMinPatients(nPatients = 20)
 myStopping <- (myStopping1 & myStopping2) | myStopping3
 
 # Choose the rule for dose increments
-myIncrements <- IncrementsRelative(intervals=c(0, 20),
-                                   increments=c(1, 0.33))
+myIncrements <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
 
 # Initialize the design
-design <- Design(model=model,
-                 nextBest=myNextBest,
-                 stopping=myStopping,
-                 increments=myIncrements,
-                 cohortSize=mySize,
-                 data=emptydata,
-                 startingDose=3)
+design <- Design(
+  model = model,
+  nextBest = myNextBest,
+  stopping = myStopping,
+  increments = myIncrements,
+  cohort_size = mySize,
+  data = emptydata,
+  startingDose = 3
+)
 
 ## define the true function
-myTruth <- function(dose)
-{
-  model@prob(dose, alpha0=7, alpha1=8)
-}
+myTruth <- probFunction(model, alpha0 = 7, alpha1 = 8)
 
 # Run the simulation on the desired design
-# We only generate 1 trial outcomes here for illustration, for the actual study 
+# We only generate 1 trial outcomes here for illustration, for the actual study
 # this should be increased of course
-options <- McmcOptions(burnin=100,
-                       step=1,
-                       samples=2000)
-time <- system.time(mySims <- simulate(design,
-                                       args=NULL,
-                                       truth=myTruth,
-                                       nsim=1,
-                                       seed=819,
-                                       mcmcOptions=options,
-                                       parallel=FALSE))[3]
-  
-  
+options <- McmcOptions(
+  burnin = 100,
+  step = 1,
+  samples = 2000
+)
+
+time <- system.time(
+  mySims <- simulate(
+    design,
+    args = NULL,
+    truth = myTruth,
+    nsim = 1,
+    seed = 819,
+    mcmcOptions = options,
+    parallel = FALSE
+  )
+)[3]
+
+# nolint end
 }
-\keyword{methods}

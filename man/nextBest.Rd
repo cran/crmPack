@@ -2,113 +2,182 @@
 % Please edit documentation in R/Rules-methods.R
 \name{nextBest}
 \alias{nextBest}
-\alias{nextBest,NextBestMTD,numeric,Samples,Model,Data-method}
-\alias{nextBest,NextBestNCRM,numeric,Samples,Model,Data-method}
-\alias{nextBest,NextBestNCRM,numeric,Samples,Model,DataParts-method}
+\alias{nextBest,NextBestEWOC,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestEWOC}
+\alias{nextBest,NextBestMTD,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestMTD}
+\alias{nextBest,NextBestNCRM,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestNCRM}
+\alias{nextBest,NextBestNCRM,numeric,Samples,GeneralModel,DataParts-method}
+\alias{nextBest-NextBestNCRM-DataParts}
+\alias{nextBest,NextBestNCRMLoss,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestNCRMLoss}
 \alias{nextBest,NextBestThreePlusThree,missing,missing,missing,Data-method}
+\alias{nextBest-NextBestThreePlusThree}
 \alias{nextBest,NextBestDualEndpoint,numeric,Samples,DualEndpoint,Data-method}
-\alias{nextBest,NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data-method}
+\alias{nextBest-NextBestDualEndpoint}
+\alias{nextBest,NextBestMinDist,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestMinDist}
+\alias{nextBest,NextBestInfTheory,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestInfTheory}
 \alias{nextBest,NextBestTD,numeric,missing,LogisticIndepBeta,Data-method}
+\alias{nextBest-NextBestTD}
+\alias{nextBest,NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data-method}
+\alias{nextBest-NextBestTDsamples}
 \alias{nextBest,NextBestMaxGain,numeric,missing,ModelTox,DataDual-method}
+\alias{nextBest-NextBestMaxGain}
 \alias{nextBest,NextBestMaxGainSamples,numeric,Samples,ModelTox,DataDual-method}
-\title{Find the next best dose}
+\alias{nextBest-NextBestMaxGainSamples}
+\alias{nextBest,NextBestProbMTDLTE,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestProbMTDLTE}
+\alias{nextBest,NextBestProbMTDMinDist,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestProbMTDMinDist}
+\alias{nextBest,NextBestOrdinal,numeric,Samples,GeneralModel,Data-method}
+\alias{nextBest-NextBestOrdinal}
+\alias{nextBest,NextBestOrdinal,numeric,Samples,LogisticLogNormalOrdinal,DataOrdinal-method}
+\title{Finding the Next Best Dose}
 \usage{
 nextBest(nextBest, doselimit, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestMTD,numeric,Samples,Model,Data}(nextBest, doselimit, samples, model, data, ...)
+\S4method{nextBest}{NextBestEWOC,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestNCRM,numeric,Samples,Model,Data}(nextBest, doselimit, samples, model, data, ...)
+\S4method{nextBest}{NextBestMTD,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestNCRM,numeric,Samples,Model,DataParts}(nextBest, doselimit, samples, model, data, ...)
+\S4method{nextBest}{NextBestNCRM,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
+
+\S4method{nextBest}{NextBestNCRM,numeric,Samples,GeneralModel,DataParts}(nextBest, doselimit = Inf, samples, model, data, ...)
+
+\S4method{nextBest}{NextBestNCRMLoss,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
 \S4method{nextBest}{NextBestThreePlusThree,missing,missing,missing,Data}(nextBest, doselimit, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestDualEndpoint,numeric,Samples,DualEndpoint,Data}(nextBest, doselimit, samples, model, data, ...)
+\S4method{nextBest}{NextBestDualEndpoint,numeric,Samples,DualEndpoint,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data}(nextBest, doselimit, samples, model, data, ...)
+\S4method{nextBest}{NextBestMinDist,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestTD,numeric,missing,LogisticIndepBeta,Data}(nextBest, doselimit, model, data, SIM = FALSE, ...)
+\S4method{nextBest}{NextBestInfTheory,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
 
-\S4method{nextBest}{NextBestMaxGain,numeric,missing,ModelTox,DataDual}(nextBest, doselimit, model, data, Effmodel, SIM = FALSE, ...)
+\S4method{nextBest}{NextBestTD,numeric,missing,LogisticIndepBeta,Data}(nextBest, doselimit = Inf, model, data, in_sim = FALSE, ...)
+
+\S4method{nextBest}{NextBestTDsamples,numeric,Samples,LogisticIndepBeta,Data}(nextBest, doselimit = Inf, samples, model, data, in_sim, ...)
+
+\S4method{nextBest}{NextBestMaxGain,numeric,missing,ModelTox,DataDual}(
+  nextBest,
+  doselimit = Inf,
+  model,
+  data,
+  model_eff,
+  in_sim = FALSE,
+  ...
+)
 
 \S4method{nextBest}{NextBestMaxGainSamples,numeric,Samples,ModelTox,DataDual}(
   nextBest,
-  doselimit,
+  doselimit = Inf,
   samples,
   model,
   data,
-  Effmodel,
-  Effsamples,
-  SIM = FALSE,
+  model_eff,
+  samples_eff,
+  in_sim = FALSE,
   ...
 )
+
+\S4method{nextBest}{NextBestProbMTDLTE,numeric,Samples,GeneralModel,Data}(nextBest, doselimit, samples, model, data, ...)
+
+\S4method{nextBest}{NextBestProbMTDMinDist,numeric,Samples,GeneralModel,Data}(nextBest, doselimit, samples, model, data, ...)
+
+\S4method{nextBest}{NextBestOrdinal,numeric,Samples,GeneralModel,Data}(nextBest, doselimit = Inf, samples, model, data, ...)
+
+\S4method{nextBest}{NextBestOrdinal,numeric,Samples,LogisticLogNormalOrdinal,DataOrdinal}(nextBest, doselimit = Inf, samples, model, data, ...)
 }
 \arguments{
-\item{nextBest}{The rule, an object of class \code{\linkS4class{NextBest}}}
+\item{nextBest}{(\code{NextBest})\cr the rule for the next best dose.}
 
-\item{doselimit}{The maximum allowed next dose. If this is an empty (length
-0) vector, then no dose limit will be applied in the course of dose
-recommendation calculation, and a corresponding warning is given.}
+\item{doselimit}{(\code{number})\cr the maximum allowed next dose. If it is an
+infinity (default), then essentially no dose limit will be applied in the
+course of dose recommendation calculation.}
 
-\item{samples}{the \code{\linkS4class{Samples}} object}
+\item{samples}{(\code{Samples})\cr posterior samples from \code{model} parameters given
+\code{data}.}
 
-\item{model}{The model input, an object of class \code{\linkS4class{Model}}}
+\item{model}{(\code{ModelTox})\cr the DLT model.}
 
-\item{data}{The data input, an object of class \code{\linkS4class{Data}}}
+\item{data}{(\code{Data})\cr data that was used to generate the samples.}
 
-\item{\dots}{possible additional arguments without method dispatch}
+\item{...}{additional arguments without method dispatch.}
 
-\item{SIM}{internal command to notify if this method is used within simulations. Default as FALSE}
+\item{in_sim}{(\code{flag})\cr is this method used in simulations? Default as \code{FALSE}.
+If this flag is \code{TRUE} and target dose estimates (during trial and end-of-trial)
+are outside of the dose grid range, the information message is printed by
+this method.}
 
-\item{Effmodel}{the efficacy model of \code{\linkS4class{ModelEff}} class object}
+\item{model_eff}{(\code{Effloglog} or \code{EffFlexi})\cr the efficacy model.}
 
-\item{Effsamples}{the efficacy samples of \code{\linkS4class{Samples}} class object}
+\item{samples_eff}{(\code{Samples})\cr posterior samples from \code{model_eff} parameters
+given \code{data}.}
 }
 \value{
-a list with the next best dose (element \code{value})
-on the grid defined in \code{data}, and a plot depicting this recommendation
-(element \code{plot}). In case of multiple plots also an element \code{singlePlots}
-is included which returns the list of single plots, which allows for further
-customization of these. Also additional list elements describing the outcome
-of the rule can be contained.
+A list with the next best dose recommendation  (element named \code{value})
+from the grid defined in \code{data}, and a plot depicting this recommendation
+(element named \code{plot}). In case of multiple plots also an element
+named \code{singlePlots} is included. The \code{singlePlots} is itself a list with
+single plots. An additional list with elements describing the outcome
+of the rule can be contained too.
 }
 \description{
-Compute the recommended next best dose.
-}
-\details{
-This function outputs the next best dose recommendation based on the
-corresponding rule \code{nextBest}, the posterior \code{samples} from the
-\code{model} and the underlying \code{data}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A function that computes the recommended next best dose based on the
+corresponding rule \code{nextBest}, the posterior \code{samples} from the \code{model} and
+the underlying \code{data}.
 }
 \section{Functions}{
 \itemize{
 \item \code{nextBest(
+  nextBest = NextBestEWOC,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: find the next best dose based on the EWOC rule.
+
+\item \code{nextBest(
   nextBest = NextBestMTD,
   doselimit = numeric,
   samples = Samples,
-  model = Model,
+  model = GeneralModel,
   data = Data
-)}: Find the next best dose based on the MTD rule
+)}: find the next best dose based on the MTD rule.
 
 \item \code{nextBest(
   nextBest = NextBestNCRM,
   doselimit = numeric,
   samples = Samples,
-  model = Model,
+  model = GeneralModel,
   data = Data
-)}: Find the next best dose based on the NCRM method. The
-additional list element \code{probs} contains the target and overdosing
-probabilities (across all doses in the dose grid) 
-used in the derivation of the next best dose.
+)}: find the next best dose based on the NCRM method. The
+additional element \code{probs} in the output's list contains the target and
+overdosing probabilities (across all doses in the dose grid) used in the
+derivation of the next best dose.
 
 \item \code{nextBest(
   nextBest = NextBestNCRM,
   doselimit = numeric,
   samples = Samples,
-  model = Model,
+  model = GeneralModel,
   data = DataParts
-)}: Find the next best dose based on the NCRM method when
-two parts trial is used - todo: need an example here for DataParts
+)}: find the next best dose based on the NCRM method when
+two parts trial is used.
+
+\item \code{nextBest(
+  nextBest = NextBestNCRMLoss,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: find the next best dose based on the NCRM method and
+loss function.
 
 \item \code{nextBest(
   nextBest = NextBestThreePlusThree,
@@ -116,7 +185,7 @@ two parts trial is used - todo: need an example here for DataParts
   samples = missing,
   model = missing,
   data = Data
-)}: Find the next best dose based on the 3+3 method
+)}: find the next best dose based on the 3+3 method.
 
 \item \code{nextBest(
   nextBest = NextBestDualEndpoint,
@@ -124,20 +193,28 @@ two parts trial is used - todo: need an example here for DataParts
   samples = Samples,
   model = DualEndpoint,
   data = Data
-)}: Find the next best dose based on the dual endpoint
-model. The additional list element \code{probs} contains the target and 
-overdosing probabilities (across all doses in the dose grid) used in the 
+)}: find the next best dose based on the dual endpoint
+model. The additional list element \code{probs} contains the target and
+overdosing probabilities (across all doses in the dose grid) used in the
 derivation of the next best dose.
 
 \item \code{nextBest(
-  nextBest = NextBestTDsamples,
+  nextBest = NextBestMinDist,
   doselimit = numeric,
   samples = Samples,
-  model = LogisticIndepBeta,
+  model = GeneralModel,
   data = Data
-)}: Find the next best dose based on the 'NextBestTDsamples'
-class rule. This a method based only on the DLE responses and for 
-\code{\linkS4class{LogisticIndepBeta}} model class object involving DLE samples
+)}: gives the dose which is below the dose limit and has an
+estimated DLT probability which is closest to the target dose.
+
+\item \code{nextBest(
+  nextBest = NextBestInfTheory,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: gives the appropriate dose within an information
+theoretic framework.
 
 \item \code{nextBest(
   nextBest = NextBestTD,
@@ -145,9 +222,17 @@ class rule. This a method based only on the DLE responses and for
   samples = missing,
   model = LogisticIndepBeta,
   data = Data
-)}: Find the next best dose based on the 'NextBestTD'
-class rule. This a method based only on the DLE responses and for 
-\code{\linkS4class{LogisticIndepBeta}} model class object without DLE samples
+)}: find the next best dose based only on the DLT responses
+and for \code{\link{LogisticIndepBeta}} model class object without DLT samples.
+
+\item \code{nextBest(
+  nextBest = NextBestTDsamples,
+  doselimit = numeric,
+  samples = Samples,
+  model = LogisticIndepBeta,
+  data = Data
+)}: find the next best dose based only on the DLT responses
+and for \code{\link{LogisticIndepBeta}} model class object involving DLT samples.
 
 \item \code{nextBest(
   nextBest = NextBestMaxGain,
@@ -155,10 +240,8 @@ class rule. This a method based only on the DLE responses and for
   samples = missing,
   model = ModelTox,
   data = DataDual
-)}: for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is 
-a function to find the next best dose based on the 'NextBestMaxGain'
-class rule. This a method based on the DLE responses and efficacy responses without DLE and 
-efficacy samples.
+)}: find the next best dose based only on pseudo DLT model
+\code{\link{ModelTox}} and \code{\link{Effloglog}} efficacy model without samples.
 
 \item \code{nextBest(
   nextBest = NextBestMaxGainSamples,
@@ -166,336 +249,742 @@ efficacy samples.
   samples = Samples,
   model = ModelTox,
   data = DataDual
-)}: for slots \code{nextBest},\code{doselimit}, \code{data} and \code{SIM}. This is 
-a function to find the next best dose based on the 'NextBestMaxGainSamples'
-class rule. This a method based on the DLE responses and efficacy responses with DLE and 
-efficacy samples. Effmodel must be of class \code{\linkS4class{Effloglog}} or  
-\code{\linkS4class{EffFlexi}}.
+)}: find the next best dose based on DLT and efficacy
+responses with DLT and efficacy samples.
+
+\item \code{nextBest(
+  nextBest = NextBestProbMTDLTE,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: find the next best dose based with the highest
+probability of having a toxicity rate less or equal to the target toxicity
+level.
+
+\item \code{nextBest(
+  nextBest = NextBestProbMTDMinDist,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: find the next best dose based with the highest
+probability of having a toxicity rate with minimum distance to the
+target toxicity level.
+
+\item \code{nextBest(
+  nextBest = NextBestOrdinal,
+  doselimit = numeric,
+  samples = Samples,
+  model = GeneralModel,
+  data = Data
+)}: find the next best dose for ordinal CRM models.
+
+\item \code{nextBest(
+  nextBest = NextBestOrdinal,
+  doselimit = numeric,
+  samples = Samples,
+  model = LogisticLogNormalOrdinal,
+  data = DataOrdinal
+)}: find the next best dose for ordinal CRM models.
 
 }}
 \examples{
+# Example of usage for `NextBestEWOC` NextBest class.
 
-# Create the data
-data <- Data(x=c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
-             y=c(0, 0, 0, 0, 0, 0, 1, 0),
-             cohort=c(0, 1, 2, 3, 4, 5, 5, 5),
-             doseGrid=
-               c(0.1, 0.5, 1.5, 3, 6,
-                 seq(from=10, to=80, by=2)))
+# Create the data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  ID = 1:8,
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
 
-# Initialize the CRM model used to model the data
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
 
-# Set-up some MCMC parameters and generate samples from the posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=2000)
-set.seed(94)
-samples <- mcmc(data, model, options)
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
 
-# Define the rule for dose increments and calculate the maximum dose allowed
-myIncrements <- IncrementsRelative(intervals=c(0, 20),
-                                   increments=c(1, 0.33))
-nextMaxDose <- maxDose(myIncrements,
-                       data=data)
-
-# Define the rule which will be used to select the next best dose
-# based on the class 'NextBestMTD'
-mtdNextBest <- NextBestMTD(target=0.33,
-                           derive=
-                             function(mtdSamples){
-                               quantile(mtdSamples, probs=0.25)
-                             })
-
-# Calculate the next best dose
-doseRecommendation <- nextBest(mtdNextBest,
-                               doselimit=nextMaxDose,
-                               samples=samples, model=model, data=data)
-
-# Create the data
-data <- Data(x=c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
-             y=c(0, 0, 0, 0, 0, 0, 1, 0),
-             cohort=c(0, 1, 2, 3, 4, 5, 5, 5),
-             doseGrid=
-               c(0.1, 0.5, 1.5, 3, 6,
-                 seq(from=10, to=80, by=2)))
-
-# Initialize the CRM model used to model the data
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
-
-# Set-up some MCMC parameters and generate samples from the posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=2000)
-set.seed(94)
-samples <- mcmc(data, model, options)
-
-# Define the rule for dose increments and calculate the maximum dose allowed
-myIncrements <- IncrementsRelative(intervals=c(0, 20),
-                                   increments=c(1, 0.33))
-nextMaxDose <- maxDose(myIncrements,
-                       data=data)
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
 
 # Define the rule which will be used to select the next best dose
-# based on the class 'NextBestNCRM'
-myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
-                           overdose=c(0.35, 1),
-                           maxOverdoseProb=0.25)
+# based on the 'NextBestEWOC' class.
+ewoc_next_best <- NextBestEWOC(
+  target = 0.30,
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.25
+)
 
-# Calculate the next best dose
-doseRecommendation <- nextBest(myNextBest,
-                               doselimit=nextMaxDose,
-                               samples=samples, model=model, data=data)
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = ewoc_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
 
-# Look at the probabilities
-doseRecommendation$probs
+# See the probabilities.
+dose_recommendation$probs
+# Example of usage for `NextBestMTD` NextBest class.
 
+# Create the data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  ID = 1:8,
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
 
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
 
-# create an object of class 'DataParts'
-data <- DataParts(x=c(0.1,0.5,1.5),
-                    y=c(0,0,0),
-                    doseGrid=c(0.1,0.5,1.5,3,6,
-                               seq(from=10,to=80,by=2)),
-                    part=c(1L,1L,1L),
-                    nextPart=1L,
-                    part1Ladder=c(0.1,0.5,1.5,3,6,10))
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
 
-# Initialize the CRM model used to model the data
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=
-                             matrix(c(1, -0.5, -0.5, 1),
-                                    nrow=2),
-                           refDose=56)
-
-# Set-up some MCMC parameters and generate samples from the posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=2000)
-set.seed(94)
-samples <- mcmc(data, model, options)
-
-myIncrements <- IncrementsRelativeParts(dltStart=0,
-                                        cleanStart=1)
-nextMaxDose <- maxDose(myIncrements,
-                       data=data)
-
-# Define the rule which will be used to select the next best dose
-# based on the class 'NextBestNCRM'
-myNextBest <- NextBestNCRM(target=c(0.2, 0.35),
-                           overdose=c(0.35, 1),
-                           maxOverdoseProb=0.25)
-
-# Calculate the next best dose
-doseRecommendation <- nextBest(myNextBest,
-                               doselimit=nextMaxDose,
-                               samples=samples, 
-                               model=model, 
-                               data=data)
-
-
-# Create the data
-data <- Data(x=c(5, 5, 5, 10, 10, 10),
-             y=c(0, 0, 0, 0, 1, 0),
-             cohort=c(0, 0, 0, 1, 1, 1),
-             doseGrid=
-               c(0.1, 0.5, 1.5, 3, 5,
-                 seq(from=10, to=80, by=2)))
-
-
-# The rule to select the next best dose will be based on the 3+3 method
-myNextBest <- NextBestThreePlusThree()
-
-# Calculate the next best dose
-doseRecommendation <- nextBest(myNextBest,
-                               data=data)
-
-
-# Create the data
-data <- DataDual(
-  x=c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10,
-      20, 20, 20, 40, 40, 40, 50, 50, 50),
-  y=c(0, 0, 0, 0, 0, 0, 1, 0,
-      0, 1, 1, 0, 0, 1, 0, 1, 1),
-  w=c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.55, 0.6,
-      0.52, 0.54, 0.56, 0.43, 0.41, 0.39, 0.34, 0.38, 0.21),
-  doseGrid=c(0.1, 0.5, 1.5, 3, 6,
-             seq(from=10, to=80, by=2)))
-
-# Initialize the Dual-Endpoint model (in this case RW1)
-model <- DualEndpointRW(mu = c(0, 1),
-                        Sigma = matrix(c(1, 0, 0, 1), nrow=2),
-                        sigma2betaW = 0.01,
-                        sigma2W = c(a=0.1, b=0.1),
-                        rho = c(a=1, b=1),
-                        smooth = "RW1")
-
-# Set-up some MCMC parameters and generate samples from the posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=500)
-set.seed(94)
-samples <- mcmc(data, model, options)
-
-# Define the rule for dose increments and calculate the maximum dose allowed
-myIncrements <- IncrementsRelative(intervals=c(0, 20),
-                                   increments=c(1, 0.33))
-nextMaxDose <- maxDose(myIncrements,
-                       data=data)
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
 
 # Define the rule which will be used to select the next best dose
-# In this case target a dose achieving at least 0.9 of maximum biomarker level (efficacy)
-# and with a probability below 0.25 that prob(DLT)>0.35 (safety)
-myNextBest <- NextBestDualEndpoint(target=c(0.9, 1),
-                                   overdose=c(0.35, 1),
-                                   maxOverdoseProb=0.25)
+# based on the 'NextBestMTD' class.
+mtd_next_best <- NextBestMTD(
+  target = 0.33,
+  derive = function(mtd_samples) {
+    quantile(mtd_samples, probs = 0.25)
+  }
+)
 
-# Calculate the next best dose
-doseRecommendation <- nextBest(myNextBest,
-                               doselimit=nextMaxDose,
-                               samples=samples,
-                               model=model,
-                               data=data)
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = mtd_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+# Example of usage for `NextBestNCRM` NextBest class.
 
-## joint plot
-print(doseRecommendation$plot)
+# Create the data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  ID = 1:8,
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
 
-## show customization of single plot
-variant1 <- doseRecommendation$singlePlots$plot1 + xlim(0, 20)
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose
+# based on the 'NextBestNCRM' class.
+nrcm_next_best <- NextBestNCRM(
+  target = c(0.2, 0.35),
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.25
+)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = nrcm_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+
+# See the probabilities.
+dose_recommendation$probs
+# Example of usage for `NextBestNCRM-DataParts` NextBest class.
+
+# Create the data.
+my_data <- DataParts(
+  x = c(0.1, 0.5, 1.5),
+  y = c(0, 0, 0),
+  ID = 1:3,
+  cohort = 1:3,
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2)),
+  part = c(1L, 1L, 1L),
+  nextPart = 1L,
+  part1Ladder = c(0.1, 0.5, 1.5, 3, 6, 10)
+)
+
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelativeParts(
+  dlt_start = 0,
+  clean_start = 1
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose
+# based on the 'NextBestNCRM' class.
+nrcm_next_best <- NextBestNCRM(
+  target = c(0.2, 0.35),
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.25
+)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = nrcm_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+
+dose_recommendation
+# Example of usage for `NextBestNCRMLoss` NextBest class.
+
+# Create the data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  ID = 1:8,
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
+
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose
+# based on the class `NextBestNCRMLoss`.
+nrcm_loss_next_best <- NextBestNCRMLoss(
+  target = c(0.2, 0.35),
+  overdose = c(0.35, 0.6),
+  unacceptable = c(0.6, 1),
+  max_overdose_prob = 0.999,
+  losses = c(1, 0, 1, 2)
+)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = nrcm_loss_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+
+# Next best dose.
+dose_recommendation$value
+
+# Look at the probabilities.
+dose_recommendation$probs
+
+# Define another rule (loss function of 3 elements).
+nrcm_loss_next_best_losses_3 <- NextBestNCRMLoss(
+  target = c(0.2, 0.35),
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.30,
+  losses = c(1, 0, 2)
+)
+
+# Calculate the next best dose.
+dose_recommendation_losses_3 <- nextBest(
+  nextBest = nrcm_loss_next_best_losses_3,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+
+# Next best dose.
+dose_recommendation_losses_3$value
+
+# Look at the probabilities.
+dose_recommendation_losses_3$probs
+# Example of usage for `NextBestThreePlusThree` NextBest class.
+
+# Create the data.
+my_data <- Data(
+  x = c(5, 5, 5, 10, 10, 10),
+  y = c(0, 0, 0, 0, 1, 0),
+  ID = 1:6,
+  cohort = c(0, 0, 0, 1, 1, 1),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 5, seq(from = 10, to = 80, by = 2))
+)
+
+# The rule to select the next best dose will be based on the 3+3 method.
+my_next_best <- NextBestThreePlusThree()
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(my_next_best, data = my_data)
+# Example of usage for `NextBestDualEndpoint` NextBest class.
+
+# Create the data.
+my_data <- DataDual(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10, 20, 20, 20, 40, 40, 40, 50, 50, 50),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1),
+  ID = 1:17,
+  cohort = c(
+    1L,
+    2L,
+    3L,
+    4L,
+    5L,
+    6L,
+    6L,
+    6L,
+    7L,
+    7L,
+    7L,
+    8L,
+    8L,
+    8L,
+    9L,
+    9L,
+    9L
+  ),
+  w = c(
+    0.31,
+    0.42,
+    0.59,
+    0.45,
+    0.6,
+    0.7,
+    0.55,
+    0.6,
+    0.52,
+    0.54,
+    0.56,
+    0.43,
+    0.41,
+    0.39,
+    0.34,
+    0.38,
+    0.21
+  ),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
+
+# Initialize the Dual-Endpoint model (in this case RW1).
+my_model <- DualEndpointRW(
+  mean = c(0, 1),
+  cov = matrix(c(1, 0, 0, 1), nrow = 2),
+  sigma2betaW = 0.01,
+  sigma2W = c(a = 0.1, b = 0.1),
+  rho = c(a = 1, b = 1),
+  rw1 = TRUE
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose. In this case,
+# target a dose achieving at least 0.9 of maximum biomarker level (efficacy)
+# and with a probability below 0.25 that prob(DLT)>0.35 (safety).
+de_next_best <- NextBestDualEndpoint(
+  target = c(0.9, 1),
+  overdose = c(0.35, 1),
+  max_overdose_prob = 0.25
+)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = de_next_best,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+
+# See the probabilities.
+dose_recommendation$probs
+
+# Joint plot.
+print(dose_recommendation$plot)
+
+# Show customization of single plot.
+variant1 <- dose_recommendation$singlePlots$plot1 + xlim(0, 20)
 print(variant1)
+# Example of usage for `NextBestTD` NextBest class.
+my_data <- Data(
+  x = c(25, 50, 50, 75, 150, 200, 225, 300),
+  y = c(0, 0, 0, 0, 1, 1, 1, 1),
+  ID = 1:8,
+  cohort = c(1L, 2L, 2L, 3L, 4L, 5L, 6L, 7L),
+  doseGrid = seq(from = 25, to = 300, by = 25)
+)
 
-## we need a data object with doses >= 1:
-data<-Data(x=c(25,50,50,75,150,200,225,300),
-           y=c(0,0,0,0,1,1,1,1),
-           doseGrid=seq(from=25,to=300,by=25))
-##The 'nextBest' method using NextBestTDsamples' rules class object
-## That is dose-esclation procedure using the 'logisticIndepBeta' DLE model involving DLE samples
-## model must be of 'LogisticIndepBeta' class
-model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
+my_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = my_data
+)
 
-##Define the options for MCMC
-options <- McmcOptions(burnin=100,step=2,samples=1000)
-##Then genreate the samples
-samples <- mcmc(data, model, options)
+# Target probabilities of the occurrence of a DLT during trial and
+# at the end of the trial are defined as 0.35 and 0.3, respectively.
+td_next_best <- NextBestTD(prob_target_drt = 0.35, prob_target_eot = 0.3)
 
-##target probabilities of the occurrence of a DLE during trial and at the end of trial are 
-## defined as 0.35 and 0.3, respectively
-##Specified in 'derive' such that the 30\% posterior quantile of the TD35 and TD30 samples 
-## will be used as TD35 and TD30 estimates
-tdNextBest<-NextBestTDsamples(targetDuringTrial=0.35,targetEndOfTrial=0.3,
-                              derive=function(TDsamples){quantile(TDsamples,probs=0.3)})
+# doselimit is the maximum allowable dose level to be given to subjects.
+dose_recommendation <- nextBest(
+  nextBest = td_next_best,
+  doselimit = max(my_data@doseGrid),
+  model = my_model,
+  data = my_data
+)
 
-##doselimit is the maximum allowable dose level to be given to subjects
-RecommendDose<-nextBest(tdNextBest,doselimit=max(data@doseGrid),samples=samples,
-                        model=model,data=data)
-## we need a data object with doses >= 1:
-data<-Data(x=c(25,50,50,75,150,200,225,300),
-           y=c(0,0,0,0,1,1,1,1),
-           doseGrid=seq(from=25,to=300,by=25))
-##The 'nextBest' method using NextBestTD' rules class object
-## That is dose-esclation procedure using the 'logisticIndepBeta' DLE model involving DLE samples
-## model must be of 'LogisticIndepBeta' class
-model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
-##target probabilities of the occurrence of a DLE during trial and at the end of trial 
-## are defined as 0.35 and 0.3, respectively
-tdNextBest<-NextBestTD(targetDuringTrial=0.35,targetEndOfTrial=0.3)
+dose_recommendation$next_dose_drt
+dose_recommendation$plot
+# Example of usage for `NextBestTDsamples` NextBest class.
+my_data <- Data(
+  x = c(25, 50, 50, 75, 150, 200, 225, 300),
+  y = c(0, 0, 0, 0, 1, 1, 1, 1),
+  ID = 1:8,
+  cohort = c(1L, 2L, 2L, 3L, 4L, 5L, 6L, 7L),
+  doseGrid = seq(from = 25, to = 300, by = 25)
+)
 
-##doselimit is the maximum allowable dose level to be given to subjects
-RecommendDose<- nextBest(tdNextBest,
-              doselimit=max(data@doseGrid),
-              model=model,
-              data=data)
-## we need a data object with doses >= 1:
-data <-DataDual(x=c(25,50,25,50,75,300,250,150),
-               y=c(0,0,0,0,0,1,1,0),
-               w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-               doseGrid=seq(25,300,25),placebo=FALSE)
+my_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = my_data
+)
 
-##The 'nextBest' method using NextBestMaxGain' rules class object
-## using the 'ModelTox' class DLE model 
-## DLEmodel e.g 'LogisticIndepBeta' class
-DLEmodel<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
+# Set-up some MCMC parameters and generate samples.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 800)
+my_samples <- mcmc(my_data, my_model, my_options)
 
-## using the 'ModelEff' class efficacy model 
-## Effmodel e.g 'Effloglog' class
-Effmodel<-Effloglog(Eff=c(1.223,2.513),Effdose=c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
+# Target probabilities of the occurrence of a DLT during trial and
+# at the end of the trial are defined as 0.35 and 0.3, respectively.
+# 'derive' is specified such that the 30\% posterior quantile of the TD35 and
+# TD30 samples will be used as TD35 and TD30 estimates.
+tds_next_best <- NextBestTDsamples(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3,
+  derive = function(samples) {
+    as.numeric(quantile(samples, probs = 0.3))
+  }
+)
 
-##target probabilities of the occurrence of a DLE during trial and at the
-## end of trial are defined as
-## 0.35 and 0.3, respectively
-mynextbest<-NextBestMaxGain(DLEDuringTrialtarget=0.35,DLEEndOfTrialtarget=0.3)
+# doselimit is the maximum allowable dose level to be given to subjects.
+dose_recommendation <- nextBest(
+  nextBest = tds_next_best,
+  doselimit = max(my_data@doseGrid),
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
 
-##doselimit is the maximum allowable dose level to be given to subjects
-RecommendDose<-nextBest(mynextbest,doselimit=300,model=DLEmodel,Effmodel=Effmodel,data=data)
-data <-DataDual(x=c(25,50,25,50,75,300,250,150),
-                y=c(0,0,0,0,0,1,1,0),
-                w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-                doseGrid=seq(25,300,25),placebo=FALSE)
-##The 'nextBest' method using NextBestMaxGainSamples' rules class object
-## using the 'ModelTox' class DLE model 
-## DLEmodel e.g 'LogisticIndepBeta' class
-DLEmodel<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
+dose_recommendation$next_dose_drt
+dose_recommendation$plot
+# Example of usage for `NextBestMaxGain` NextBest class.
 
-## using the 'ModelEff' class efficacy model 
-## Effmodel e.g 'Effloglog' class
-Effmodel<-Effloglog(c(1.223,2.513),c(25,300),nu=c(a=1,b=0.025),data=data,c=0)
-##DLE and efficacy samples must be of 'Samples' Class
-DLEsamples<-mcmc(data,DLEmodel,options)
-Effsamples<-mcmc(data,Effmodel,options)
+# Create the data.
+my_data <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  ID = 1:8,
+  cohort = 1:8,
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  doseGrid = seq(25, 300, 25),
+  placebo = FALSE
+)
 
-##target probabilities of the occurrence of a DLE during trial and at the end of trial 
-## are defined as 0.35 and 0.3, respectively
-## Using 30\% posterior quantile of the TD35 and TD30 samples as estimates of TD35 and TD30, 
-## function specified in TDderive slot
-## Using the 50\% posterior quantile of the Gstar (the dose which gives the maxim gain value) 
-## samples as Gstar estimate,function specified in Gstarderive slot 
-mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,
-                                   DLEEndOfTrialtarget=0.3,
-                                   TDderive=function(TDsamples){
-                                     quantile(TDsamples,prob=0.3)},
-                                   Gstarderive=function(Gstarsamples){
-                                     quantile(Gstarsamples,prob=0.5)})
+# 'ModelTox' DLT model, e.g 'LogisticIndepBeta'.
+my_model_dlt <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = my_data
+)
 
-RecommendDose<-nextBest(mynextbest,doselimit=max(data@doseGrid),samples=DLEsamples,model=DLEmodel,
-                        data=data,Effmodel=Effmodel,Effsamples=Effsamples)
+# 'ModelEff' efficacy model, e.g. 'Effloglog'.
+my_model_eff <- Effloglog(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  nu = c(a = 1, b = 0.025),
+  data = my_data
+)
 
-## now using the 'EffFlexi' class efficacy model:
+# Target probabilities of the occurrence of a DLT during trial and at the
+# end of trial are defined as 0.35 and 0.3, respectively.
+mg_next_best <- NextBestMaxGain(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3
+)
 
-##The 'nextBest' method using NextBestMaxGainSamples' rules class object for 'EffFlexi' model class
-## using the 'ModelTox' class DLE model 
-## DLEmodel e.g 'LogisticIndepBeta' class
-Effmodel<- EffFlexi(Eff=c(1.223, 2.513),Effdose=c(25,300),
-                    sigma2=c(a=0.1,b=0.1),
-                    sigma2betaW=c(a=20,b=50),smooth="RW2",data=data)
+# doselimit is the maximum allowable dose level to be given to subjects.
+dose_recommendation <- nextBest(
+  nextBest = mg_next_best,
+  doselimit = 300,
+  model = my_model_dlt,
+  model_eff = my_model_eff,
+  data = my_data
+)
 
-##DLE and efficacy samples must be of 'Samples' Class
-DLEsamples<-mcmc(data,DLEmodel,options)
-Effsamples<-mcmc(data,Effmodel,options)
+dose_recommendation$next_dose
+dose_recommendation$plot
+# Example of usage for `NextBestMaxGainSamples` NextBest class.
 
-##target probabilities of the occurrence of a DLE during trial and at the 
-## end of trial are defined as 0.35 and 0.3, respectively
-## Using 30\% posterior quantile of the TD35 and TD30 samples as estimates of 
-## TD35 and TD30, function specified in TDderive slot
-## Using the 50\% posterio quantile of the Gstar (the dose which gives the maximum 
-## gain value) samples as Gstar estimate,function specified in Gstarderive slot 
-mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,
-                                   DLEEndOfTrialtarget=0.3,
-                                   TDderive=function(TDsamples){
-                                     quantile(TDsamples,prob=0.3)},
-                                   Gstarderive=function(Gstarsamples){
-                                     quantile(Gstarsamples,prob=0.5)})
+# Create the data.
+my_data <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  ID = 1:8,
+  cohort = 1:8,
+  doseGrid = seq(25, 300, 25),
+  placebo = FALSE
+)
 
-RecommendDose<-nextBest(mynextbest,doselimit=max(data@doseGrid),samples=DLEsamples,
-                        model=DLEmodel,
-                        data=data,Effmodel=Effmodel,Effsamples=Effsamples)
+# 'ModelTox' DLT model, e.g 'LogisticIndepBeta'.
+my_model_dlt <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = my_data
+)
 
+# 'ModelEff' efficacy model, e.g 'Effloglog'.
+my_model_effll <- Effloglog(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  nu = c(a = 1, b = 0.025),
+  data = my_data
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples_dlt <- mcmc(my_data, my_model_dlt, my_options)
+my_samples_effll <- mcmc(my_data, my_model_effll, my_options)
+
+# Target probabilities of the occurrence of a DLT during trial and at the end of
+# trial are defined as 0.35 and 0.3, respectively.
+# Use 30\% posterior quantile of the TD35 and TD30 samples as estimates of TD35
+# and TD30.
+# Use 50\% posterior quantile of the Gstar (the dose which gives the maxim gain value)
+# samples as Gstar estimate.
+mgs_next_best <- NextBestMaxGainSamples(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3,
+  derive = function(samples) {
+    as.numeric(quantile(samples, prob = 0.3))
+  },
+  mg_derive = function(mg_samples) {
+    as.numeric(quantile(mg_samples, prob = 0.5))
+  }
+)
+
+dose_recommendation <- nextBest(
+  nextBest = mgs_next_best,
+  doselimit = max(my_data@doseGrid),
+  samples = my_samples_dlt,
+  model = my_model_dlt,
+  data = my_data,
+  model_eff = my_model_effll,
+  samples_eff = my_samples_effll
+)
+
+dose_recommendation$next_dose
+dose_recommendation$plot
+
+# Now using the 'EffFlexi' class efficacy model:
+
+my_model_effflexi <- EffFlexi(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  sigma2W = c(a = 0.1, b = 0.1),
+  sigma2betaW = c(a = 20, b = 50),
+  rw1 = FALSE,
+  data = my_data
+)
+
+my_samples_effflexi <- mcmc(my_data, my_model_effflexi, my_options)
+
+dose_recommendation <- nextBest(
+  nextBest = mgs_next_best,
+  doselimit = max(my_data@doseGrid),
+  samples = my_samples_dlt,
+  model = my_model_dlt,
+  data = my_data,
+  model_eff = my_model_effflexi,
+  samples_eff = my_samples_effflexi
+)
+
+dose_recommendation$next_dose
+dose_recommendation$plot
+# Example of usage for `NextBestProbMTDLTE` NextBest class.
+
+# Create the data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  ID = 1:8,
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
+
+# Initialize the CRM model used to model the data.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsRelative(
+  intervals = c(0, 20),
+  increments = c(1, 0.33)
+)
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose
+# based on the 'NextBestProbMTDLTE' class.
+nb_mtd_lte <- NextBestProbMTDLTE(target = 0.33)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = nb_mtd_lte,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+# Example of usage for `NextBestProbMTDMinDist` NextBest class.
+
+# Create the data.
+my_data <- Data(
+  x = c(1.5, 1.5, 1.5, 2.5, 2.5, 2.5, 3.5, 3.5, 3.5),
+  y = c(0, 0, 0, 0, 0, 0, 1, 1, 0),
+  ID = 1:9,
+  cohort = c(1, 1, 1, 2, 2, 2, 3, 3, 3),
+  doseGrid = c(1.5, 2.5, 3.5, 4.5, 6, 7)
+)
+
+# Initialize the CRM model used to model the data.
+my_model <- my_model <- LogisticKadaneBetaGamma(
+  theta = 0.3,
+  xmin = 1.5,
+  xmax = 7,
+  alpha = 1,
+  beta = 19,
+  shape = 0.5625,
+  rate = 0.125
+)
+
+# Set-up some MCMC parameters and generate samples from the posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 500)
+my_samples <- mcmc(my_data, my_model, my_options)
+
+# Define the rule for dose increments and calculate the maximum dose allowed.
+my_increments <- IncrementsDoseLevels(levels = 1)
+
+next_max_dose <- maxDose(my_increments, data = my_data)
+
+# Define the rule which will be used to select the next best dose
+# based on the 'NextBestProbMTDMinDist' class.
+nb_mtd_min_dist <- NextBestProbMTDMinDist(target = 0.3)
+
+# Calculate the next best dose.
+dose_recommendation <- nextBest(
+  nextBest = nb_mtd_min_dist,
+  doselimit = next_max_dose,
+  samples = my_samples,
+  model = my_model,
+  data = my_data
+)
+ordinal_data <- .DefaultDataOrdinal()
+ordinal_model <- .DefaultLogisticLogNormalOrdinal()
+options <- .DefaultMcmcOptions()
+ordinal_samples <- mcmc(ordinal_data, ordinal_model, options)
+
+nextBest(
+  nextBest = NextBestOrdinal(2L, .DefaultNextBestNCRM()),
+  samples = ordinal_samples,
+  doselimit = Inf,
+  model = ordinal_model,
+  data = ordinal_data
+)
+ordinal_data <- .DefaultDataOrdinal()
+ordinal_model <- .DefaultLogisticLogNormalOrdinal()
+options <- .DefaultMcmcOptions()
+ordinal_samples <- mcmc(ordinal_data, ordinal_model, options)
+
+nextBest(
+  nextBest = NextBestOrdinal(2L, .DefaultNextBestNCRM()),
+  samples = ordinal_samples,
+  doselimit = Inf,
+  model = ordinal_model,
+  data = ordinal_data
+)
 }
-\keyword{methods}

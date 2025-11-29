@@ -2,36 +2,32 @@
 % Please edit documentation in R/Rules-methods.R
 \name{&,Stopping,StoppingAll-method}
 \alias{&,Stopping,StoppingAll-method}
-\title{The method combining an atomic and a stopping list}
+\alias{and-Stopping-StoppingAll}
+\title{Combine an Atomic Stopping Rule and a Stopping List with AND}
 \usage{
 \S4method{&}{Stopping,StoppingAll}(e1, e2)
 }
 \arguments{
-\item{e1}{\code{\linkS4class{Stopping}} object}
+\item{e1}{(\code{Stopping})\cr stopping rule object.}
 
-\item{e2}{\code{\linkS4class{StoppingAll}} object}
+\item{e2}{(\code{StoppingAll})\cr stopping list object.}
 }
 \value{
-The modified \code{\linkS4class{StoppingAll}} object
+The modified \code{\link{StoppingAll}} object.
 }
 \description{
-The method combining an atomic and a stopping list
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+The method combining an atomic stopping rule and a stopping list.
 }
 \examples{
-
 ## Example of combining an atomic stopping rule with a list of stopping rules
 ## with an AND ('&') operator
 
-myStopping1 <- StoppingMinCohorts(nCohorts=3)
-myStopping2 <- StoppingTargetProb(target=c(0.2, 0.35),
-                                  prob=0.5)
+myStopping1 <- StoppingMinCohorts(nCohorts = 3)
+myStopping2 <- StoppingTargetProb(target = c(0.2, 0.35), prob = 0.5)
 
-myStopping3 <- StoppingMinPatients(nPatients=20)
+myStopping3 <- StoppingMinPatients(nPatients = 20)
 
-myStopping <-  myStopping3 & (myStopping1 | myStopping2 ) 
-
-
-
-
+myStopping <- myStopping3 & (myStopping1 | myStopping2)
 }
-\keyword{methods}

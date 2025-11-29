@@ -1,14 +1,57 @@
-# Version 1.0.6
+# Version 2.0.0
 
-* Change maintainer's email address.
+* This release signifies a major breaking revamp of the package. Over several years, the package has undergone significant cleanup, tests writing and refactoring efforts. The package has thereby reached a major milestone and currently includes:
+  - 15 different dose-toxicity models
+  - 15 different dose recommendation rules
+  - 19 different stopping rules
+  - 9 cohort size rules
+  - 9 increment rules
+  - Reporting functionality (using `knitr`)
+  - 13 vignettes (documentation)
+* Users are advised to carefully review the release notes and documentation for detailed information on the changes and any necessary updates to their existing code using a previous CRAN release of `crmPack`. In particular, there is a new vignette which describes how to use certain functions and features of `crmPack` after the major refactoring.
 
-# Version 1.0.5
+### New Features
 
-* Remove S-PLUS part from `writeModel()` to avoid using the deprecated `is.R()` function.
+* Added new `NextBestNCRMLoss` and `NextBestEWOC` classes and corresponding `nextBest` methods.
+* Added new `DataGrouped` and `DesignGrouped` classes with corresponding model `LogisticLogNormalGrouped` to support simultaneous dose escalation with monotherapy and combination therapy arms.
+* Provided basic support for ordinal CRM models in `DesignOrdinal` (simulation is not yet supported). See the vignette for more details.
+* Included rolling CRM design implemented in `DADesign`. See the vignette for more details.
+* Created new `ProbitLogNormalRel` model class to support the (standardized) dose.
+* Implemented `knit_print` methods for almost all `crmPack` classes to improve rendering in Markdown and Quarto documents. See the vignette for more details.
+* Implemented `broom`-like `tidy` methods for all concrete `crmPack` classes. See the vignette for more details.
+* Added logging via the `futile.logger` package, the user interface consists of four functions: `enable_logging`, `disable_logging`, `is_logging_enabled`, `log_trace`.
+* Created the `CrmPackClass` class as the ultimate ancestor of all other `crmPack` classes to allow identification of crmPack classes and simpler definition of generic methods.
+* Added no-parameter constructor functions named `.Default<class name>` to provide usable instances of all concrete subclasses of `Increments`, `Model`, `NextBest` and `Stopping`.
+* Included `additional_stats` to add reporting of additional parameters to method `simulate` to summarize MTD.
+* `report_label` can be added to stopping rules for individual or combined stopping rule reporting.
+* Implemented the `IncrementsMaxToxProb` class.
 
-# Version 1.0.4
+### Enhancements
 
-* Fix minor documentation formatting errors.
+* `approximate` now returns a `list` containing the fitted model and, optionally, a `ggplot` object of the approximated dose/toxicity curve.
+* Modified `efficacy-EffFlexi` method: allowed for vectorized dose; `NA` is now returned for doses from outside of the dose grid range (and the warning is thrown).
+* `doselimit` argument in `nextBest` method is now specified as `Inf` instead of `numeric(0)`.
+* Warning message not printed anymore by `nextBest` methods when `doselimit` not specified.
+* Allowed for `from_prior` flag - argument to `modelspecs` function at `GeneralModel` class.
+* Introduced validation of the updated object for `update` methods for `Data`-like classes. Added `check` flag to possibly omit the validation of the updated object.
+* Added new functions `dose_grid_range` and `ngrid`, which return the range and the number of doses in the dose grid, respectively.
+* Added methods `names` and `size` for objects of class `Samples`.
+
+### Bugfixes
+
+* Corrected the spelling of the name of the `messgae` [sic] attribute of the return value of `stopTrial` with signature `stopping = "StoppingTDCIRatio"`.
+
+### Refactoring
+
+* Set up the package to use `testthat` and added unit and integration tests.
+* Started using the `lifecycle` package to manage deprecations and breaking changes.
+* Changed `ProbitLogNormal` so that it supports the log of (standardized) dose only.
+* Replaced warning with message when no `cohort` or `ID` is provided to the user constructor `Data`.
+* Re-factored `sampleSize` function so that it returns `0` if `burnin > iterations`.
+
+### Miscellaneous
+
+* Removed `multiplot` function. Please use equivalent functionality in other packages, such as `cowplot` or `ggpubr`.
 
 # Version 1.0.0
 
@@ -19,7 +62,7 @@
 * By default only use 5 cores and not all available cores on a machine. Note that
   this value can also be changed by the user.
   
-* Change of maintainer.
+* Change of maintainer
 
 # Version 0.2.8
 
@@ -58,21 +101,20 @@
 
 * It is now possible to specify how many cores should be used when parallel
   computations are used.
-  
-  
+
 
 # Version 0.2.7
 
 ### Bugfixes:
 
-* LogisticNormal now works again - "prec" was not found before.
+* `LogisticNormal` now works again - `prec` was not found before.
 
 
 # Version 0.2.6
 
 ### Bugfixes:
 
-* Replaced BayesLogit dependency by JAGS code, since BayesLogit was taken off CRAN.
+* Replaced `BayesLogit` dependency by JAGS code, since `BayesLogit` was taken off CRAN.
 
 * Speed up one example to pass CRAN check.
 
@@ -149,7 +191,7 @@
   obtained due to impropriety of the RW prior (added to model class description).
   
 * For DualEndpointRW models, it is now possible to have non-equidistant grid points,
-  and obtain sensible results. (But still needs to be thouroughly tested though.)
+  and obtain sensible results. (But still needs to be thoroughly tested though.)
   
 * For DualEndpointBeta model, it is now possible to have negative E0 and Emax parameters.
 

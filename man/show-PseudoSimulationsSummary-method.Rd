@@ -2,105 +2,130 @@
 % Please edit documentation in R/Simulations-methods.R
 \name{show,PseudoSimulationsSummary-method}
 \alias{show,PseudoSimulationsSummary-method}
-\title{Show the summary of the simulations}
+\alias{show-PseudoSimulationsSummary}
+\title{Show the Summary of \code{PseudoSimulations}}
 \usage{
 \S4method{show}{PseudoSimulationsSummary}(object)
 }
 \arguments{
-\item{object}{the \code{\linkS4class{PseudoSimulationsSummary}} object we want
-to print}
+\item{object}{(\code{PseudoSimulationsSummary})\cr the object we want to print.}
 }
 \value{
-invisibly returns a data frame of the results with one row and
-appropriate column names
+Invisibly returns a data frame of the results with one row and
+appropriate column names.
 }
 \description{
-Show the summary of the simulations
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Display a summary of pseudo simulation results.
 }
 \examples{
-##obtain the plot for the simulation results
-##If only DLE responses are considered in the simulations
-##Specified your simulations when no DLE samples are used
-data <- Data(doseGrid=seq(25,300,25))
+# Obtain the plot for the simulation results if only DLE responses are
+# considered in the simulations.
 
-##The design only incorporate DLE responses and DLE samples are involved
-##Specified the model of 'ModelTox' class eg 'LogisticIndepBeta' class model
-model<-LogisticIndepBeta(binDLE=c(1.05,1.8),DLEweights=c(3,3),DLEdose=c(25,300),data=data)
-##Then the escalation rule
-tdNextBest <- NextBestTD(targetDuringTrial=0.35,
-                         targetEndOfTrial=0.3)
+# Specified simulations when no DLE samples are used.
+emptydata <- Data(doseGrid = seq(25, 300, 25))
 
-##Then the starting data, an empty data set
-emptydata<-Data(doseGrid=seq(25,300,25))
-## The cohort size, size of 3 subjects
-mySize <-CohortSizeConst(size=3)
-##Deifne the increments for the dose-escalation process
-##The maximum increase of 200\% for doses up to the maximum of the dose specified in the doseGrid
-##The maximum increase of 200\% for dose above the maximum of the dose specified in the doseGrid
-##This is to specified a maximum of 3-fold restriction in dose-esclation
-myIncrements<-IncrementsRelative(intervals=c(min(data@doseGrid),max(data@doseGrid)), 
-                                 increments=c(2,2))
-##Specified the stopping rule e.g stop when the maximum sample size of 36 patients has been reached
-myStopping <- StoppingMinPatients(nPatients=36)
+# The design only incorporate DLE responses and DLE samples are involved.
+# Specify the model of 'ModelTox' class eg 'LogisticIndepBeta' class model.
+my_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = emptydata
+)
 
+# The escalation rule.
+td_next_best <- NextBestTD(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3
+)
 
-##Specified the design(for details please refer to the 'TDDesign' example)
-design <- TDDesign(model=model,
-                   nextBest=tdNextBest,
-                   stopping=myStopping,
-                   increments=myIncrements,
-                   cohortSize=mySize,
-                   data=data,startingDose=25)
+# The cohort size is 3 subjects.
+my_size <- CohortSizeConst(size = 3)
 
-##Specify the truth of the DLE responses
-myTruth <- function(dose)
-{ model@prob(dose, phi1=-53.66584, phi2=10.50499)
+# Allow increase of 200\%.
+my_increments <- IncrementsRelative(intervals = 0, increments = 2)
+
+# Specify the stopping rule with maximum sample size of 36 patients or when the
+# next dose is NA.
+my_stopping <- StoppingMinPatients(nPatients = 36) | StoppingMissingDose()
+
+# Specify the design. (For details please refer to the 'TDDesign' example.)
+my_design <- TDDesign(
+  model = my_model,
+  nextBest = td_next_best,
+  stopping = my_stopping,
+  increments = my_increments,
+  cohort_size = my_size,
+  data = emptydata,
+  startingDose = 25
+)
+
+# Specify the truth of the DLE responses.
+my_truth <- probFunction(my_model, phi1 = -53.66584, phi2 = 10.50499)
+
+# For illustration purpose only 1 simulation is produced.
+my_sim <- simulate(
+  object = my_design,
+  args = NULL,
+  truth = my_truth,
+  nsim = 1,
+  seed = 819,
+  parallel = FALSE
+)
+
+# Summary of the simulations.
+my_sum <- summary(
+  my_sim,
+  truth = my_truth
+)
+
+# Show the summary of the simulated results in a data frame.
+show(my_sum)
+
+# Example where DLE samples are involved.
+
+# The escalation rule.
+td_next_best <- NextBestTDsamples(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3,
+  derive = function(samples) {
+    as.numeric(quantile(samples, probs = 0.3))
+  }
+)
+
+# The design.
+my_design <- TDsamplesDesign(
+  model = my_model,
+  nextBest = td_next_best,
+  stopping = my_stopping,
+  increments = my_increments,
+  cohort_size = my_size,
+  data = emptydata,
+  startingDose = 25
+)
+
+# For illustration purposes 2 trails are simulated with 50 burn-ins to generate
+# 200 samples.
+my_options <- McmcOptions(burnin = 50, step = 2, samples = 200)
+
+my_sim <- simulate(
+  object = my_design,
+  args = NULL,
+  truth = my_truth,
+  nsim = 2,
+  seed = 819,
+  mcmcOptions = my_options,
+  parallel = FALSE
+)
+
+# Produce a summary of the simulations.
+my_sum <- summary(
+  my_sim,
+  truth = my_truth
+)
+
+# Show the summary of the simulated results in a data frame.
+show(my_sum)
 }
-
-##The simulations
-##For illustration purpose only 1 simulation is produced (nsim=1). 
-mySim <- simulate(design,
-                  args=NULL,
-                  truth=myTruth,
-                  nsim=1,
-                  seed=819,
-                  parallel=FALSE)
-##Then produce a summary of your simulations
-MYSUM <- summary(mySim,
-                 truth=myTruth)
-##show the summary of the simulated results in a data frame
-show(MYSUM)
-
-
-
-##If DLE samples are involved
-##The escalation rule
-tdNextBest<-NextBestTDsamples(targetDuringTrial=0.35,
-                              targetEndOfTrial=0.3,
-                              derive=function(TDsamples){quantile(TDsamples,probs=0.3)})
-##The design
-design <- TDsamplesDesign(model=model,
-                          nextBest=tdNextBest,
-                          stopping=myStopping,
-                          increments=myIncrements,
-                          cohortSize=mySize,
-                          data=data,startingDose=25)
-##Options for MCMC
-##For illustration purpose, we will use 50 burn-ins to generate 200 samples and 
-##only simulate for 2 trials (nsim=2)
-options<-McmcOptions(burnin=50,step=2,samples=200)
-##The simualtions
-mySim <- simulate(design,
-                  args=NULL,
-                  truth=myTruth,
-                  nsim=2,
-                  seed=819,
-                  mcmcOptions=options,
-                  parallel=FALSE)
-##Then produce a summary of your simulations
-MYSUM <- summary(mySim,
-         truth=myTruth)
-##show the summary of the simulated results in a data frame
-show(MYSUM)
-}
-\keyword{methods}

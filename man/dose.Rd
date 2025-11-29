@@ -2,95 +2,256 @@
 % Please edit documentation in R/Model-methods.R
 \name{dose}
 \alias{dose}
-\alias{dose,numeric,Model,Samples-method}
-\alias{dose,numeric,ModelTox,Samples-method}
-\alias{dose,numeric,ModelTox,missing-method}
-\title{Compute the doses for a given probability, given model and samples}
+\alias{dose,numeric,LogisticNormal,Samples-method}
+\alias{dose-LogisticNormal}
+\alias{dose,numeric,LogisticLogNormal,Samples-method}
+\alias{dose-LogisticLogNormal}
+\alias{dose,numeric,LogisticLogNormalOrdinal,Samples-method}
+\alias{dose-LogisticLogNormalOrdinal}
+\alias{dose,numeric,LogisticLogNormalSub,Samples-method}
+\alias{dose-LogisticLogNormalSub}
+\alias{dose,numeric,ProbitLogNormal,Samples-method}
+\alias{dose-ProbitLogNormal}
+\alias{dose,numeric,ProbitLogNormalRel,Samples-method}
+\alias{dose-ProbitLogNormalRel}
+\alias{dose,numeric,LogisticLogNormalGrouped,Samples-method}
+\alias{dose-LogisticLogNormalGrouped}
+\alias{dose,numeric,LogisticKadane,Samples-method}
+\alias{dose-LogisticKadane}
+\alias{dose,numeric,LogisticKadaneBetaGamma,Samples-method}
+\alias{dose-LogisticKadaneBetaGamma}
+\alias{dose,numeric,LogisticNormalMixture,Samples-method}
+\alias{dose-LogisticNormalMixture}
+\alias{dose,numeric,LogisticNormalFixedMixture,Samples-method}
+\alias{dose-LogisticNormalFixedMixture}
+\alias{dose,numeric,LogisticLogNormalMixture,Samples-method}
+\alias{dose-LogisticLogNormalMixture}
+\alias{dose,numeric,DualEndpoint,Samples-method}
+\alias{dose-DualEndpoint}
+\alias{dose,numeric,LogisticIndepBeta,Samples-method}
+\alias{dose-LogisticIndepBeta}
+\alias{dose,numeric,LogisticIndepBeta,missing-method}
+\alias{dose-LogisticIndepBeta-noSamples}
+\alias{dose,numeric,Effloglog,missing-method}
+\alias{dose-Effloglog-noSamples}
+\alias{dose,numeric,EffFlexi,Samples-method}
+\alias{dose-EffFlexi}
+\alias{dose,numeric,OneParLogNormalPrior,Samples-method}
+\alias{dose-OneParLogNormalPrior}
+\alias{dose,numeric,OneParExpPrior,Samples-method}
+\alias{dose-OneParExpPrior}
+\title{Computing the Doses for a given independent variable, Model and Samples}
 \usage{
-dose(prob, model, samples, ...)
+dose(x, model, samples, ...)
 
-\S4method{dose}{numeric,Model,Samples}(prob, model, samples, ...)
+\S4method{dose}{numeric,LogisticNormal,Samples}(x, model, samples)
 
-\S4method{dose}{numeric,ModelTox,Samples}(prob, model, samples, ...)
+\S4method{dose}{numeric,LogisticLogNormal,Samples}(x, model, samples)
 
-\S4method{dose}{numeric,ModelTox,missing}(prob, model, samples, ...)
+\S4method{dose}{numeric,LogisticLogNormalOrdinal,Samples}(x, model, samples, grade)
+
+\S4method{dose}{numeric,LogisticLogNormalSub,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,ProbitLogNormal,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,ProbitLogNormalRel,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticLogNormalGrouped,Samples}(x, model, samples, group)
+
+\S4method{dose}{numeric,LogisticKadane,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticKadaneBetaGamma,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticNormalMixture,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticNormalFixedMixture,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticLogNormalMixture,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,DualEndpoint,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticIndepBeta,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,LogisticIndepBeta,missing}(x, model)
+
+\S4method{dose}{numeric,Effloglog,missing}(x, model)
+
+\S4method{dose}{numeric,EffFlexi,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,OneParLogNormalPrior,Samples}(x, model, samples)
+
+\S4method{dose}{numeric,OneParExpPrior,Samples}(x, model, samples)
 }
 \arguments{
-\item{prob}{the probability}
+\item{x}{(\code{proportion} or \code{numeric})\cr a value of an independent variable
+on which dose depends.
+The following recycling rule applies when \code{samples} is not missing: vectors
+of size 1 will be recycled to the size of the sample
+(i.e. \code{size(samples)}). Otherwise, \code{x} must have the same size
+as the sample.}
 
-\item{model}{the \code{\linkS4class{Model}}}
+\item{model}{(\code{GeneralModel} or \code{ModelPseudo})\cr the model.}
 
-\item{samples}{the \code{\linkS4class{Samples}}}
+\item{samples}{(\code{Samples})\cr the samples of model's parameters that will be
+used to compute the resulting doses. Can also be missing for some models.}
 
-\item{\dots}{unused}
+\item{...}{model specific parameters when \code{samples} are not used.}
+
+\item{grade}{(\code{integer})\cr The toxicity grade for which probabilities are required}
+
+\item{group}{(\code{character} or \code{factor})\cr for \code{\link{LogisticLogNormalGrouped}},
+indicating whether to calculate the dose for the \code{mono} or for
+the \code{combo} arm.}
+}
+\value{
+A \code{number} or \code{numeric} vector with the doses.
+If non-scalar \code{samples} were used, then every element in the returned vector
+corresponds to one element of a sample. Hence, in this case, the output
+vector is of the same length as the sample vector. If scalar \code{samples} were
+used or no \code{samples} were used, e.g. for pseudo DLE/toxicity \code{model},
+then the output is of the same length as the length of the \code{prob}.
 }
 \description{
-Compute the doses for a given probability, given model and samples
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A function that computes the dose reaching a specific target value of a
+given variable that dose depends on. The meaning of this variable depends
+on the type of the model. For instance, for single agent dose escalation
+model or pseudo DLE (dose-limiting events)/toxicity model, this variable
+represents the a probability of the occurrence of a DLE. For efficacy models,
+it represents expected efficacy.
+The doses are computed based on the samples of the model parameters (samples).
+}
+\details{
+The \code{dose()} function computes the doses corresponding to a value of
+a given independent variable, using samples of the model parameter(s).
+If you work with multivariate model parameters, then assume that your model
+specific \code{dose()} method receives a samples matrix where the rows
+correspond to the sampling index, i.e. the layout is then
+\verb{nSamples x dimParameter}.
 }
 \section{Functions}{
 \itemize{
-\item \code{dose(prob = numeric, model = ModelTox, samples = Samples)}: Compute the doses for a given probability, given 
-Pseudo DLE model with samples
+\item \code{dose(x = numeric, model = LogisticNormal, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
 
-\item \code{dose(prob = numeric, model = ModelTox, samples = missing)}: Compute the dose for a given probability and a given 
-Pseudo DLE model without samples
+\item \code{dose(x = numeric, model = LogisticLogNormal, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticLogNormalOrdinal, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+In the case of a \code{LogisticLogNormalOrdinal} model, \code{dose} returns only the
+probability of toxicity at the given grade or higher
+
+\item \code{dose(x = numeric, model = LogisticLogNormalSub, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = ProbitLogNormal, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = ProbitLogNormalRel, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticLogNormalGrouped, samples = Samples)}: method for \code{\link{LogisticLogNormalGrouped}} which needs \code{group}
+argument in addition.
+
+\item \code{dose(x = numeric, model = LogisticKadane, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticKadaneBetaGamma, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticNormalMixture, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticNormalFixedMixture, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticLogNormalMixture, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = DualEndpoint, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticIndepBeta, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+
+\item \code{dose(x = numeric, model = LogisticIndepBeta, samples = missing)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+All model parameters (except \code{x}) should be present in the \code{model} object.
+
+\item \code{dose(x = numeric, model = Effloglog, samples = missing)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}).
+All model parameters (except \code{x}) should be present in the \code{model} object.
+
+\item \code{dose(x = numeric, model = EffFlexi, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLE (\code{x}). For this method \code{x} must
+be a scalar.
+
+\item \code{dose(x = numeric, model = OneParLogNormalPrior, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLT (\code{x}).
+
+\item \code{dose(x = numeric, model = OneParExpPrior, samples = Samples)}: compute the dose level reaching a specific target
+probability of the occurrence of a DLT (\code{x}).
 
 }}
-\examples{
-
-# create some data
-data <- Data(x =c (0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
-             y = c(0, 0, 0, 0, 0, 0, 1, 0),
-             cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
-             doseGrid = c(0.1, 0.5, 1.5, 3, 6,
-                          seq(from=10, to=80, by=2)))
-
-# Initialize a  model
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=matrix(c(1, -0.5, -0.5, 1),
-                                      nrow=2),
-                           refDose=56)
-
-# Get samples from posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=2000)
-set.seed(94)
-samples <- mcmc(data, model, options)
-
-# Posterior for the dose achieving Prob(DLE) = 0.45
-TD45 <- dose(prob=0.45,model=model,samples=samples)
-
-
-# create data from the 'Data" (or DataDual') class
-data <- Data(x = c(25,50,25,50,75,300,250,150),
-             y = c(0,0,0,0,0,1,1,0),
-             doseGrid = seq(25,300,25))
-
-## Initialize a model from 'ModelTox' class e.g using 'LogisticIndepBeta' model
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
-
-options <- McmcOptions(burnin=100, step=2, samples=200)
-DLEsamples <- mcmc(data=data,model=DLEmodel,options=options)
-
-TD45 <- dose(prob=0.45, model = DLEmodel,samples = DLEsamples)
-
-
-# create data from the 'Data' (or 'DataDual') class
-data <- Data(x = c(25,50,25,50,75,300,250,150),
-                 y = c(0,0,0,0,0,1,1,0),
-                 doseGrid = seq(25,300,25))
-
-## Initialize a model from 'ModelTox' class e.g using 'LogisticIndepBeta' model
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
-
-TD45 <- dose(prob=0.45, model = DLEmodel)
-
+\note{
+The \code{\link[=dose]{dose()}} and \code{\link[=prob]{prob()}} methods are the inverse of each other, for
+all \code{\link[=dose]{dose()}} methods for which its first argument, i.e. a given independent
+variable that dose depends on, represents toxicity probability.
 }
-\keyword{methods}
+\examples{
+# Create some data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
+
+# Initialize a model, e.g. 'LogisticLogNormal'.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Get samples from posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 20)
+my_samples <- mcmc(data = my_data, model = my_model, options = my_options)
+
+# Posterior for the dose achieving Prob(DLT) = 0.45.
+dose(x = 0.45, model = my_model, samples = my_samples)
+
+# Create data from the 'Data' (or 'DataDual') class.
+dlt_data <- Data(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  doseGrid = seq(from = 25, to = 300, by = 25)
+)
+
+# Initialize a toxicity model using 'LogisticIndepBeta' model.
+dlt_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = dlt_data
+)
+
+# Get samples from posterior.
+dlt_sample <- mcmc(data = dlt_data, model = dlt_model, options = my_options)
+
+# Posterior for the dose achieving Prob(DLT) = 0.45.
+dose(x = 0.45, model = dlt_model, samples = dlt_sample)
+dose(x = c(0.45, 0.6), model = dlt_model)
+data_ordinal <- .DefaultDataOrdinal()
+model <- .DefaultLogisticLogNormalOrdinal()
+options <- .DefaultMcmcOptions()
+samples <- mcmc(data_ordinal, model, options)
+
+dose(0.25, model, samples, grade = 2L)
+}
+\seealso{
+\code{\link[=doseFunction]{doseFunction()}}, \code{\link[=prob]{prob()}}, \code{\link[=efficacy]{efficacy()}}.
+}

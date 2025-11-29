@@ -4,48 +4,63 @@
 \name{LogisticKadane-class}
 \alias{LogisticKadane-class}
 \alias{.LogisticKadane}
-\title{Reparametrized logistic model}
+\alias{LogisticKadane}
+\alias{.DefaultLogisticKadane}
+\title{\code{LogisticKadane}}
+\usage{
+LogisticKadane(theta, xmin, xmax)
+
+.DefaultLogisticKadane()
+}
+\arguments{
+\item{theta}{(\code{proportion})\cr the target toxicity probability.}
+
+\item{xmin}{(\code{number})\cr the minimum of the dose range.}
+
+\item{xmax}{(\code{number})\cr the maximum of the dose range.}
+}
 \description{
-This is the logistic model in the parametrization of Kadane et al. (1980).
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+\code{\link{LogisticKadane}} is the class for the logistic model in the parametrization
+of \insertCite{KadaneDickeyWinklerSmithPeters1980;textual}{crmPack}.
 }
 \details{
-Let \eqn{\rho_{0} = p(x_{min})} be the probability of a DLT and the minimum
-dose \eqn{x_{min}}, and let \eqn{\gamma} be the dose with target toxicity
-probability \eqn{\theta}, i.e. \eqn{p(\gamma) = \theta}. Then it can easily
-be shown that the logistic regression model has intercept
-\deqn{\frac{\gamma logit(\rho_{0}) - x_{min} logit(\theta)}{\gamma -
-x_{min}}}{(\gamma logit(\rho_{0}) - x_{min} logit(\theta)) / (\gamma -
-x_{min})}
+Let \code{rho0 = p(xmin)} be the probability of a DLT at the minimum dose
+\code{xmin}, and let \code{gamma} be the dose with target toxicity probability \code{theta},
+i.e. \eqn{p(gamma) = theta}. Then it can easily be shown that the logistic
+regression model has intercept
+\deqn{[gamma * logit(rho0) - xmin * logit(theta)] / [gamma - xmin]}
 and slope
-\deqn{\frac{logit(theta) - logit(\rho_{0})}{\gamma - x_{min}}}{(logit(theta)
-- logit(\rho_{0})) / (\gamma - x_{min})}
+\deqn{[logit(theta) - logit(rho0)] / [gamma - xmin].}
 
-The prior is a uniform distribution for \eqn{\gamma} between \eqn{x_{min}}
-and \eqn{x_{max}}, and for \eqn{\rho_{0}} as well a uniform distribution
-between \eqn{0} and \eqn{\theta}.
-
-The slots of this class, required for creating the model, are the target
-toxicity, as well as the minimum and maximum of the dose range. Note that
-these can be different from the minimum and maximum of the dose grid in the
-data later on.
+The priors are \deqn{gamma ~ Unif(xmin, xmax).} and
+\deqn{rho0 ~ Unif(0, theta).}
 }
 \section{Slots}{
 
 \describe{
-\item{\code{theta}}{the target toxicity probability \eqn{\theta}}
+\item{\code{theta}}{(\code{proportion})\cr the target toxicity probability.}
 
-\item{\code{xmin}}{the minimum of the dose range \eqn{x_{min}}}
+\item{\code{xmin}}{(\code{number})\cr the minimum of the dose range.}
 
-\item{\code{xmax}}{the maximum of the dose range \eqn{x_{max}}}
+\item{\code{xmax}}{(\code{number})\cr the maximum of the dose range.}
 }}
 
-\examples{
+\note{
+The slots of this class, required for creating the model, are the target
+toxicity, as well as the minimum and maximum of the dose range. Note that
+these can be different from the minimum and maximum of the dose grid in the
+data later on.
 
-
-model <- LogisticKadane(theta = 0.33,
-                        xmin = 1,
-                        xmax = 200)
-
-
+Typically, end-users will not use the \code{.DefaultLogisticKadane()} function.
 }
-\keyword{classes}
+\examples{
+my_model <- LogisticKadane(theta = 0.33, xmin = 1, xmax = 200)
+}
+\references{
+\insertAllCited{}
+}
+\seealso{
+\code{\link{ModelLogNormal}}
+}

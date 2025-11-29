@@ -11,69 +11,73 @@
   truth,
   args = NULL,
   parallel = FALSE,
-  nCores = min(parallel::detectCores(), 5),
+  nCores = min(parallel::detectCores(), 5L),
   ...
 )
 }
 \arguments{
-\item{object}{the \code{\linkS4class{RuleDesign}} object we want to simulate
-data from}
+\item{object}{the \code{\link{RuleDesign}} object we want to simulate data from}
 
-\item{nsim}{the number of simulations (default: 1)}
+\item{nsim}{(\code{count})\cr the number of simulations (default: 1)}
 
-\item{seed}{see \code{\link{setSeed}}}
+\item{seed}{see \code{\link[=set_seed]{set_seed()}}}
 
-\item{truth}{a function which takes as input a dose (vector) and returns the
+\item{truth}{(\code{function})\cr a function which takes as input a dose (vector) and returns the
 true probability (vector) for toxicity. Additional arguments can be supplied
 in \code{args}.}
 
-\item{args}{data frame with arguments for the \code{truth} function. The
+\item{args}{(\code{data.frame})\cr data frame with arguments for the \code{truth} function. The
 column names correspond to the argument names, the rows to the values of the
 arguments. The rows are appropriately recycled in the \code{nsim}
 simulations.}
 
-\item{parallel}{should the simulation runs be parallelized across the
+\item{parallel}{(\code{flag})\cr should the simulation runs be parallelized across the
 clusters of the computer? (not default)}
 
-\item{nCores}{how many cores should be used for parallel computing?
+\item{nCores}{(\code{count})\cr how many cores should be used for parallel computing?
 Defaults to the number of cores on the machine, maximum 5.}
 
-\item{\dots}{not used}
+\item{...}{not used}
 }
 \value{
-an object of class \code{\linkS4class{GeneralSimulations}}
+an object of class \code{\link{GeneralSimulations}}
 }
 \description{
-Simulate outcomes from a rule-based design
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
+# nolint start
 
 # Define the dose-grid
 emptydata <- Data(doseGrid = c(5, 10, 15, 25, 35, 50, 80))
 
 # inizialing a 3+3 design with constant cohort size of 3 and
 # starting dose equal 5
-myDesign <- RuleDesign(nextBest = NextBestThreePlusThree(),
-                       cohortSize = CohortSizeConst(size=3L),
-                       data = emptydata,
-                       startingDose = 5)
+myDesign <- RuleDesign(
+  nextBest = NextBestThreePlusThree(),
+  cohort_size = CohortSizeConst(size = 3L),
+  data = emptydata,
+  startingDose = 5
+)
 
-model <- LogisticLogNormal(mean = c(-0.85, 1),
-                           cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
-                           refDose = 50)
-  
+model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 50
+)
+
 ## define the true function
-myTruth <- function(dose)
-{
-  model@prob(dose, alpha0=7, alpha1=8)
-}
+myTruth <- probFunction(model, alpha0 = 7, alpha1 = 8)
 
 # Perform the simulation
-##For illustration purpose only 10 simulation is produced (nsim=10). 
-threeSims <- simulate(myDesign,
-                      nsim=10,
-                      seed=35,
-                      truth=myTruth,
-                      parallel=FALSE)
+## For illustration purpose only 10 simulation is produced (nsim=10).
+threeSims <- simulate(
+  myDesign,
+  nsim = 10,
+  seed = 35,
+  truth = myTruth,
+  parallel = FALSE
+)
+
+# nolint end
 }
-\keyword{methods}

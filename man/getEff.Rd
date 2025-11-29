@@ -3,39 +3,42 @@
 \name{getEff}
 \alias{getEff}
 \alias{getEff,DataDual-method}
-\title{Extracting efficacy responses for subjects without or with a DLE. This is a class where we separate
-efficacy responses with or without a DLE. It outputs the efficacy responses and their corresponding 
-dose levels treated at in two categories (with or without DLE)}
+\alias{getEff-DataDual}
+\title{Extracting Efficacy Responses for Subjects Categorized by the DLT}
 \usage{
 getEff(object, ...)
 
-\S4method{getEff}{DataDual}(object, x, y, w, ...)
+\S4method{getEff}{DataDual}(object, no_dlt = FALSE)
 }
 \arguments{
-\item{object}{for data input from \code{\linkS4class{DataDual}} object}
+\item{object}{(\code{DataDual})\cr object from which the responses and dose levels
+are extracted.}
 
-\item{\dots}{unused}
+\item{...}{further arguments passed to class-specific methods.}
 
-\item{x}{todo}
-
-\item{y}{todo}
-
-\item{w}{todo}
+\item{no_dlt}{(\code{flag})\cr should only no DLT responses be returned? Otherwise,
+all responses are returned.}
+}
+\value{
+\code{list} with efficacy responses categorized by the DLT value.
 }
 \description{
-Extracting efficacy responses for subjects without or with a DLE. This is a class where we separate
-efficacy responses with or without a DLE. It outputs the efficacy responses and their corresponding 
-dose levels treated at in two categories (with or without DLE)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A method that extracts efficacy responses for subjects and categorizes it
+with respect to DLT, i.e. DLT or no DLT. The efficacy responses
+are reported together with their corresponding dose levels.
 }
 \examples{
-## Separate the efficacy responses of subjects with or without DLE
-## data must be specified for in 'DataDual' class
-data<-DataDual(x=c(25,50,25,50,75,300,250,150),
-               y=c(0,0,0,0,0,1,1,0),
-               w=c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-               doseGrid=seq(25,300,25))
-##Display the efficacy response and their corresponding dose levels 
-## treated at when no or a DLE is observed
+# Example data.
+data <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  doseGrid = seq(25, 300, 25)
+)
+
+# Get the efficacy response and their corresponding dose levels
+# categorized by the DLT.
 getEff(data)
 }
-\keyword{methods}

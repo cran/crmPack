@@ -2,112 +2,139 @@
 % Please edit documentation in R/Simulations-methods.R
 \name{plot,PseudoDualFlexiSimulations,missing-method}
 \alias{plot,PseudoDualFlexiSimulations,missing-method}
-\title{Plot for PseudoDualFlexiSimulations}
+\alias{plot-PseudoDualFlexiSimulations-missing}
+\title{Plot \code{PseudoDualFlexiSimulations}}
 \usage{
 \S4method{plot}{PseudoDualFlexiSimulations,missing}(x, y, type = c("trajectory", "dosesTried", "sigma2", "sigma2betaW"), ...)
 }
 \arguments{
-\item{x}{the \code{\linkS4class{PseudoDualFlexiSimulations}} object we want
-to plot from}
+\item{x}{(\code{PseudoDualFlexiSimulations})\cr the object we want to plot from.}
 
-\item{y}{missing}
+\item{y}{(\code{missing})\cr missing object, not used.}
 
-\item{type}{the type of plots you want to obtain.}
+\item{type}{(\code{character})\cr the type of plots you want to obtain.}
 
-\item{\dots}{not used}
+\item{...}{not used.}
 }
 \value{
-A single \code{\link[ggplot2]{ggplot}} object if a single plot is
-asked for, otherwise a \code{gtable} object.
+A single \code{ggplot2} object if a single plot is asked for, otherwise a
+\code{gtable} object.
 }
 \description{
-This plot method can be applied to \code{\linkS4class{PseudoDualFlexiSimulations}}
-objects in order to summarize them graphically. Possible \code{type}s of
-plots at the moment are: 
-\describe{ 
-\item{trajectory}{Summary of the trajectory of the simulated trials} 
-\item{dosesTried}{Average proportions of the doses tested in patients} 
-\item{sigma2}{The variance of the efficacy responses} 
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Summarize the simulations with plots.
+
+This plot method can be applied to \code{\link{PseudoDualFlexiSimulations}} objects in
+order to summarize them graphically. Possible \code{type}s of plots at the moment
+are:
+
+\describe{
+\item{trajectory}{Summary of the trajectory of the simulated trials}
+\item{dosesTried}{Average proportions of the doses tested in patients}
+\item{sigma2}{The variance of the efficacy responses}
 \item{sigma2betaW}{The variance of the random walk model}
-} 
-You can specify one or both of these in the
-\code{type} argument.
+}
+
+You can specify one or both of these in the \code{type} argument.
 }
 \examples{
-##obtain the plot for the simulation results
-##If DLE and efficacy responses are considered in the simulations
+# Obtain the plot for the simulation results if DLE and efficacy responses
+# are considered in the simulations.
+emptydata <- DataDual(doseGrid = seq(25, 300, 25))
 
+# The DLE model must be of 'ModelTox' (e.g 'LogisticIndepBeta') class.
+dle_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = emptydata
+)
 
-data <- DataDual(doseGrid=seq(25,300,25))
-##First for the DLE model 
-##The DLE model must be of 'ModelTox' (e.g 'LogisticIndepBeta') class 
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
+# The efficacy model must be of 'EffFlexi' class.
+eff_model <- EffFlexi(
+  eff = c(1.223, 2.513),
+  eff_dose = c(25, 300),
+  sigma2W = c(a = 0.1, b = 0.1),
+  sigma2betaW = c(a = 20, b = 50),
+  rw1 = FALSE,
+  data = emptydata
+)
 
-##The efficacy model must be of 'EffFlexi' class
+# The escalation rule using the 'NextBestMaxGainSamples' class.
+my_next_best <- NextBestMaxGainSamples(
+  prob_target_drt = 0.35,
+  prob_target_eot = 0.3,
+  derive = function(samples) {
+    as.numeric(quantile(samples, prob = 0.3))
+  },
+  mg_derive = function(mg_samples) {
+    as.numeric(quantile(mg_samples, prob = 0.5))
+  }
+)
 
-Effmodel<- EffFlexi(Eff=c(1.223, 2.513),Effdose=c(25,300),
-                    sigma2=c(a=0.1,b=0.1),sigma2betaW=c(a=20,b=50),smooth="RW2",data=data)
+# The cohort size, size of 3 subjects.
+my_size <- CohortSizeConst(size = 3)
 
-##The escalation rule using the 'NextBestMaxGainSamples' class
-mynextbest<-NextBestMaxGainSamples(DLEDuringTrialtarget=0.35,
-                                   DLEEndOfTrialtarget=0.3,
-                                   TDderive=function(TDsamples){
-                                     quantile(TDsamples,prob=0.3)},
-                                   Gstarderive=function(Gstarsamples){
-                                     quantile(Gstarsamples,prob=0.5)})
+# Allow increase of 200\%.
+my_increments <- IncrementsRelative(intervals = 0, increments = 2)
 
-## The cohort size, size of 3 subjects
-mySize <-CohortSizeConst(size=3)
-##Deifne the increments for the dose-escalation process
-##The maximum increase of 200\% for doses up to the maximum of the dose specified in the doseGrid
-##The maximum increase of 200\% for dose above the maximum of the dose specified in the doseGrid
-##This is to specified a maximum of 3-fold restriction in dose-esclation
-myIncrements<-IncrementsRelative(intervals=c(min(data@doseGrid),max(data@doseGrid)), 
-                                 increments=c(2,2))
-##Specified the stopping rule e.g stop when the maximum sample size of 36 patients has been reached
-myStopping <- StoppingMinPatients(nPatients=36)
+# Define the stopping rule. Stop when the maximum sample size of 36 patients has
+# been reached or when the next dose is NA.
+my_stopping <- StoppingMinPatients(nPatients = 36) | StoppingMissingDose()
 
+# Specify the design.
+design <- DualResponsesSamplesDesign(
+  nextBest = my_next_best,
+  cohort_size = my_size,
+  startingDose = 25,
+  model = dle_model,
+  eff_model = eff_model,
+  data = emptydata,
+  stopping = my_stopping,
+  increments = my_increments
+)
+# Specify the true DLE curve and the true expected efficacy values
+# at all dose levels.
+my_truth_dle <- probFunction(dle_model, phi1 = -53.66584, phi2 = 10.50499)
 
-##Specified the design 
-design <- DualResponsesSamplesDesign(nextBest=mynextbest,
-                                     cohortSize=mySize,
-                                     startingDose=25,
-                                     model=DLEmodel,
-                                     Effmodel=Effmodel,
-                                     data=data,
-                                     stopping=myStopping,
-                                     increments=myIncrements)
-##specified the true DLE curve and the true expected efficacy values at all dose levels
-myTruthDLE<- function(dose)
-{ DLEmodel@prob(dose, phi1=-53.66584, phi2=10.50499)
+my_truth_eff <- c(
+  -0.5478867,
+  0.1645417,
+  0.5248031,
+  0.7604467,
+  0.9333009,
+  1.0687031,
+  1.1793942,
+  1.2726408,
+  1.3529598,
+  1.4233411,
+  1.4858613,
+  1.5420182
+)
+
+# The true gain curve.
+my_truth_gain <- function(dose) {
+  return((myTruthEff(dose)) / (1 + (myTruthDLE(dose) / (1 - myTruthDLE(dose)))))
 }
 
-myTruthEff<- c(-0.5478867, 0.1645417,  0.5248031,  0.7604467,  
-               0.9333009  ,1.0687031,  1.1793942 , 1.2726408 , 
-               1.3529598 , 1.4233411 , 1.4858613 , 1.5420182)
-##The true gain curve can also be seen
-myTruthGain <- function(dose)
-{return((myTruthEff(dose))/(1+(myTruthDLE(dose)/(1-myTruthDLE(dose)))))}
+# MCMC options.
+my_options <- McmcOptions(burnin = 10, step = 1, samples = 20)
 
+# For illustration purpose only 1 simulation is produced.
+my_sim <- simulate(
+  object = design,
+  args = NULL,
+  trueDLE = my_truth_dle,
+  trueEff = my_truth_eff,
+  trueSigma2 = 0.025,
+  trueSigma2betaW = 1,
+  mcmcOptions = my_options,
+  nsim = 1,
+  seed = 819,
+  parallel = FALSE
+)
 
-##options for MCMC
-options<-McmcOptions(burnin=10,step=1,samples=20)
-##The simulations
-##For illustration purpose only 1 simulation is produced (nsim=1). 
-mySim<-simulate(object=design,
-                args=NULL,
-                trueDLE=myTruthDLE,
-                trueEff=myTruthEff,
-                trueSigma2=0.025,
-                trueSigma2betaW=1,
-                mcmcOptions=options,
-                nsim=1,
-                seed=819,
-                parallel=FALSE)
-##plot this simulated results
-print(plot(mySim))
+# Plot the simulated results.
+print(plot(my_sim))
 }
-\keyword{methods}

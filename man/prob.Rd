@@ -2,103 +2,220 @@
 % Please edit documentation in R/Model-methods.R
 \name{prob}
 \alias{prob}
-\alias{prob,numeric,Model,Samples-method}
-\alias{prob,numeric,ModelTox,Samples-method}
-\alias{prob,numeric,ModelTox,missing-method}
-\title{Compute the probability for a given dose, given model and samples}
+\alias{prob,numeric,LogisticNormal,Samples-method}
+\alias{prob-LogisticNormal}
+\alias{prob,numeric,LogisticLogNormal,Samples-method}
+\alias{prob-LogisticLogNormal}
+\alias{prob,numeric,LogisticLogNormalSub,Samples-method}
+\alias{prob-LogisticLogNormalSub}
+\alias{prob,numeric,ProbitLogNormal,Samples-method}
+\alias{prob-ProbitLogNormal}
+\alias{prob,numeric,ProbitLogNormalRel,Samples-method}
+\alias{prob-ProbitLogNormalRel}
+\alias{prob,numeric,LogisticLogNormalGrouped,Samples-method}
+\alias{prob-LogisticLogNormalGrouped}
+\alias{prob,numeric,LogisticKadane,Samples-method}
+\alias{prob-LogisticKadane}
+\alias{prob,numeric,LogisticKadaneBetaGamma,Samples-method}
+\alias{prob-LogisticKadaneBetaGamma}
+\alias{prob,numeric,LogisticNormalMixture,Samples-method}
+\alias{prob-LogisticNormalMixture}
+\alias{prob,numeric,LogisticNormalFixedMixture,Samples-method}
+\alias{prob-LogisticNormalFixedMixture}
+\alias{prob,numeric,LogisticLogNormalMixture,Samples-method}
+\alias{prob-LogisticLogNormalMixture}
+\alias{prob,numeric,DualEndpoint,Samples-method}
+\alias{prob-DualEndpoint}
+\alias{prob,numeric,LogisticIndepBeta,Samples-method}
+\alias{prob-LogisticIndepBeta}
+\alias{prob,numeric,LogisticIndepBeta,missing-method}
+\alias{prob-LogisticIndepBeta-noSamples}
+\alias{prob,numeric,OneParLogNormalPrior,Samples-method}
+\alias{prob-OneParLogNormalPrior}
+\alias{prob,numeric,OneParExpPrior,Samples-method}
+\alias{prob-OneParExpPrior}
+\alias{prob,numeric,LogisticLogNormalOrdinal,Samples-method}
+\alias{prob-LogisticLogNormalOrdinal}
+\title{Computing Toxicity Probabilities for a Given Dose, Model and Samples}
 \usage{
 prob(dose, model, samples, ...)
 
-\S4method{prob}{numeric,Model,Samples}(dose, model, samples, ...)
+\S4method{prob}{numeric,LogisticNormal,Samples}(dose, model, samples, ...)
 
-\S4method{prob}{numeric,ModelTox,Samples}(dose, model, samples, ...)
+\S4method{prob}{numeric,LogisticLogNormal,Samples}(dose, model, samples, ...)
 
-\S4method{prob}{numeric,ModelTox,missing}(dose, model, samples, ...)
+\S4method{prob}{numeric,LogisticLogNormalSub,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,ProbitLogNormal,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,ProbitLogNormalRel,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticLogNormalGrouped,Samples}(dose, model, samples, group, ...)
+
+\S4method{prob}{numeric,LogisticKadane,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticKadaneBetaGamma,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticNormalMixture,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticNormalFixedMixture,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticLogNormalMixture,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,DualEndpoint,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticIndepBeta,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticIndepBeta,missing}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,OneParLogNormalPrior,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,OneParExpPrior,Samples}(dose, model, samples, ...)
+
+\S4method{prob}{numeric,LogisticLogNormalOrdinal,Samples}(dose, model, samples, grade, cumulative = TRUE, ...)
 }
 \arguments{
-\item{dose}{the dose}
+\item{dose}{(\code{number} or \code{numeric})\cr the dose which is targeted.
+The following recycling rule applies when \code{samples} is not missing: vectors
+of size 1 will be recycled to the size of the sample
+(i.e. \code{size(samples)}). Otherwise, \code{dose} must have the same
+size as the sample.}
 
-\item{model}{the \code{\linkS4class{Model}} object}
+\item{model}{(\code{GeneralModel} or \code{ModelTox})\cr the model for single agent
+dose escalation or pseudo DLE (dose-limiting events)/toxicity model.}
 
-\item{samples}{the \code{\linkS4class{Samples}}}
+\item{samples}{(\code{Samples})\cr the samples of model's parameters that will be
+used to compute toxicity probabilities. Can also be missing for some models.}
 
-\item{\dots}{unused}
+\item{...}{model specific parameters when \code{samples} are not used.}
+
+\item{group}{(\code{character} or \code{factor})\cr for \code{\link{LogisticLogNormalGrouped}},
+indicating whether to calculate the probability for the \code{mono} or for
+the \code{combo} arm.}
+
+\item{grade}{(\code{integer} or \code{integer_vector})\cr The toxicity grade for which probabilities are required}
+
+\item{cumulative}{(\code{flag})\cr Should the returned probability be cumulative
+(the default) or grade-specific?}
 }
 \value{
-the vector (for \code{\linkS4class{Model}} objects) of probability
-samples.
+A \code{proportion} or \code{numeric} vector with the toxicity probabilities.
+If non-scalar \code{samples} were used, then every element in the returned vector
+corresponds to one element of a sample. Hence, in this case, the output
+vector is of the same length as the sample vector. If scalar \code{samples} were
+used or no \code{samples} were used, e.g. for pseudo DLE/toxicity \code{model},
+then the output is of the same length as the length of the \code{dose}.  In the
+case of \code{LogisticLogNormalOrdinal}, the probabilities relate to toxicities
+of  grade given by \code{grade}.
 }
 \description{
-Compute the probability for a given dose, given model and samples
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A function that computes the probability of the occurrence of a DLE at a
+specified dose level, based on the model parameters (samples).
+}
+\details{
+The \code{prob()} function computes the probability of toxicity for given
+doses, using samples of the model parameter(s).
+If you work with multivariate model parameters, then assume that your model
+specific \code{prob()} method receives a samples matrix where the rows
+correspond to the sampling index, i.e. the layout is then
+\verb{nSamples x dimParameter}.
 }
 \section{Functions}{
 \itemize{
-\item \code{prob(dose = numeric, model = ModelTox, samples = Samples)}: Compute the probability for a given dose, 
-given Pseudo DLE model and samples
+\item \code{prob(dose = numeric, model = LogisticNormal, samples = Samples)}: 
 
-\item \code{prob(dose = numeric, model = ModelTox, samples = missing)}: Compute the probability for a given dose, given Pseudo DLE model without samples
+\item \code{prob(dose = numeric, model = LogisticLogNormal, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticLogNormalSub, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = ProbitLogNormal, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = ProbitLogNormalRel, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticLogNormalGrouped, samples = Samples)}: method for \code{\link{LogisticLogNormalGrouped}} which needs \code{group}
+argument in addition.
+
+\item \code{prob(dose = numeric, model = LogisticKadane, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticKadaneBetaGamma, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticNormalMixture, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticNormalFixedMixture, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticLogNormalMixture, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = DualEndpoint, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticIndepBeta, samples = Samples)}: compute toxicity probabilities of the occurrence of a DLE at
+a specified dose level, based on the samples of \code{\link{LogisticIndepBeta}} model
+parameters.
+
+\item \code{prob(dose = numeric, model = LogisticIndepBeta, samples = missing)}: compute toxicity probabilities of the occurrence of a DLE at
+a specified dose level, based on the \code{\link{LogisticIndepBeta}} model parameters.
+All model parameters (except \code{dose}) should be present in the \code{model} object.
+
+\item \code{prob(dose = numeric, model = OneParLogNormalPrior, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = OneParExpPrior, samples = Samples)}: 
+
+\item \code{prob(dose = numeric, model = LogisticLogNormalOrdinal, samples = Samples)}: 
 
 }}
-\examples{
-
-# create some data
-data <- Data(x =c (0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
-             y = c(0, 0, 0, 0, 0, 0, 1, 0),
-             cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
-             doseGrid = c(0.1, 0.5, 1.5, 3, 6,
-                          seq(from=10, to=80, by=2)))
-
-# Initialize a  model
-model <- LogisticLogNormal(mean=c(-0.85, 1),
-                           cov=matrix(c(1, -0.5, -0.5, 1),
-                                      nrow=2),
-                           refDose=56)
-
-# Get samples from posterior
-options <- McmcOptions(burnin=100,
-                       step=2,
-                       samples=2000)
-set.seed(94)
-samples <- mcmc(data, model, options)
-
-# posterior for Prob(DLT | dose=50)
-tox.prob <- prob(dose=50, model=model, samples=samples)
-
-
-
-
-# create data from the 'DataDual' class
-data <- DataDual(x = c(25,50,25,50,75,300,250,150),
-                 y = c(0,0,0,0,0,1,1,0),
-                 w = c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-                 doseGrid = seq(25,300,25))
-
-## Initialize a model from 'ModelTox' class e.g using 'LogisticIndepBeta' model
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
-
-options <- McmcOptions(burnin=100, step=2, samples=200)
-DLEsamples <- mcmc(data=data,model=DLEmodel,options=options)
-
-tox.prob <- prob(dose=100, model = DLEmodel, samples = DLEsamples)
-
-
-
-# create data from the 'DataDual' class
-data <- DataDual(x = c(25,50,25,50,75,300,250,150),
-                 y = c(0,0,0,0,0,1,1,0),
-                 w = c(0.31,0.42,0.59,0.45,0.6,0.7,0.6,0.52),
-                 doseGrid = seq(25,300,25))
-
-## Initialize a model from 'ModelTox' class e.g using 'LogisticIndepBeta' model
-DLEmodel <- LogisticIndepBeta(binDLE=c(1.05,1.8),
-                              DLEweights=c(3,3),
-                              DLEdose=c(25,300),
-                              data=data)
-
-tox.prob <- prob(dose=100, model = DLEmodel)
-
+\note{
+The \code{\link[=prob]{prob()}} and \code{\link[=dose]{dose()}} functions are the inverse of
+each other, for all \code{\link[=dose]{dose()}} methods for which its first argument, i.e. a
+given independent variable that dose depends on, represents toxicity
+probability.
 }
-\keyword{methods}
+\examples{
+# Create some data.
+my_data <- Data(
+  x = c(0.1, 0.5, 1.5, 3, 6, 10, 10, 10),
+  y = c(0, 0, 0, 0, 0, 0, 1, 0),
+  cohort = c(0, 1, 2, 3, 4, 5, 5, 5),
+  doseGrid = c(0.1, 0.5, 1.5, 3, 6, seq(from = 10, to = 80, by = 2))
+)
+
+# Initialize a model, e.g. 'LogisticLogNormal'.
+my_model <- LogisticLogNormal(
+  mean = c(-0.85, 1),
+  cov = matrix(c(1, -0.5, -0.5, 1), nrow = 2),
+  ref_dose = 56
+)
+
+# Get samples from posterior.
+my_options <- McmcOptions(burnin = 100, step = 2, samples = 20)
+my_samples <- mcmc(data = my_data, model = my_model, options = my_options)
+
+# Posterior for Prob(DLT | dose = 50).
+prob(dose = 50, model = my_model, samples = my_samples)
+
+# Create data from the 'DataDual' class.
+data_dual <- DataDual(
+  x = c(25, 50, 25, 50, 75, 300, 250, 150),
+  y = c(0, 0, 0, 0, 0, 1, 1, 0),
+  w = c(0.31, 0.42, 0.59, 0.45, 0.6, 0.7, 0.6, 0.52),
+  doseGrid = seq(from = 25, to = 300, by = 25)
+)
+
+# Initialize a toxicity model using 'LogisticIndepBeta' model.
+dlt_model <- LogisticIndepBeta(
+  binDLE = c(1.05, 1.8),
+  DLEweights = c(3, 3),
+  DLEdose = c(25, 300),
+  data = data_dual
+)
+
+# Get samples from posterior.
+dlt_sample <- mcmc(data = data_dual, model = dlt_model, options = my_options)
+
+# Posterior for Prob(DLT | dose = 100).
+prob(dose = 100, model = dlt_model, samples = dlt_sample)
+prob(dose = c(50, 150), model = dlt_model)
+}
+\seealso{
+\code{\link[=probFunction]{probFunction()}}, \code{\link[=dose]{dose()}}, \code{\link[=efficacy]{efficacy()}}.
+}

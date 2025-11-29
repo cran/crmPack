@@ -2,22 +2,26 @@
 % Please edit documentation in R/helpers.R
 \name{pinvGamma}
 \alias{pinvGamma}
-\title{Compute the distribution function of Inverse gamma distribution}
+\title{Compute the Distribution Function of Inverse Gamma Distribution}
 \usage{
 pinvGamma(q, a, b, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{q}{vector of quantiles}
+\item{q}{(\code{numeric})\cr vector of quantiles.}
 
-\item{a}{the shape parameter of the inverse gamma distribution}
+\item{a}{(\code{number})\cr the shape parameter of the inverse gamma distribution.}
 
-\item{b}{the scale parameter of the inverse gamm distribution}
+\item{b}{(\code{number})\cr the scale parameter of the inverse gamma distribution.}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are P[X  > x], otherwise, P[X <= x].}
+\item{lower.tail}{(\code{flag})\cr if \code{TRUE} (default), probabilities are \code{P(X <= x)},
+otherwise, \code{P(X > x)}.}
 
-\item{log.p}{logical; if FALSE (default) return the probability, otherwise return the natural logarithm of the probability}
+\item{log.p}{(\code{flag})\cr if \code{TRUE}, probabilities/densities \code{p} are returned as \code{log(p)}.}
+}
+\value{
+The distribution function value(s).
 }
 \description{
-Compute the distribution function of Inverse gamma distribution
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \keyword{internal}
