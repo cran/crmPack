@@ -710,7 +710,7 @@ dose-toxicity curve:</p>
 <p>The posterior estimate of the dose toxicity curve is easily
 visualised:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">plot</span>(postSamples, model, firstFour)</span></code></pre></div>
-<p><img role="img" aria-label="A plot of the posterior after the first four participants.  The mean probability of toxicity increases smoothly, with a slight convex curve, from about zero percent at a dose of zero to about 65% at a dose of 100.  The confidence interval extends from 0% to about 25% at a dose of zero and from about 30% to  about 90% at a dose of 100." src="data:image/png;base64,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" alt="A plot of the posterior after the first four participants.  The mean probability of toxicity increases smoothly, with a slight convex curve, from about zero percent at a dose of zero to about 65% at a dose of 100.  The confidence interval extends from 0% to about 25% at a dose of zero and from about 30% to  about 90% at a dose of 100." /></p>
+<p><img role="img" aria-label="A plot of the posterior after the first four participants.  The mean probability of toxicity increases smoothly, with a slight convex curve, from about zero percent at a dose of zero to about 65% at a dose of 100.  The confidence interval extends from 0% to about 25% at a dose of zero and from about 30% to  about 90% at a dose of 100." src="data:image/png;base64,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" alt="A plot of the posterior after the first four participants.  The mean probability of toxicity increases smoothly, with a slight convex curve, from about zero percent at a dose of zero to about 65% at a dose of 100.  The confidence interval extends from 0% to about 25% at a dose of zero and from about 30% to  about 90% at a dose of 100." /></p>
 <p>A visual representation of the model’s state is obtained with:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">nextBest</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  my_next_best,</span>
@@ -719,7 +719,7 @@ visualised:</p>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">model =</span> model,</span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">data =</span> empty_data</span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>)<span class="sc">$</span>plot</span></code></pre></div>
-<p><img role="img" aria-label="Two graphs arranged in a single column.  The upper graph shoes green lines of various heights that show the probability each dose is in the target toxicity range.  There is a big arrow pointing to the bar at a dose of 20, indicating tat this dose has the highest probability of being in the target toxicity range.  The lower graph as a similar series of red lines, indicating the probability that each dose is in the overdose range.  There is a horizontal black dashed line at 25%, indicating that this is the highest acceptable probability of being in the overdose range.  The red bars for doses of 30 and above all extend above 25%, indicating that their toxicity is unacceptable.  The toxicity for doses of 20 and below lie below 25%." src="data:image/png;base64,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" alt="Two graphs arranged in a single column.  The upper graph shoes green lines of various heights that show the probability each dose is in the target toxicity range.  There is a big arrow pointing to the bar at a dose of 20, indicating tat this dose has the highest probability of being in the target toxicity range.  The lower graph as a similar series of red lines, indicating the probability that each dose is in the overdose range.  There is a horizontal black dashed line at 25%, indicating that this is the highest acceptable probability of being in the overdose range.  The red bars for doses of 30 and above all extend above 25%, indicating that their toxicity is unacceptable.  The toxicity for doses of 20 and below lie below 25%." /></p>
+<p><img role="img" aria-label="Two graphs arranged in a single column.  The upper graph shoes green lines of various heights that show the probability each dose is in the target toxicity range.  There is a big arrow pointing to the bar at a dose of 20, indicating tat this dose has the highest probability of being in the target toxicity range.  The lower graph as a similar series of red lines, indicating the probability that each dose is in the overdose range.  There is a horizontal black dashed line at 25%, indicating that this is the highest acceptable probability of being in the overdose range.  The red bars for doses of 30 and above all extend above 25%, indicating that their toxicity is unacceptable.  The toxicity for doses of 20 and below lie below 25%." src="data:image/png;base64,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" alt="Two graphs arranged in a single column.  The upper graph shoes green lines of various heights that show the probability each dose is in the target toxicity range.  There is a big arrow pointing to the bar at a dose of 20, indicating tat this dose has the highest probability of being in the target toxicity range.  The lower graph as a similar series of red lines, indicating the probability that each dose is in the overdose range.  There is a horizontal black dashed line at 25%, indicating that this is the highest acceptable probability of being in the overdose range.  The red bars for doses of 30 and above all extend above 25%, indicating that their toxicity is unacceptable.  The toxicity for doses of 20 and below lie below 25%." /></p>
 <p>The lower panel of the plot shows the posterior probability that each
 dose is in the overdose range. The dashed horizontal black line shows
 the acceptable risk of overdose: Doses with red lines which go above
@@ -809,10 +809,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.062
+0.039
 </td>
 <td style="text-align:right;">
-0.007
+0.009
 </td>
 </tr>
 <tr>
@@ -826,10 +826,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.097
+0.084
 </td>
 <td style="text-align:right;">
-0.031
+0.022
 </td>
 </tr>
 <tr>
@@ -843,10 +843,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.202
+0.163
 </td>
 <td style="text-align:right;">
-0.112
+0.091
 </td>
 </tr>
 <tr>
@@ -860,10 +860,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.305
+0.231
 </td>
 <td style="text-align:right;">
-0.273
+0.255
 </td>
 </tr>
 <tr>
@@ -877,10 +877,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.335
+0.326
 </td>
 <td style="text-align:right;">
-0.430
+0.395
 </td>
 </tr>
 <tr>
@@ -894,10 +894,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.244
+0.296
 </td>
 <td style="text-align:right;">
-0.676
+0.623
 </td>
 </tr>
 <tr>
@@ -911,10 +911,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.138
+0.140
 </td>
 <td style="text-align:right;">
-0.829
+0.842
 </td>
 </tr>
 <tr>
@@ -928,10 +928,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.076
+0.065
 </td>
 <td style="text-align:right;">
-0.912
+0.928
 </td>
 </tr>
 <tr>
@@ -945,10 +945,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.051
+0.032
 </td>
 <td style="text-align:right;">
-0.945
+0.967
 </td>
 </tr>
 </tbody>
@@ -1008,7 +1008,7 @@ satisfied:</p>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 4 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]][[2]]</span></span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 20 % for dose 9 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 16 % for dose 9 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
@@ -1022,7 +1022,7 @@ satisfied:</p>
 <span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 4 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
-<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 20 % for dose 9 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 16 % for dose 9 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)</span></span>
 <span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[1]]</span></span>
@@ -1035,7 +1035,7 @@ satisfied:</p>
 <span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[2]]</span></span>
 <span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)</span></span>
-<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 20 % for dose 9 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 16 % for dose 9 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;report_label&quot;)</span></span>
 <span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt; [1] &quot;P(0.2 ≤ prob(DLE | NBD) ≤ 0.35) ≥ 0.5&quot;</span></span>
 <span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -1117,10 +1117,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.015
+0.003
 </td>
 <td style="text-align:right;">
-0.005
+0.000
 </td>
 </tr>
 <tr>
@@ -1134,10 +1134,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.012
+0.015
 </td>
 <td style="text-align:right;">
-0.012
+0.000
 </td>
 </tr>
 <tr>
@@ -1151,10 +1151,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.079
+0.066
 </td>
 <td style="text-align:right;">
-0.018
+0.008
 </td>
 </tr>
 <tr>
@@ -1168,10 +1168,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.243
+0.217
 </td>
 <td style="text-align:right;">
-0.084
+0.073
 </td>
 </tr>
 <tr>
@@ -1185,10 +1185,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.322
+0.327
 </td>
 <td style="text-align:right;">
-0.226
+0.191
 </td>
 </tr>
 <tr>
@@ -1202,10 +1202,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.355
+0.400
 </td>
 <td style="text-align:right;">
-0.497
+0.425
 </td>
 </tr>
 <tr>
@@ -1219,10 +1219,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.244
+0.278
 </td>
 <td style="text-align:right;">
-0.719
+0.660
 </td>
 </tr>
 <tr>
@@ -1236,10 +1236,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.100
+0.125
 </td>
 <td style="text-align:right;">
-0.884
+0.846
 </td>
 </tr>
 <tr>
@@ -1253,10 +1253,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.047
+0.093
 </td>
 <td style="text-align:right;">
-0.943
+0.887
 </td>
 </tr>
 </tbody>
@@ -1355,7 +1355,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 <td style="text-align:right;">
 0.000
@@ -1372,7 +1372,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.012
+0.003
 </td>
 <td style="text-align:right;">
 0.000
@@ -1389,10 +1389,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.029
+0.041
 </td>
 <td style="text-align:right;">
-0.004
+0.001
 </td>
 </tr>
 <tr>
@@ -1406,10 +1406,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.141
+0.147
 </td>
 <td style="text-align:right;">
-0.026
+0.017
 </td>
 </tr>
 <tr>
@@ -1423,10 +1423,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.360
+0.234
 </td>
 <td style="text-align:right;">
-0.077
+0.110
 </td>
 </tr>
 <tr>
@@ -1440,10 +1440,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.406
+0.416
 </td>
 <td style="text-align:right;">
-0.330
+0.318
 </td>
 </tr>
 <tr>
@@ -1457,10 +1457,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.301
+0.285
 </td>
 <td style="text-align:right;">
-0.598
+0.606
 </td>
 </tr>
 <tr>
@@ -1474,10 +1474,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.143
+0.171
 </td>
 <td style="text-align:right;">
-0.823
+0.786
 </td>
 </tr>
 <tr>
@@ -1491,10 +1491,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.091
+0.108
 </td>
 <td style="text-align:right;">
-0.890
+0.863
 </td>
 </tr>
 </tbody>
@@ -1611,7 +1611,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.003
+0.000
 </td>
 <td style="text-align:right;">
 0.000
@@ -1628,10 +1628,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.008
+0.006
 </td>
 <td style="text-align:right;">
-0.002
+0.000
 </td>
 </tr>
 <tr>
@@ -1645,10 +1645,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.067
+0.036
 </td>
 <td style="text-align:right;">
-0.005
+0.004
 </td>
 </tr>
 <tr>
@@ -1662,10 +1662,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.193
+0.155
 </td>
 <td style="text-align:right;">
-0.032
+0.020
 </td>
 </tr>
 <tr>
@@ -1679,10 +1679,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.430
+0.400
 </td>
 <td style="text-align:right;">
-0.163
+0.137
 </td>
 </tr>
 <tr>
@@ -1696,10 +1696,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.337
+0.389
 </td>
 <td style="text-align:right;">
-0.493
+0.433
 </td>
 </tr>
 <tr>
@@ -1713,10 +1713,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.200
+0.240
 </td>
 <td style="text-align:right;">
-0.743
+0.711
 </td>
 </tr>
 <tr>
@@ -1730,10 +1730,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.124
+0.126
 </td>
 <td style="text-align:right;">
-0.847
+0.851
 </td>
 </tr>
 </tbody>
@@ -1833,7 +1833,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 <td style="text-align:right;">
 0.000
@@ -1850,7 +1850,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.002
+0.005
 </td>
 <td style="text-align:right;">
 0.000
@@ -1867,10 +1867,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.004
+0.005
 </td>
 <td style="text-align:right;">
-0.000
+0.002
 </td>
 </tr>
 <tr>
@@ -1884,10 +1884,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.024
+0.027
 </td>
 <td style="text-align:right;">
-0.001
+0.002
 </td>
 </tr>
 <tr>
@@ -1901,10 +1901,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.112
+0.089
 </td>
 <td style="text-align:right;">
-0.006
+0.011
 </td>
 </tr>
 <tr>
@@ -1918,10 +1918,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.343
+0.410
 </td>
 <td style="text-align:right;">
-0.076
+0.066
 </td>
 </tr>
 <tr>
@@ -1935,10 +1935,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.425
+0.426
 </td>
 <td style="text-align:right;">
-0.322
+0.348
 </td>
 </tr>
 <tr>
@@ -1952,10 +1952,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.306
+0.276
 </td>
 <td style="text-align:right;">
-0.583
+0.644
 </td>
 </tr>
 <tr>
@@ -1969,10 +1969,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.179
+0.166
 </td>
 <td style="text-align:right;">
-0.757
+0.797
 </td>
 </tr>
 </tbody>
@@ -2072,7 +2072,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.000
+0.001
 </td>
 <td style="text-align:right;">
 0.000
@@ -2089,7 +2089,7 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.006
+0.005
 </td>
 <td style="text-align:right;">
 0.000
@@ -2106,10 +2106,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.010
+0.021
 </td>
 <td style="text-align:right;">
-0.002
+0.001
 </td>
 </tr>
 <tr>
@@ -2123,10 +2123,10 @@ Overdose range
 1
 </td>
 <td style="text-align:right;">
-0.068
+0.102
 </td>
 <td style="text-align:right;">
-0.005
+0.003
 </td>
 </tr>
 <tr>
@@ -2140,10 +2140,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.236
+0.266
 </td>
 <td style="text-align:right;">
-0.024
+0.032
 </td>
 </tr>
 <tr>
@@ -2157,10 +2157,10 @@ Overdose range
 2
 </td>
 <td style="text-align:right;">
-0.539
+0.483
 </td>
 <td style="text-align:right;">
-0.187
+0.247
 </td>
 </tr>
 <tr>
@@ -2174,10 +2174,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.355
+0.322
 </td>
 <td style="text-align:right;">
-0.572
+0.577
 </td>
 </tr>
 <tr>
@@ -2191,10 +2191,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.146
+0.151
 </td>
 <td style="text-align:right;">
-0.834
+0.823
 </td>
 </tr>
 <tr>
@@ -2208,10 +2208,10 @@ Overdose range
 0
 </td>
 <td style="text-align:right;">
-0.081
+0.098
 </td>
 <td style="text-align:right;">
-0.914
+0.886
 </td>
 </tr>
 </tbody>
@@ -2244,14 +2244,14 @@ should stop and conclude that <code>45</code> is the MTD:</p>
 <span id="cb30-20"><a href="#cb30-20" tabindex="-1"></a>  fifthFullCohort</span>
 <span id="cb30-21"><a href="#cb30-21" tabindex="-1"></a>)</span>
 <span id="cb30-22"><a href="#cb30-22" tabindex="-1"></a>x</span>
-<span id="cb30-23"><a href="#cb30-23" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb30-23"><a href="#cb30-23" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb30-24"><a href="#cb30-24" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)</span></span>
 <span id="cb30-25"><a href="#cb30-25" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]]</span></span>
 <span id="cb30-26"><a href="#cb30-26" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]][[1]]</span></span>
 <span id="cb30-27"><a href="#cb30-27" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 9 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb30-28"><a href="#cb30-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-29"><a href="#cb30-29" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]][[2]]</span></span>
-<span id="cb30-30"><a href="#cb30-30" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 54 % for dose 45 and thus above the required 50 %&quot;</span></span>
+<span id="cb30-30"><a href="#cb30-30" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 48 % for dose 45 and thus below the required 50 %&quot;</span></span>
 <span id="cb30-31"><a href="#cb30-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-32"><a href="#cb30-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-33"><a href="#cb30-33" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
@@ -2259,13 +2259,13 @@ should stop and conclude that <code>45</code> is the MTD:</p>
 <span id="cb30-35"><a href="#cb30-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-36"><a href="#cb30-36" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)</span></span>
 <span id="cb30-37"><a href="#cb30-37" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[1]]</span></span>
-<span id="cb30-38"><a href="#cb30-38" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb30-38"><a href="#cb30-38" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb30-39"><a href="#cb30-39" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)</span></span>
 <span id="cb30-40"><a href="#cb30-40" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]]</span></span>
 <span id="cb30-41"><a href="#cb30-41" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 9 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb30-42"><a href="#cb30-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-43"><a href="#cb30-43" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
-<span id="cb30-44"><a href="#cb30-44" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 54 % for dose 45 and thus above the required 50 %&quot;</span></span>
+<span id="cb30-44"><a href="#cb30-44" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 48 % for dose 45 and thus below the required 50 %&quot;</span></span>
 <span id="cb30-45"><a href="#cb30-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-46"><a href="#cb30-46" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)</span></span>
 <span id="cb30-47"><a href="#cb30-47" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[1]]</span></span>
@@ -2276,9 +2276,9 @@ should stop and conclude that <code>45</code> is the MTD:</p>
 <span id="cb30-52"><a href="#cb30-52" tabindex="-1"></a><span class="co">#&gt; [1] &quot;≥ 3 cohorts dosed&quot;</span></span>
 <span id="cb30-53"><a href="#cb30-53" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb30-54"><a href="#cb30-54" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[2]]</span></span>
-<span id="cb30-55"><a href="#cb30-55" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb30-55"><a href="#cb30-55" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb30-56"><a href="#cb30-56" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)</span></span>
-<span id="cb30-57"><a href="#cb30-57" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 54 % for dose 45 and thus above the required 50 %&quot;</span></span>
+<span id="cb30-57"><a href="#cb30-57" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 48 % for dose 45 and thus below the required 50 %&quot;</span></span>
 <span id="cb30-58"><a href="#cb30-58" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;report_label&quot;)</span></span>
 <span id="cb30-59"><a href="#cb30-59" tabindex="-1"></a><span class="co">#&gt; [1] &quot;P(0.2 ≤ prob(DLE | NBD) ≤ 0.35) ≥ 0.5&quot;</span></span>
 <span id="cb30-60"><a href="#cb30-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -2404,28 +2404,28 @@ Median
 1
 </td>
 <td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
 0.006
 </td>
 <td style="text-align:right;">
-0.000
+0.022
 </td>
 <td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.003
-</td>
-<td style="text-align:right;">
-0.015
-</td>
-<td style="text-align:right;">
-0.027
+0.051
 </td>
 </tr>
 <tr>
@@ -2433,7 +2433,7 @@ Median
 3
 </td>
 <td style="text-align:right;">
-0.013
+0.018
 </td>
 <td style="text-align:right;">
 0.003
@@ -2448,13 +2448,13 @@ Median
 0.000
 </td>
 <td style="text-align:right;">
-0.014
+0.017
 </td>
 <td style="text-align:right;">
-0.036
+0.055
 </td>
 <td style="text-align:right;">
-0.058
+0.097
 </td>
 </tr>
 <tr>
@@ -2462,13 +2462,13 @@ Median
 9
 </td>
 <td style="text-align:right;">
-0.036
+0.044
 </td>
 <td style="text-align:right;">
-0.018
+0.022
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 <td style="text-align:right;">
 0.001
@@ -2477,13 +2477,13 @@ Median
 0.005
 </td>
 <td style="text-align:right;">
-0.049
+0.058
 </td>
 <td style="text-align:right;">
-0.097
+0.119
 </td>
 <td style="text-align:right;">
-0.124
+0.172
 </td>
 </tr>
 <tr>
@@ -2491,28 +2491,28 @@ Median
 20
 </td>
 <td style="text-align:right;">
-0.090
+0.099
 </td>
 <td style="text-align:right;">
-0.073
+0.079
 </td>
 <td style="text-align:right;">
-0.010
+0.008
 </td>
 <td style="text-align:right;">
-0.015
+0.013
 </td>
 <td style="text-align:right;">
-0.034
+0.031
 </td>
 <td style="text-align:right;">
-0.126
+0.144
 </td>
 <td style="text-align:right;">
-0.193
+0.228
 </td>
 <td style="text-align:right;">
-0.230
+0.261
 </td>
 </tr>
 <tr>
@@ -2520,28 +2520,28 @@ Median
 30
 </td>
 <td style="text-align:right;">
-0.153
+0.161
 </td>
 <td style="text-align:right;">
-0.137
+0.143
 </td>
 <td style="text-align:right;">
-0.040
+0.033
 </td>
 <td style="text-align:right;">
-0.051
+0.046
 </td>
 <td style="text-align:right;">
-0.084
+0.083
 </td>
 <td style="text-align:right;">
-0.209
+0.231
 </td>
 <td style="text-align:right;">
-0.275
+0.303
 </td>
 <td style="text-align:right;">
-0.314
+0.337
 </td>
 </tr>
 <tr>
@@ -2549,28 +2549,28 @@ Median
 45
 </td>
 <td style="text-align:right;">
-0.266
+0.271
 </td>
 <td style="text-align:right;">
-0.260
+0.263
 </td>
 <td style="text-align:right;">
-0.100
+0.096
 </td>
 <td style="text-align:right;">
-0.135
+0.123
 </td>
 <td style="text-align:right;">
-0.186
+0.175
 </td>
 <td style="text-align:right;">
-0.335
+0.359
 </td>
 <td style="text-align:right;">
-0.411
+0.426
 </td>
 <td style="text-align:right;">
-0.469
+0.471
 </td>
 </tr>
 <tr>
@@ -2578,28 +2578,28 @@ Median
 60
 </td>
 <td style="text-align:right;">
-0.381
+0.383
 </td>
 <td style="text-align:right;">
-0.363
+0.379
 </td>
 <td style="text-align:right;">
-0.174
+0.160
 </td>
 <td style="text-align:right;">
-0.211
+0.195
 </td>
 <td style="text-align:right;">
-0.277
+0.275
 </td>
 <td style="text-align:right;">
-0.490
+0.489
 </td>
 <td style="text-align:right;">
-0.579
+0.571
 </td>
 <td style="text-align:right;">
-0.619
+0.633
 </td>
 </tr>
 <tr>
@@ -2607,28 +2607,28 @@ Median
 80
 </td>
 <td style="text-align:right;">
-0.506
+0.505
 </td>
 <td style="text-align:right;">
-0.484
+0.501
 </td>
 <td style="text-align:right;">
-0.241
+0.225
 </td>
 <td style="text-align:right;">
-0.297
+0.262
 </td>
 <td style="text-align:right;">
-0.375
+0.379
 </td>
 <td style="text-align:right;">
-0.645
+0.646
 </td>
 <td style="text-align:right;">
-0.743
+0.755
 </td>
 <td style="text-align:right;">
-0.806
+0.802
 </td>
 </tr>
 <tr>
@@ -2636,28 +2636,28 @@ Median
 100
 </td>
 <td style="text-align:right;">
-0.594
+0.591
 </td>
 <td style="text-align:right;">
-0.585
+0.589
 </td>
 <td style="text-align:right;">
-0.291
+0.267
 </td>
 <td style="text-align:right;">
-0.347
+0.320
 </td>
 <td style="text-align:right;">
-0.448
+0.445
 </td>
 <td style="text-align:right;">
-0.750
+0.744
 </td>
 <td style="text-align:right;">
-0.849
+0.872
 </td>
 <td style="text-align:right;">
-0.902
+0.903
 </td>
 </tr>
 </tbody>
@@ -2677,7 +2677,7 @@ Median
 <span id="cb33-13"><a href="#cb33-13" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Posterior PDFs for doses &gt; 9&quot;</span>,</span>
 <span id="cb33-14"><a href="#cb33-14" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">&quot;Dose&quot;</span></span>
 <span id="cb33-15"><a href="#cb33-15" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img role="img" aria-label="A graph showing the posterior density of of the probability of toxicity for all doses greater than nine.  The mode of each density moves to the right as dose increases.  The densities for low doses are heaviliy skewed to the left.  Densities for higher doses are more symmetric and flatter." src="data:image/png;base64,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" alt="A graph showing the posterior density of of the probability of toxicity for all doses greater than nine.  The mode of each density moves to the right as dose increases.  The densities for low doses are heaviliy skewed to the left.  Densities for higher doses are more symmetric and flatter." /></p>
+<p><img role="img" aria-label="A graph showing the posterior density of of the probability of toxicity for all doses greater than nine.  The mode of each density moves to the right as dose increases.  The densities for low doses are heaviliy skewed to the left.  Densities for higher doses are more symmetric and flatter." src="data:image/png;base64,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" alt="A graph showing the posterior density of of the probability of toxicity for all doses greater than nine.  The mode of each density moves to the right as dose increases.  The densities for low doses are heaviliy skewed to the left.  Densities for higher doses are more symmetric and flatter." /></p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>fullSummary <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Dose)) <span class="sc">+</span></span>
 <span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Q05, <span class="at">ymax =</span> Q95), <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
@@ -2693,7 +2693,7 @@ Median
 <span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a>  )</span>
 <span id="cb34-14"><a href="#cb34-14" tabindex="-1"></a><span class="co">#&gt; Ignoring unknown labels:</span></span>
 <span id="cb34-15"><a href="#cb34-15" tabindex="-1"></a><span class="co">#&gt; • colour : &quot;Dose&quot;</span></span></code></pre></div>
-<p><img role="img" aria-label="A visual representation of the posterior dose - toxicity curve.  Very closely spaced solid lines in black and blue, representing the mean and median estimate of toxicity for each dose rise almost linearly from zero percent for a dose of zero to about 55% for a dose of 100.  Shading extends to each side of the two solid lines.  The transparency of the shading increases with distance from the solid lines.  The shading is funnel shaped, with a narrow mneck at a dose of 100 and a wider mouth at a dose of 100.  The shading represents the central 90%, 80% and 50% confidence intervals for the posterior mean estimate of toxicity at each dose." src="data:image/png;base64,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" alt="A visual representation of the posterior dose - toxicity curve.  Very closely spaced solid lines in black and blue, representing the mean and median estimate of toxicity for each dose rise almost linearly from zero percent for a dose of zero to about 55% for a dose of 100.  Shading extends to each side of the two solid lines.  The transparency of the shading increases with distance from the solid lines.  The shading is funnel shaped, with a narrow mneck at a dose of 100 and a wider mouth at a dose of 100.  The shading represents the central 90%, 80% and 50% confidence intervals for the posterior mean estimate of toxicity at each dose." /></p>
+<p><img role="img" aria-label="A visual representation of the posterior dose - toxicity curve.  Very closely spaced solid lines in black and blue, representing the mean and median estimate of toxicity for each dose rise almost linearly from zero percent for a dose of zero to about 55% for a dose of 100.  Shading extends to each side of the two solid lines.  The transparency of the shading increases with distance from the solid lines.  The shading is funnel shaped, with a narrow mneck at a dose of 100 and a wider mouth at a dose of 100.  The shading represents the central 90%, 80% and 50% confidence intervals for the posterior mean estimate of toxicity at each dose." src="data:image/png;base64,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" alt="A visual representation of the posterior dose - toxicity curve.  Very closely spaced solid lines in black and blue, representing the mean and median estimate of toxicity for each dose rise almost linearly from zero percent for a dose of zero to about 55% for a dose of 100.  Shading extends to each side of the two solid lines.  The transparency of the shading increases with distance from the solid lines.  The shading is funnel shaped, with a narrow mneck at a dose of 100 and a wider mouth at a dose of 100.  The shading represents the central 90%, 80% and 50% confidence intervals for the posterior mean estimate of toxicity at each dose." /></p>
 </div>
 <div id="note" class="section level2">
 <h2>Note</h2>
