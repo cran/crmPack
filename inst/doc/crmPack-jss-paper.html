@@ -136,7 +136,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -376,17 +375,17 @@ dose in cohorts of three, with the dose for the next cohort then being
 determined from the number of DLTs having been observed in the current cohort.</p>
 <p>Algorithmic designs like the simple 3+3 design <span class="citation">(Carter 1973)</span> have
 disadvantages that have been recognized in the statistics community, see e.g.,
-<span class="citation">(Paoletti, Ezzalfani, and Le Tourneau 2015)</span>. Fundamentally, the escalation rules of the 3+3 design do
+<span class="citation">(Paoletti et al. 2015)</span>. Fundamentally, the escalation rules of the 3+3 design do
 not have any statistical justification <span class="citation">(Storer 1989)</span> in terms of estimating
 an MTD. Moreover, they cannot be extended to address today’s Phase I trials,
 with extension cohorts, dose escalation of drug combinations and optimal
 biological dose determination, naming just a few prominent challenges. Hence
 model-based dose escalation designs like the continual reassessment method
-(CRM) <span class="citation">(O’Quigley, Pepe, and Fisher 1990)</span> have gained increasing interest due to the need for
+(CRM) <span class="citation">(O’Quigley et al. 1990)</span> have gained increasing interest due to the need for
 more efficient and informative Phase I trials. These designs are based in
 statistical inference, with dose-toxicity regression models as the backbone, and
 are therefore flexible for adaptation to various complex trial designs.
-Importantly, they avoid fixing only a few dose levels in advance. For a wider comparison of algorithmic and model based designs see e.g., <span class="citation">(Jaki, Clive, and Weir 2013)</span>.</p>
+Importantly, they avoid fixing only a few dose levels in advance. For a wider comparison of algorithmic and model based designs see e.g., <span class="citation">(Jaki et al. 2013)</span>.</p>
 <p>However, the wide-spread implementation of such designs has been hindered by the
 need for either licensing specialized commercial software (thus losing
 flexibility) or programming the design and simulations from scratch for each
@@ -405,12 +404,12 @@ these implementations there is, however, a limitation on how much the designs
 can be tailored towards the individual needs of the study. Similarly static
 implementations of methods for dose escalation are available in the
 <code>Stata</code> module <code>crm</code> <span class="citation">(Mander 2013)</span> which implements the CRM and
-the <code>dfcrm</code> package <span class="citation">(K. Cheung 2013)</span> in <code>R</code> which additionally implements the
-time-to-event CRM (TITE-CRM) <span class="citation">(Y. K. Cheung and Chappell 2000)</span>. Several <code>R</code>-packages
-with extensions are available. The <code>bcrm</code> package <span class="citation">(M. Sweeting, Mander, and Sabin 2013)</span> implements a variety of one and two parameter models, and facilitates different
+the <code>dfcrm</code> package <span class="citation">(Cheung 2013)</span> in <code>R</code> which additionally implements the
+time-to-event CRM (TITE-CRM) <span class="citation">(Cheung and Chappell 2000)</span>. Several <code>R</code>-packages
+with extensions are available. The <code>bcrm</code> package <span class="citation">(Sweeting et al. 2013)</span> implements a variety of one and two parameter models, and facilitates different
 ways to specify prior distributions, escalation and stopping rules. The <code>ordcrm</code> package
 <span class="citation">(Dressler and Huang 2016)</span> implements ordinal proportional odds and continuation ratio models for CRMs.
-The <code>dfpk</code> package <span class="citation">(Toumazi, Ursino, and Zohar 2017)</span> uses pharmacokinetic data in the dose escalation.</p>
+The <code>dfpk</code> package <span class="citation">(Toumazi et al. 2017)</span> uses pharmacokinetic data in the dose escalation.</p>
 <p>In this paper we introduce the <code>R</code>-package <code>crmPack</code> <span class="citation">(Sabanes Bove et al. 2018)</span> for
 dose escalation studies, which is publicly available on CRAN. While the package’s name
 pays tribute to the original CRM as the first model-based dose escalation design, the
@@ -457,7 +456,7 @@ hyperparameters <span class="math inline">\(\xi\)</span>.</p>
 <p>In <code>crmPack</code> the virtual <code>S4</code> class <code>GeneralModel</code> encapsulates this
 notion and subclasses implement concrete models.</p>
 <p>For example, the class <code>LogisticLogNormal</code> implements
-the logistic regression model <span class="citation">(Neuenschwander, Branson, and Gsponer 2008)</span> with
+the logistic regression model <span class="citation">(Neuenschwander et al. 2008)</span> with
 <span class="math display">\[\begin{equation}
 \label{eq:LogisticLogNormal}
 \mathrm{logit}(Prob(Y=1 | x,\theta))
@@ -536,7 +535,7 @@ for <span class="math inline">\(x_{1}\)</span>, since we consider here the regre
 with a log transformation of the dose <span class="math inline">\(x\)</span> (with <span class="math inline">\(x^{*} = 100\)</span> chosen as reference dose).</p>
 <p><strong>Minimally informative prior</strong> Here we assume that limited prior information is available on the dose-toxicity
 relationship, and hence would like to use a minimally informative prior
-<span class="citation">(Neuenschwander, Branson, and Gsponer 2008)</span> which can be easily obtained with the function
+<span class="citation">(Neuenschwander et al. 2008)</span> which can be easily obtained with the function
 <code>MinimalInformative</code>. Since stochastic optimization is used internally, setting of a seed is required for reproducibility.
 Furthermore, it is recommended to specify a coarse dose grid across the original dose range (excluding the placebo dose) to avoid long computation time:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>coarseGrid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>)</span>
@@ -635,7 +634,7 @@ for doses equal or above 200 mg is specified using the class <code>IncrementsRel
 the <code>maxDose</code> function to obtain the maximum next dose <span class="math inline">\(t_{N+1} = \tau({\cal D}_{N})\)</span>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>(nextMaxDose <span class="ot">&lt;-</span> <span class="fu">maxDose</span>(myIncrements, data))</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; [1] 150</span></span></code></pre></div>
-<p>We then define the function <span class="math inline">\(\nu\)</span> for selecting a dose for the next cohort. In this case we would like to select the dose which maximizes the probability of the DLT rate being in the target toxicity range from 20% to 35%, but with the probability of overdosing not exceeding 25% <span class="citation">(Neuenschwander, Branson, and Gsponer 2008)</span>, using the <code>NextBestNCRM</code> class:</p>
+<p>We then define the function <span class="math inline">\(\nu\)</span> for selecting a dose for the next cohort. In this case we would like to select the dose which maximizes the probability of the DLT rate being in the target toxicity range from 20% to 35%, but with the probability of overdosing not exceeding 25% <span class="citation">(Neuenschwander et al. 2008)</span>, using the <code>NextBestNCRM</code> class:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>myNextBest <span class="ot">&lt;-</span> <span class="fu">NextBestNCRM</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="at">target =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.35</span>), <span class="at">overdose =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="dv">1</span>),</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">max_overdose_prob =</span> <span class="fl">0.25</span></span>
@@ -933,7 +932,7 @@ framework based on the <code>S4</code> classes and methods system <span class="c
 for Bayesian computations. Here we will therefore illustrate how users can extend
 the existing functionality easily to the specific needs of the study.</p>
 <p><strong>Objective</strong> The example will implement a version of the one-parameter CRM
-<span class="citation">(O’Quigley, Pepe, and Fisher 1990)</span>, which is currently not (yet) included in the package.
+<span class="citation">(O’Quigley et al. 1990)</span>, which is currently not (yet) included in the package.
 It is based on a one-parameter power model to describe the relationship between
 the binary DLT responses <span class="math inline">\(Y\)</span> and their corresponding dose levels <span class="math inline">\(x\)</span>:
 <span class="math display">\[\begin{equation}
@@ -1134,7 +1133,7 @@ in the package. As for all designs, the underlying structure to extend to novel 
 graphical displays are also available.</p>
 <p>The package is actively developed further and new methods will be added.
 Future extensions of <code>crmPack</code> will include model-based combination dose
-escalation designs, see for example <span class="citation">(M. J. Sweeting and Mander 2012)</span> and [<span class="citation">Riviere et al. (2014)</span>
+escalation designs, see for example <span class="citation">(Sweeting and Mander 2012)</span> and [<span class="citation">Riviere et al. (2014)</span>
 for recent reviews. Furthermore, data-augmentation CRM designs [see]<span class="citation">(Liu and Ning 2013)</span>
 that allow for a decoupling of inter-cohort waiting times and DLT time windows, hence
 speeding up dose escalation trials, will be included.</p>
@@ -1146,7 +1145,7 @@ on an earlier draft of the manuscript. This report is funded by the Roche Postdo
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-bekele2005" class="csl-entry">
 Bekele, NB, and Yu Shen. 2005. <span>“A Bayesian Approach to Jointly Modeling Toxicity and Biomarker Expression in a Phase i/II Dose-Finding Trial.”</span> <em>Biometrics</em> 61 (2): 343–54.
 </div>
@@ -1166,7 +1165,7 @@ Cheung, Ying Kuen, and Rick Chappell. 2000. <span>“Sequential Designs for Phas
 Consultants, Berry. 2025.<em> (<span>AD</span>aptive <span>D</span>esign <span>PLAN</span>ner)</em>. Austin, Texas, US. <a href="https://www.berryconsultants.com/software/addplan">https://www.berryconsultants.com/software/addplan</a>.
 </div>
 <div id="ref-R2016" class="csl-entry">
-Core Team. 2016. <em>: A Language and Environment for Statistical Computing</em>. Vienna, Austria: Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+Core Team. 2016. <em>: A Language and Environment for Statistical Computing</em>. Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
 </div>
 <div id="ref-East2016" class="csl-entry">
 Cytel Inc. 2016.<em> 6: Statistical Software for the Design, Simulation and Monitoring of Clinical Trials</em>. Cambridge, MA. <a href="https://www.cytel.com/software/east/">https://www.cytel.com/software/east/</a>.
@@ -1178,7 +1177,7 @@ Dressler, Emily V., and Zhengyan Huang. 2016. <em>: Likelihood-Based Continual R
 Institute Inc. 2003.<em> Software, Version 9.1</em>. Cary, NC. <a href="https://www.sas.com/">https://www.sas.com/</a>.
 </div>
 <div id="ref-jaki2013" class="csl-entry">
-Jaki, Thomas, Sally Clive, and Christopher J Weir. 2013. <span>“Principles of Dose Finding Studies in Cancer: A Comparison of Trial Designs.”</span> <em><span>Cancer Chemotherapy and Pharmacology</span></em> 71 (5): 1107–14.
+Jaki, Thomas, Sally Clive, and Christopher J Weir. 2013. <span>“Principles of Dose Finding Studies in Cancer: A Comparison of Trial Designs.”</span> <em><span class="nocase">Cancer Chemotherapy and Pharmacology</span></em> 71 (5): 1107–14.
 </div>
 <div id="ref-Liu2013" class="csl-entry">
 Liu, Suyu, and Jing Ning. 2013. <span>“A Bayesian Dose-Finding Design for Drug Combination Trials with Delayed Toxicities.”</span> <em>Bayesian Analysis</em> 8 (3): 703–22.
@@ -1205,7 +1204,7 @@ Riviere, M.- K., C. Le Tourneau, X. Paoletti, F. Dubois, and S. Zohar. 2014. <sp
 Sabanes Bove, Daniel, Wai Yin Yeung, Giuseppe Palermo, and Thomas Jaki. 2018. <em>: Object-Oriented Implementation of CRM Designs</em>. <a href="https://CRAN.R-project.org/package=crmPack">https://CRAN.R-project.org/package=crmPack</a>.
 </div>
 <div id="ref-Stata2015" class="csl-entry">
-StataCorp. 2015.<em> Statistical Software: Release 14</em>. College Station, TX: StataCorp LP. <a href="https://www.stata.com/">https://www.stata.com/</a>.
+StataCorp. 2015.<em> Statistical Software: Release 14</em>. StataCorp LP. <a href="https://www.stata.com/">https://www.stata.com/</a>.
 </div>
 <div id="ref-Storer1989" class="csl-entry">
 Storer, Barry E. 1989. <span>“Design and Analysis of Phase i Clinical Trials.”</span> <em>Biometrics</em> 45 (3): 925–37. <a href="https://doi.org/10.2307/2531693">https://doi.org/10.2307/2531693</a>.
@@ -1217,7 +1216,7 @@ Sweeting, Michael J, and Adrian P Mander. 2012. <span>“Escalation Strategies f
 Sweeting, Michael, Adrian Mander, and Tony Sabin. 2013. <span>“: Bayesian Continual Reassessment Method Designs for Phase i Dose-Finding Trials.”</span> <em>Journal of Statistical Software</em> 54 (13): 1–26.
 </div>
 <div id="ref-FACTS" class="csl-entry">
-Team, FACTS Development. 2015. <span>“Fixed and Adaptive Clinical Trial Simulator.”</span> <a href="https://www.berryconsultants.com/software">https://www.berryconsultants.com/software</a>.
+Team, FACTS Development. 2015. <em>Fixed and Adaptive Clinical Trial Simulator</em>. <a href="https://www.berryconsultants.com/software">https://www.berryconsultants.com/software</a>.
 </div>
 <div id="ref-Thall2010" class="csl-entry">
 Thall, Peter F. 2010. <span>“Bayesian Models and Decision Algorithms for Complex Early Phase Clinical Trials.”</span> <em>Statistical Science</em> 25 (2): 227–44. <a href="https://pubmed.ncbi.nlm.nih.gov/21318084/">https://pubmed.ncbi.nlm.nih.gov/21318084/</a>.
@@ -1226,7 +1225,7 @@ Thall, Peter F. 2010. <span>“Bayesian Models and Decision Algorithms for Compl
 Toumazi, Artemis, Moreno Ursino, and Sarah Zohar. 2017. <em>: A Bayesian Dose-Finding Design Using Pharmacokinetics (PK) for Phase i Clinical Trials</em>. <a href="https://CRAN.R-project.org/package=dfpk">https://CRAN.R-project.org/package=dfpk</a>.
 </div>
 <div id="ref-w06" class="csl-entry">
-Whitehead, J. 2006. <span>“Statistical Methods for Dose-Finding Experiments.”</span> In, edited by Sylvie Chevret. John Wiley &amp; Sons.
+Whitehead, J. 2006. <em>Statistical Methods for Dose-Finding Experiments</em>. Edited by Sylvie Chevret. John Wiley &amp; Sons.
 </div>
 <div id="ref-ggplot2" class="csl-entry">
 Wickham, Hadley. 2009. <em>: Elegant Graphics for Data Analysis</em>. Springer-Verlag. <a href="https://ggplot2.tidyverse.org/">https://ggplot2.tidyverse.org/</a>.

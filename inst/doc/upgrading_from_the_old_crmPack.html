@@ -375,7 +375,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -1706,10 +1705,10 @@ of a fixed model’s parameters values.</p>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># given a particular models and samples.</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Every single dose corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dose</span>(<span class="fl">0.3</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 3.038969e-01 1.007821e+00 1.503246e+01 1.540791e+00 4.373162e+00
-##  [6] 1.433964e+00 1.278770e+00 6.090378e-01 1.982880e+00 8.590442e-01
-## [11] 1.293315e+01 1.000224e-04 3.604849e-02 2.069266e-01 4.351992e-01
-## [16] 1.910766e+00 3.440231e+00 1.429485e+00 9.009591e-01 1.078463e+00</code></pre>
+<pre><code>##  [1] 3.278790694 0.554150904 0.918539049 0.558741575 1.545490983 0.715198121
+##  [7] 1.172486135 0.002215822 0.226325503 0.438845999 1.231280487 1.316242352
+## [13] 1.265201241 1.696035303 1.239095210 2.147403696 1.850472533 7.258521042
+## [19] 0.907779501 0.394272482</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># True dose-DLT relationship.</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># The `true_dose_fun` takes one argument (target probability of the occurrence of a DLT)</span></span>
@@ -1724,9 +1723,10 @@ of a fixed model’s parameters values.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Toxicity probabilities for a given dose (equal to 10), model and samples.</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># Every single probability value corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">prob</span>(<span class="dv">10</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 0.9802516 0.9903143 0.3223271 0.9046593 0.4389037 0.9678821 0.5333849
-##  [8] 0.8107781 0.1685260 0.9499074 0.3600874 0.8413947 0.9647205 0.7664528
-## [15] 0.9784331 0.4056784 0.2104194 0.9463394 0.9869097 0.9046571</code></pre>
+<pre><code>##  [1] 0.57374356 0.74502863 0.01602445 0.05873480 0.70533846 0.99382766
+##  [7] 0.95317040 0.72614591 0.88728748 0.95682023 0.98860068 0.87522820
+## [13] 0.97600890 0.96886065 0.90953999 0.72918677 0.55890727 0.28038409
+## [19] 0.96943074 0.92824640</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>
@@ -3566,7 +3566,7 @@ replaced by <code>update-ModelPseudo</code>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-advancedR" class="csl-entry">
 Wickham, Hadley. 2019. <em>Advanced r, Second Edition</em>. Chapman
 &amp; Hall/CRC: R Series. <a href="https://adv-r.hadley.nz">https://adv-r.hadley.nz</a>.

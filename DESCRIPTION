@@ -1,6 +1,6 @@
 Package: crmPack
 Title: Object-Oriented Implementation of Dose Escalation Designs
-Version: 2.0.1
+Version: 2.0.2
 Authors@R: c(
     person("Daniel", "Sabanes Bove", , "daniel.sabanes_bove@rconis.com", role = c("aut", "cre")),
     person("Wai", "Yin Yeung", , "winnie.yeung@roche.com", role = "aut"),
@@ -76,7 +76,7 @@ Collate: 'CrmPackClass-class.R' 'CrmPackClass-methods.R'
         'helpers_samples.R' 'helpers_simulations.R' 'utils-pipe.R'
         'utils.R'
 NeedsCompilation: no
-Packaged: 2025-12-04 13:00:38 UTC; Daniel
+Packaged: 2026-01-08 12:48:53 UTC; daniel
 Author: Daniel Sabanes Bove [aut, cre],
   Wai Yin Yeung [aut],
   Burak Kuersad Guenhan [aut],
@@ -100,4 +100,4 @@ Author: Daniel Sabanes Bove [aut, cre],
   RPACT GmbH [cph, fnd]
 Maintainer: Daniel Sabanes Bove <daniel.sabanes_bove@rconis.com>
 Repository: CRAN
-Date/Publication: 2025-12-04 14:40:20 UTC
+Date/Publication: 2026-01-08 16:20:02 UTC
