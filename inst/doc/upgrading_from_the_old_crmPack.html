@@ -1705,10 +1705,10 @@ of a fixed model’s parameters values.</p>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># given a particular models and samples.</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Every single dose corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dose</span>(<span class="fl">0.3</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 3.278790694 0.554150904 0.918539049 0.558741575 1.545490983 0.715198121
-##  [7] 1.172486135 0.002215822 0.226325503 0.438845999 1.231280487 1.316242352
-## [13] 1.265201241 1.696035303 1.239095210 2.147403696 1.850472533 7.258521042
-## [19] 0.907779501 0.394272482</code></pre>
+<pre><code>##  [1] 1.961955e+00 2.617251e+00 1.167802e+00 9.021515e-01 4.939584e+01
+##  [6] 3.553180e-01 1.242371e+00 1.951510e-01 3.314612e-04 1.057962e+00
+## [11] 1.279596e-01 1.605336e-01 6.247247e+00 1.136980e-01 1.751436e-05
+## [16] 1.286282e+00 4.448543e-01 5.758316e-01 7.480225e-03 2.235373e+00</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># True dose-DLT relationship.</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># The `true_dose_fun` takes one argument (target probability of the occurrence of a DLT)</span></span>
@@ -1723,10 +1723,10 @@ of a fixed model’s parameters values.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Toxicity probabilities for a given dose (equal to 10), model and samples.</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># Every single probability value corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">prob</span>(<span class="dv">10</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 0.57374356 0.74502863 0.01602445 0.05873480 0.70533846 0.99382766
-##  [7] 0.95317040 0.72614591 0.88728748 0.95682023 0.98860068 0.87522820
-## [13] 0.97600890 0.96886065 0.90953999 0.72918677 0.55890727 0.28038409
-## [19] 0.96943074 0.92824640</code></pre>
+<pre><code>##  [1] 0.20299887 0.67591152 0.84483855 0.99797896 0.13960517 0.61031211
+##  [7] 0.75672870 0.77516896 0.70496299 0.79591087 0.97648866 0.57324073
+## [13] 0.39108697 0.04453572 0.56254977 0.86844677 0.96364339 0.82987649
+## [19] 0.83841593 0.20286558</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>

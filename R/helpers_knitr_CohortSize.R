@@ -70,13 +70,11 @@ knit_print.CohortSizeConst <- function(
 knit_print.CohortSizeRange <- function(x, ..., asis = TRUE) {
   assert_flag(asis)
 
-  param <- list(...)
-  if (!("col.names" %in% names(param))) {
-    param[["col.names"]] <- c("Lower", "Upper", "Cohort size")
-  }
-  if (!("caption" %in% names(param))) {
-    param[["caption"]] <- "Defined by the dose to be used in the next cohort"
-  }
+  param <- h_kable_param_default(
+    list(...),
+    col_names = c("Lower", "Upper", "Cohort size"),
+    caption = "Defined by the dose to be used in the next cohort"
+  )
   x <- tidy(x)
   param[["x"]] <- x
   rv <- kableExtra::add_header_above(
@@ -113,19 +111,17 @@ knit_print.CohortSizeDLT <- function(
   asis = TRUE
 ) {
   assert_flag(asis)
-  param <- list(...)
   tox_label <- h_prepare_labels(tox_label)
 
-  if (!("col.names" %in% names(param))) {
-    param[["col.names"]] <- c("Lower", "Upper", "Cohort size")
-  }
-  if (!("caption" %in% names(param))) {
-    param[["caption"]] <- paste0(
+  param <- h_kable_param_default(
+    list(...),
+    col_names = c("Lower", "Upper", "Cohort size"),
+    caption = paste0(
       "Defined by the number of ",
       tox_label[2],
       " so far observed"
     )
-  }
+  )
   param[["x"]] <- tidy(x)
   headers <- c(2, 1)
   names(headers) <- c(paste0("No of ", tox_label[2]), " ")
@@ -273,6 +269,39 @@ knit_print.CohortSizeOrdinal <- function(
     sep = "\n"
   )
 
+  if (asis) {
+    rv <- knitr::asis_output(rv)
+  }
+  rv
+}
+
+#' Render a `CohortSizeRandom` Object
+#'
+#' @description `r lifecycle::badge("experimental")`
+#' @inherit knit_print.CohortSizeConst return
+#' @inheritSection knit_print.CohortSizeConst Usage Notes
+#'
+#' @export
+#' @method knit_print CohortSizeRandom
+#' @rdname knit_print
+knit_print.CohortSizeRandom <- function(
+  x,
+  ...,
+  asis = TRUE,
+  label = c("participant", "participants")
+) {
+  assert_flag(asis)
+
+  label <- h_prepare_labels(label)
+  rv <- paste0(
+    "A random cohort size drawn uniformly between ",
+    x@min_size,
+    " and ",
+    x@max_size,
+    " ",
+    label[2],
+    ".\n\n"
+  )
   if (asis) {
     rv <- knitr::asis_output(rv)
   }

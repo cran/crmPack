@@ -1,8 +1,9 @@
 Package: crmPack
 Title: Object-Oriented Implementation of Dose Escalation Designs
-Version: 2.0.2
+Version: 2.1.0
 Authors@R: c(
-    person("Daniel", "Sabanes Bove", , "daniel.sabanes_bove@rconis.com", role = c("aut", "cre")),
+    person("Daniel", "Sabanés Bové", , "daniel.sabanes_bove@rconis.com", role = c("aut", "cre"), 
+           comment = c(ORCID = "0000-0002-0176-9239")),
     person("Wai", "Yin Yeung", , "winnie.yeung@roche.com", role = "aut"),
     person("Burak Kuersad", "Guenhan", , "burakgunhan@gmail.com", role = "aut"),
     person("Giuseppe", "Palermo", , "giuseppe.palermo@roche.com", role = "aut"),
@@ -35,7 +36,7 @@ Description: Implements a wide range of dose escalation
     The whole package is written in a modular form in the S4 class system, making it 
     very flexible for adaptation to new models, escalation or stopping rules. 
     Further details are presented in 
-    Sabanes Bove et al. (2019) <doi:10.18637/jss.v089.i10>.
+    Sabanés Bové et al. (2019) <doi:10.18637/jss.v089.i10>.
 License: GPL (>= 2)
 URL: https://github.com/openpharma/crmPack,
         https://openpharma.github.io/crmPack/
@@ -55,29 +56,33 @@ Language: en-US
 LazyLoad: yes
 RoxygenNote: 7.3.3
 RdMacros: Rdpack
-Collate: 'CrmPackClass-class.R' 'CrmPackClass-methods.R'
-        'Data-validity.R' 'helpers.R' 'Data-class.R' 'helpers_data.R'
-        'Data-methods.R' 'Rules-validity.R' 'Rules-class.R'
-        'ModelParams-validity.R' 'ModelParams-class.R'
-        'Model-validity.R' 'helpers_jags.R' 'Model-class.R'
-        'Design-validity.R' 'Design-class.R' 'McmcOptions-validity.R'
-        'McmcOptions-class.R' 'McmcOptions-methods.R'
-        'Samples-validity.R' 'Samples-class.R' 'logger.R'
-        'helpers_covr.R' 'mcmc.R' 'Simulations-validity.R'
+Collate: 'Backfill-validity.R' 'CrmPackClass-class.R'
+        'Rules-validity.R' 'helpers.R' 'Rules-class.R'
+        'Backfill-class.R' 'Backfill-methods.R'
+        'CrmPackClass-methods.R' 'Data-validity.R' 'Data-class.R'
+        'helpers_data.R' 'Data-methods.R' 'ModelParams-validity.R'
+        'ModelParams-class.R' 'Model-validity.R' 'helpers_jags.R'
+        'Model-class.R' 'Design-validity.R' 'Design-class.R'
+        'McmcOptions-validity.R' 'McmcOptions-class.R'
+        'McmcOptions-methods.R' 'Samples-validity.R' 'Samples-class.R'
+        'logger.R' 'helpers_covr.R' 'mcmc.R' 'Simulations-validity.R'
         'Simulations-class.R' 'helpers_broom.R' 'helpers_rules.R'
         'Model-methods.R' 'checkmate.R' 'Rules-methods.R'
         'Design-methods.R' 'fromQuantiles.R' 'Samples-methods.R'
-        'Simulations-methods.R' 'crmPack-package.R' 'helpers_design.R'
-        'helpers_knitr.R' 'helpers_knitr_CohortSize.R'
+        'Simulations-methods.R' 'crmPack-package.R'
+        'helpers_backfill.R' 'helpers_design.R' 'helpers_knitr.R'
+        'helpers_knitr_Backfill.R' 'helpers_knitr_CohortSize.R'
         'helpers_knitr_Design.R' 'helpers_knitr_GeneralData.R'
         'helpers_knitr_GeneralModel.R' 'helpers_knitr_Increments.R'
-        'helpers_knitr_NextBest.R' 'helpers_knitr_SafetyWindow.R'
+        'helpers_knitr_NextBest.R' 'helpers_knitr_Opening.R'
+        'helpers_knitr_Recruitment.R' 'helpers_knitr_SafetyWindow.R'
         'helpers_knitr_Stopping.R' 'helpers_model.R'
         'helpers_samples.R' 'helpers_simulations.R' 'utils-pipe.R'
         'utils.R'
 NeedsCompilation: no
-Packaged: 2026-01-08 12:48:53 UTC; daniel
-Author: Daniel Sabanes Bove [aut, cre],
+Packaged: 2026-01-30 03:19:00 UTC; daniel
+Author: Daniel Sabanés Bové [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-0176-9239>),
   Wai Yin Yeung [aut],
   Burak Kuersad Guenhan [aut],
   Giuseppe Palermo [aut],
@@ -98,6 +103,6 @@ Author: Daniel Sabanes Bove [aut, cre],
   Merck Healthcare KGaA [cph, fnd],
   Bayer AG [cph, fnd],
   RPACT GmbH [cph, fnd]
-Maintainer: Daniel Sabanes Bove <daniel.sabanes_bove@rconis.com>
+Maintainer: Daniel Sabanés Bové <daniel.sabanes_bove@rconis.com>
 Repository: CRAN
-Date/Publication: 2026-01-08 16:20:02 UTC
+Date/Publication: 2026-01-30 10:20:09 UTC

@@ -96,7 +96,15 @@ plot(firstFour)
 plot(firstFour) + theme_light()
 
 ## -----------------------------------------------------------------------------
-vignetteMcmcOptions <- McmcOptions(burnin = 100, step = 2, samples = 1000)
+vignetteMcmcOptions <- McmcOptions(
+  burnin = 100,
+  step = 2,
+  samples = 1000,
+  rng_seed = 321,
+  rng_kind = "Wichmann-Hill"
+)
+
+## -----------------------------------------------------------------------------
 postSamples <- mcmc(
   data = firstFour,
   model = model,
@@ -250,7 +258,7 @@ doseRecommendation$value
 
 x <- stopTrial(
   my_stopping,
-  dose = doseRecommendation$value,
+  dose = 30, # team decision.
   postSamples2,
   model,
   secondFullCohort
@@ -385,6 +393,12 @@ x
 
 ## ----fig.alt = "A visual representation of the data after nineteen participants have been treated.  One each at doses 1, 3 and 9; four at a dose of 20; 6 at a dose of 30 and 6 at a dose of 45.  Toxicitiues were reported by participants 4 (at a dose of 20) and 18 and 19 (both at a dose of 45)."----
 plot(fifthFullCohort)
+
+## ----fig.alt = "A plot of the posterior after nineteen participants have been treated.  The mean probability of toxicity increases smoothly from about zero percent at a dose of zero to about 55% at a dose of 100.  The confidence interval extends from 0% to about 6% at a dose of zero and from about 22% to about 90% at a dose of 100."----
+plot(postSamples5, model, fifthFullCohort)
+
+## ----fig.alt = "Two graphs arranged in a single column.  The upper graph shoes green lines of various heights that show the probability each dose is in the target toxicity range.  There is a big arrow pointing to the bar at a dose of 45, indicating that this dose has the highest probability of being in the target toxicity range.  The lower graph as a similar series of red lines, indicating the probability that each dose is in the overdose range.  There is a horizontal black dashed line at 25%, indicating that this is the highest acceptable probability of being in the overdose range.  The red bars for doses of 60 and above all extend above 25%, indicating that their toxicity is unacceptable.  The toxicity for doses of 45 and below lie below 25%."----
+doseRecommendation$plot
 
 ## ----fig.alt = "A graph showing the posterior density of of the probability of toxicity for all doses greater than nine.  The mode of each density moves to the right as dose increases.  The densities for low doses are heaviliy skewed to the left.  Densities for higher doses are more symmetric and flatter."----
 slotNames(model)
