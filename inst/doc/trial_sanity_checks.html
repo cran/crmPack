@@ -484,9 +484,9 @@ earlier DLTs were reported at lower doses.</p>
 <tr class="even">
 <td align="right">5</td>
 <td align="right">1</td>
-<td align="right">5</td>
+<td align="right">3</td>
 <td align="left">FALSE</td>
-<td align="right">0</td>
+<td align="right">-40</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
@@ -1124,36 +1124,42 @@ the state of the model after escalation to 50 mg without toxicity…</p>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="dt">L</span><span class="sc">:</span><span class="dv">7</span><span class="dt">L</span>, <span class="fu">rep</span>(<span class="dv">8</span><span class="dt">L</span><span class="sc">:</span><span class="dv">9</span><span class="dt">L</span>, <span class="at">each =</span> <span class="dv">3</span>))</span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>)</span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>default_mcmc_options <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(<span class="at">burnin =</span> <span class="dv">1000</span>, <span class="at">step =</span> <span class="dv">2</span>, <span class="at">samples =</span> <span class="dv">1000</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>no_tox_50_samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(no_tox_below_50_data, initial_model, default_mcmc_options)</span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>recommended_dose <span class="ot">&lt;-</span> <span class="fu">nextBest</span>(</span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  next_best,</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="at">doselimit =</span> <span class="cn">Inf</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  <span class="at">samples =</span> no_tox_50_samples,</span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="at">model =</span> initial_model,</span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="at">data =</span> no_tox_below_50_data</span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>)</span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>recommended_dose<span class="sc">$</span>value</span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; [1] 50</span></span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>recommended_dose<span class="sc">$</span>probs</span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt;       dose target overdose</span></span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt;  [1,]    1  0.000    0.000</span></span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt;  [2,]    3  0.000    0.000</span></span>
-<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt;  [3,]    5  0.000    0.000</span></span>
-<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt;  [4,]   10  0.000    0.000</span></span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt;  [5,]   15  0.000    0.000</span></span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt;  [6,]   20  0.001    0.000</span></span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt;  [7,]   25  0.002    0.000</span></span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt;  [8,]   40  0.027    0.001</span></span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt;  [9,]   50  0.122    0.016</span></span>
-<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; [10,]   80  0.145    0.797</span></span>
-<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; [11,]  100  0.071    0.911</span></span>
-<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a></span>
-<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="fu">maxDose</span>(revised_increment_rule, no_tox_below_50_data)</span>
-<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; [1] 83.5</span></span></code></pre></div>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>default_mcmc_options <span class="ot">&lt;-</span> <span class="fu">McmcOptions</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">burnin =</span> <span class="dv">1000</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">step =</span> <span class="dv">2</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="at">rng_kind =</span> <span class="st">&quot;Mersenne-Twister&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  <span class="at">rng_seed =</span> <span class="dv">3819</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>)</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>no_tox_50_samples <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(no_tox_below_50_data, initial_model, default_mcmc_options)</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>recommended_dose <span class="ot">&lt;-</span> <span class="fu">nextBest</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  next_best,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>  <span class="at">doselimit =</span> <span class="cn">Inf</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  <span class="at">samples =</span> no_tox_50_samples,</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>  <span class="at">model =</span> initial_model,</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>  <span class="at">data =</span> no_tox_below_50_data</span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>)</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>recommended_dose<span class="sc">$</span>value</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; [1] 50</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>recommended_dose<span class="sc">$</span>probs</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt;       dose target overdose</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt;  [1,]    1  0.000    0.000</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt;  [2,]    3  0.000    0.000</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt;  [3,]    5  0.000    0.000</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt;  [4,]   10  0.000    0.000</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt;  [5,]   15  0.000    0.000</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt;  [6,]   20  0.001    0.000</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt;  [7,]   25  0.003    0.000</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt;  [8,]   40  0.054    0.002</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt;  [9,]   50  0.145    0.016</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; [10,]   80  0.158    0.803</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; [11,]  100  0.043    0.939</span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="fu">maxDose</span>(revised_increment_rule, no_tox_below_50_data)</span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; [1] 83.5</span></span></code></pre></div>
 <p>Whilst the increments rule allows escalation to 83.5 mg, the toxicity
 estimates provided by the model do not: the current estimate of toxicity
-at 80 mg is 0.797, well above the limit of 0.25 defined in the dose
+at 80 mg is 0.803, well above the limit of 0.25 defined in the dose
 recommendation rule (<code>next_best</code>).</p>
 <p>Again, we have several options. We can introduce intermediate doses,
 thus slowing escalation and allowing the prior model more time to adapt
@@ -1284,6 +1290,20 @@ attempt.</p>
 <tr class="odd">
 <td align="right">15</td>
 <td align="right">0</td>
+<td align="right">15</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">15</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="left">FALSE</td>
+<td align="right">-33</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="right">0</td>
 <td align="right">20</td>
 <td align="left">FALSE</td>
 <td align="right">33</td>
@@ -1305,9 +1325,9 @@ attempt.</p>
 <tr class="even">
 <td align="right">20</td>
 <td align="right">1</td>
-<td align="right">10</td>
+<td align="right">15</td>
 <td align="left">FALSE</td>
-<td align="right">-50</td>
+<td align="right">-25</td>
 </tr>
 <tr class="odd">
 <td align="right">25</td>
@@ -1425,28 +1445,28 @@ attempt.</p>
 <td align="right">80</td>
 <td align="right">0</td>
 <td align="right">100</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 <td align="right">25</td>
 </tr>
 <tr class="even">
 <td align="right">80</td>
 <td align="right">1</td>
 <td align="right">50</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 <td align="right">-38</td>
 </tr>
 <tr class="odd">
 <td align="right">80</td>
 <td align="right">2</td>
 <td align="right">50</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 <td align="right">-38</td>
 </tr>
 <tr class="even">
 <td align="right">80</td>
 <td align="right">3</td>
 <td align="right">40</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 <td align="right">-50</td>
 </tr>
 </tbody>
@@ -1486,10 +1506,10 @@ any reports of toxicity, and fit the revised model …</p>
 <span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt;  [5,]   15  0.000    0.000</span></span>
 <span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;  [6,]   20  0.000    0.000</span></span>
 <span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt;  [7,]   25  0.000    0.000</span></span>
-<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;  [8,]   40  0.015    0.000</span></span>
-<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;  [9,]   50  0.048    0.000</span></span>
-<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [10,]   80  0.356    0.027</span></span>
-<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; [11,]  100  0.465    0.095</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;  [8,]   40  0.000    0.000</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;  [9,]   50  0.004    0.000</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [10,]   80  0.191    0.000</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; [11,]  100  0.347    0.012</span></span>
 <span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a></span>
 <span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="fu">stopTrial</span>(stopping_trial, recommended_dose<span class="sc">$</span>value, no_tox_samples, initial_model, no_tox_data)</span>
 <span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
@@ -1499,7 +1519,7 @@ any reports of toxicity, and fit the revised model …</p>
 <span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 11 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[1]][[2]]</span></span>
-<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 46 % for dose 100 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 35 % for dose 100 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
@@ -1513,7 +1533,7 @@ any reports of toxicity, and fit the revised model …</p>
 <span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Number of cohorts is 11 and thus reached the prespecified minimum number 3&quot;</span></span>
 <span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)[[2]]</span></span>
-<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 46 % for dose 100 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 35 % for dose 100 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)</span></span>
 <span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[1]]</span></span>
@@ -1526,7 +1546,7 @@ any reports of toxicity, and fit the revised model …</p>
 <span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;individual&quot;)[[2]]</span></span>
 <span id="cb10-65"><a href="#cb10-65" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
 <span id="cb10-66"><a href="#cb10-66" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;message&quot;)</span></span>
-<span id="cb10-67"><a href="#cb10-67" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 46 % for dose 100 and thus below the required 50 %&quot;</span></span>
+<span id="cb10-67"><a href="#cb10-67" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Probability for target toxicity is 35 % for dose 100 and thus below the required 50 %&quot;</span></span>
 <span id="cb10-68"><a href="#cb10-68" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;report_label&quot;)</span></span>
 <span id="cb10-69"><a href="#cb10-69" tabindex="-1"></a><span class="co">#&gt; [1] &quot;P(0.2 ≤ prob(DLE | NBD) ≤ 0.35) ≥ 0.5&quot;</span></span>
 <span id="cb10-70"><a href="#cb10-70" tabindex="-1"></a><span class="co">#&gt; </span></span>

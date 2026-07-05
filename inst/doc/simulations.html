@@ -345,6 +345,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
+<!-- simulations.Rmd is generated from simulations.Rmd.orig Please edit that file -->
 <div id="simulation-setting" class="section level2">
 <h2>Simulation setting</h2>
 <p>Here the simulation study setting is defined.</p>
@@ -375,8 +376,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="design-definition" class="section level2">
 <h2>Design definition</h2>
 <p>Here the the dose escalation designs are defined: in this example the
-TITE-CRM is used. Similarly the code can be adapted for the
-rolling-CRM.</p>
+TITE-CRM is used. Similarly the code can be adapted for the rolling-CRM
+which is implemented in <code>DALogisticLogNormal</code>. Note that
+another alternative is <code>TITELogisticLogNormalSub</code> which is a
+submodel of <code>LogisticLogNormalSub</code>, which uses again the
+subtraction of the reference dose from the dose level in the regression
+model.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(crmPack)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>t_max <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>

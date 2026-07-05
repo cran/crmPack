@@ -29,230 +29,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
-<script>$(document).ready(function(){
-    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
-        $('[data-toggle="tooltip"]').tooltip();
-    }
-    if ($('[data-toggle="popover"]').popover === 'function') {
-        $('[data-toggle="popover"]').popover();
-    }
-});
-</script>
-<style type="text/css">
-.lightable-minimal {
-border-collapse: separate;
-border-spacing: 16px 1px;
-width: 100%;
-margin-bottom: 10px;
-}
-.lightable-minimal td {
-margin-left: 5px;
-margin-right: 5px;
-}
-.lightable-minimal th {
-margin-left: 5px;
-margin-right: 5px;
-}
-.lightable-minimal thead tr:last-child th {
-border-bottom: 2px solid #00000050;
-empty-cells: hide;
-}
-.lightable-minimal tbody tr:first-child td {
-padding-top: 0.5em;
-}
-.lightable-minimal.lightable-hover tbody tr:hover {
-background-color: #f5f5f5;
-}
-.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-classic {
-border-top: 0.16em solid #111111;
-border-bottom: 0.16em solid #111111;
-width: 100%;
-margin-bottom: 10px;
-margin: 10px 5px;
-}
-.lightable-classic tfoot tr td {
-border: 0;
-}
-.lightable-classic tfoot tr:first-child td {
-border-top: 0.14em solid #111111;
-}
-.lightable-classic caption {
-color: #222222;
-}
-.lightable-classic td {
-padding-left: 5px;
-padding-right: 5px;
-color: #222222;
-}
-.lightable-classic th {
-padding-left: 5px;
-padding-right: 5px;
-font-weight: normal;
-color: #222222;
-}
-.lightable-classic thead tr:last-child th {
-border-bottom: 0.10em solid #111111;
-}
-.lightable-classic.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-classic.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-classic-2 {
-border-top: 3px double #111111;
-border-bottom: 3px double #111111;
-width: 100%;
-margin-bottom: 10px;
-}
-.lightable-classic-2 tfoot tr td {
-border: 0;
-}
-.lightable-classic-2 tfoot tr:first-child td {
-border-top: 3px double #111111;
-}
-.lightable-classic-2 caption {
-color: #222222;
-}
-.lightable-classic-2 td {
-padding-left: 5px;
-padding-right: 5px;
-color: #222222;
-}
-.lightable-classic-2 th {
-padding-left: 5px;
-padding-right: 5px;
-font-weight: normal;
-color: #222222;
-}
-.lightable-classic-2 tbody tr:last-child td {
-border-bottom: 3px double #111111;
-}
-.lightable-classic-2 thead tr:last-child th {
-border-bottom: 1px solid #111111;
-}
-.lightable-classic-2.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-material {
-min-width: 100%;
-white-space: nowrap;
-table-layout: fixed;
-font-family: Roboto, sans-serif;
-border: 1px solid #EEE;
-border-collapse: collapse;
-margin-bottom: 10px;
-}
-.lightable-material tfoot tr td {
-border: 0;
-}
-.lightable-material tfoot tr:first-child td {
-border-top: 1px solid #EEE;
-}
-.lightable-material th {
-height: 56px;
-padding-left: 16px;
-padding-right: 16px;
-}
-.lightable-material td {
-height: 52px;
-padding-left: 16px;
-padding-right: 16px;
-border-top: 1px solid #eeeeee;
-}
-.lightable-material.lightable-hover tbody tr:hover {
-background-color: #f5f5f5;
-}
-.lightable-material.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-material.lightable-striped tbody td {
-border: 0;
-}
-.lightable-material.lightable-striped thead tr:last-child th {
-border-bottom: 1px solid #ddd;
-}
-.lightable-material-dark {
-min-width: 100%;
-white-space: nowrap;
-table-layout: fixed;
-font-family: Roboto, sans-serif;
-border: 1px solid #FFFFFF12;
-border-collapse: collapse;
-margin-bottom: 10px;
-background-color: #363640;
-}
-.lightable-material-dark tfoot tr td {
-border: 0;
-}
-.lightable-material-dark tfoot tr:first-child td {
-border-top: 1px solid #FFFFFF12;
-}
-.lightable-material-dark th {
-height: 56px;
-padding-left: 16px;
-padding-right: 16px;
-color: #FFFFFF60;
-}
-.lightable-material-dark td {
-height: 52px;
-padding-left: 16px;
-padding-right: 16px;
-color: #FFFFFF;
-border-top: 1px solid #FFFFFF12;
-}
-.lightable-material-dark.lightable-hover tbody tr:hover {
-background-color: #FFFFFF12;
-}
-.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
-background-color: #FFFFFF12;
-}
-.lightable-material-dark.lightable-striped tbody td {
-border: 0;
-}
-.lightable-material-dark.lightable-striped thead tr:last-child th {
-border-bottom: 1px solid #FFFFFF12;
-}
-.lightable-paper {
-width: 100%;
-margin-bottom: 10px;
-color: #444;
-}
-.lightable-paper tfoot tr td {
-border: 0;
-}
-.lightable-paper tfoot tr:first-child td {
-border-top: 1px solid #00000020;
-}
-.lightable-paper thead tr:last-child th {
-color: #666;
-vertical-align: bottom;
-border-bottom: 1px solid #00000020;
-line-height: 1.15em;
-padding: 10px 5px;
-}
-.lightable-paper td {
-vertical-align: middle;
-border-bottom: 1px solid #00000010;
-line-height: 1.15em;
-padding: 7px 5px;
-}
-.lightable-paper.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-paper.lightable-striped tbody tr:nth-child(even) {
-background-color: #00000008;
-}
-.lightable-paper.lightable-striped tbody td {
-border: 0;
-}
-</style>
 
 <style type="text/css">
 code{white-space: pre-wrap;}
@@ -591,6 +367,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
+<!-- upgrading_from_the_old_crmPack.Rmd is generated from upgrading_from_the_old_crmPack.Rmd.orig Please edit that file -->
 <p>The following vignette describes the changes that were introduced to
 the <code>crmPack</code> package as a result of the package’s
 refactoring. One row in below tables represents a single-type,
@@ -732,87 +509,6 @@ and log slope.
 </tr>
 <tr>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Parent model class
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-ModelParamsNormal
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Represents parameters of bivariate normal distribution.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-SafetyWindow
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-SafetyWindowConst
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Safety window length used when the <code>gap</code> should be kept
-constant.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-SafetyWindow
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-SafetyWindowSize
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Safety window length based on cohort size.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-StoppingLowestDoseHSRBeta
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping based on a Hard Safety Rule using the Beta posterior
-distribution.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-StoppingMTDCV
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping rule based on precision of MTD which is calculated as the
-coefficient of variation (CV) of the MTD.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-StoppingMissingDose
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping based on NA returned by next best dose.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Stopping
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-StoppingSpecificDose
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-Testing a stopping rule at specific dose of the dose grid and not at the
-next best dose.
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 nextBest
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
@@ -878,6 +574,87 @@ NextBestProbMTDMinDist
 Next best dose that selects the dose with the highest probability of
 having a toxicity rate with the smallest distance to the toxicity
 target.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Parent model class
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+ModelParamsNormal
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Represents parameters of bivariate normal distribution.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+SafetyWindow
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+SafetyWindowConst
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Safety window length used when the <code>gap</code> should be kept
+constant.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+SafetyWindow
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+SafetyWindowSize
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Safety window length based on cohort size.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+StoppingLowestDoseHSRBeta
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping based on a Hard Safety Rule using the Beta posterior
+distribution.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+StoppingMissingDose
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping based on NA returned by next best dose.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+StoppingMTDCV
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping rule based on precision of MTD which is calculated as the
+coefficient of variation (CV) of the MTD.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Stopping
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+StoppingSpecificDose
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+Testing a stopping rule at specific dose of the dose grid and not at the
+next best dose.
 </td>
 </tr>
 </tbody>
@@ -1005,20 +782,20 @@ New Name
 <span style="     ">CohortSizeDLT</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">DLTintervals</span>
+<span style="     ">cohortSize</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-dlt_intervals
+cohort_size
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 </tr>
 <tr>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">cohortSize</span>
+<span style="     ">DLTintervals</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-cohort_size
+dlt_intervals
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
@@ -1323,22 +1100,22 @@ to be used by Random Number Generator in rJAGS
 <span style="     ">ModelEff</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     text-decoration: line-through;">ExpEff</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-moved to model class method and renamed to <code>efficacy</code>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 <span style="     text-decoration: line-through;">dose</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 moved to model class method
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     text-decoration: line-through;">ExpEff</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+moved to model class method and renamed to <code>efficacy</code>
 </td>
 </tr>
 <tr>
@@ -1574,29 +1351,6 @@ target_ratio
 </tr>
 <tr>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
-<span style="     ">StoppingTDCIRatio</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">targetEndOfTrial</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-prob_target
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">targetRatio</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-target_ratio
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
 <span style="     ">StoppingTargetBiomarker</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
@@ -1617,6 +1371,29 @@ replaces <code>scale</code> string
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 replaced by <code>is_relative</code> flag
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
+<span style="     ">StoppingTDCIRatio</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     ">targetEndOfTrial</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+prob_target
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     ">targetRatio</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+target_ratio
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 </tr>
 <tr>
@@ -1704,37 +1481,39 @@ of a fixed model’s parameters values.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Doses reaching a specific target probability of the occurrence of a DLT (equal to 0.3),</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># given a particular models and samples.</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Every single dose corresponds to one particular sample in `my_samples`.</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dose</span>(<span class="fl">0.3</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 1.961955e+00 2.617251e+00 1.167802e+00 9.021515e-01 4.939584e+01
-##  [6] 3.553180e-01 1.242371e+00 1.951510e-01 3.314612e-04 1.057962e+00
-## [11] 1.279596e-01 1.605336e-01 6.247247e+00 1.136980e-01 1.751436e-05
-## [16] 1.286282e+00 4.448543e-01 5.758316e-01 7.480225e-03 2.235373e+00</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># True dose-DLT relationship.</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># The `true_dose_fun` takes one argument (target probability of the occurrence of a DLT)</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># and computes the corresponding dose, according to the model chosen and given a fixed values</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>true_dose_fun <span class="ot">&lt;-</span> <span class="fu">doseFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">true_dose_fun</span>(<span class="fl">0.3</span>)</span></code></pre></div>
-<pre><code>## [1] 0.9538033</code></pre>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dose</span>(<span class="fl">0.3</span>, my_model, my_samples)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  [1]  1.34841076  0.11025416  0.86730537  1.53660845  1.20567406  0.83567002</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  [7]  1.64091143  2.28460821  4.52450730  1.44885220  1.58322190  0.02608328</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; [13]  1.21766897  0.39543888  1.28366789  0.73875076 19.61886830  0.60780362</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [19]  0.05915204  1.29433795</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># True dose-DLT relationship.</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># The `true_dose_fun` takes one argument (target probability of the occurrence of a DLT)</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># and computes the corresponding dose, according to the model chosen and given a fixed values</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>true_dose_fun <span class="ot">&lt;-</span> <span class="fu">doseFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="fu">true_dose_fun</span>(<span class="fl">0.3</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; [1] 0.9538033</span></span></code></pre></div>
 </div>
 <div id="prob" class="section level3">
 <h3>Prob</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Toxicity probabilities for a given dose (equal to 10), model and samples.</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># Every single probability value corresponds to one particular sample in `my_samples`.</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">prob</span>(<span class="dv">10</span>, my_model, my_samples)</span></code></pre></div>
-<pre><code>##  [1] 0.20299887 0.67591152 0.84483855 0.99797896 0.13960517 0.61031211
-##  [7] 0.75672870 0.77516896 0.70496299 0.79591087 0.97648866 0.57324073
-## [13] 0.39108697 0.04453572 0.56254977 0.86844677 0.96364339 0.82987649
-## [19] 0.83841593 0.20286558</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># toxicity probability, according to the model chosen and given a fixed values</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>true_prob_fun <span class="ot">&lt;-</span> <span class="fu">probFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">true_prob_fun</span>(<span class="dv">10</span>)</span></code></pre></div>
-<pre><code>## [1] 0.8179597</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Toxicity probabilities for a given dose (equal to 10), model and samples.</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># Every single probability value corresponds to one particular sample in `my_samples`.</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">prob</span>(<span class="dv">10</span>, my_model, my_samples)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [1] 0.93817478 0.22611044 0.99172210 0.73879550 0.86176537 0.02110999</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  [7] 0.78785107 0.66024799 0.16678261 0.89131170 0.99387321 0.78392448</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; [13] 0.87738055 0.95835853 0.92685442 0.74505590 0.36538941 0.93118090</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [19] 0.83881343 0.98010014</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># toxicity probability, according to the model chosen and given a fixed values</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>true_prob_fun <span class="ot">&lt;-</span> <span class="fu">probFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">true_prob_fun</span>(<span class="dv">10</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; [1] 0.8179597</span></span></code></pre></div>
 </div>
 </div>
 <div id="new-random-number-generator-settings-for-the-mcmc" class="section level2">
@@ -1761,7 +1540,7 @@ sensible, objects of the required class. One reason the objects returned
 may not be contextually sensible is that the constructors take no
 account of any associated <code>doseGrid</code>.</p>
 <p>Here are some examples of their use:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">.DefaultStoppingAll</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">.DefaultStoppingAll</span>()</span></code></pre></div>
 <p>If all of the following rules are <code>TRUE</code>:</p>
 <ul>
 <li><p>≥ 3 cohorts dosed: If 3 or more cohorts have been
@@ -1772,8 +1551,9 @@ toxicity at the next best dose is in the range [0.20, 0.35] is at least
 <li><p>≥ 20 patients dosed: If 20 or more participants have been
 treated.</p></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>class_name <span class="ot">&lt;-</span> <span class="st">&quot;LogisticNormal&quot;</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">text =</span> <span class="fu">paste0</span>(<span class="st">&quot;.Default&quot;</span>, class_name, <span class="st">&quot;()&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>class_name <span class="ot">&lt;-</span> <span class="st">&quot;LogisticNormal&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">text =</span> <span class="fu">paste0</span>(<span class="st">&quot;.Default&quot;</span>, class_name, <span class="st">&quot;()&quot;</span>)))</span></code></pre></div>
 <p>A logistic log normal model will describe the relationship between
 dose and toxicity: <span class="math display">\[ p(Tox | d) = f(X = 1 |
 \theta, d) = \frac{e^{\alpha + \beta \cdot d/d^*}}{1 + e^{\alpha + \beta
@@ -1924,10 +1704,10 @@ many model classes)
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">DLTintervals</span>
+<span style="     ">cohortSize</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-intervals
+cohort_size
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
@@ -1936,10 +1716,10 @@ intervals
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">cohortSize</span>
+<span style="     ">DLTintervals</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-cohort_size
+intervals
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
@@ -2360,24 +2140,24 @@ to be used by Random Number Generator in rJAGS
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     text-decoration: line-through;">ExpEff</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-moved to model class method and renamed to <code>efficacy</code>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 <span style="     text-decoration: line-through;">dose</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 moved to model class method
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     text-decoration: line-through;">ExpEff</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+moved to model class method and renamed to <code>efficacy</code>
 </td>
 </tr>
 <tr>
@@ -2824,33 +2604,6 @@ stop_list
 </tr>
 <tr>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
-<span style="     ">StoppingTDCIRatio</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">targetEndOfTrial</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-prob_target
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-<span style="     ">targetRatio</span>
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-target_ratio
-</td>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
 <span style="     ">StoppingTargetBiomarker</span>
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
@@ -2875,6 +2628,33 @@ replaces <code>scale</code> string
 </td>
 <td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 replaced by <code>is_relative</code> flag
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;vertical-align: top !important;" rowspan="2">
+<span style="     ">StoppingTDCIRatio</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     ">targetEndOfTrial</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+prob_target
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+<span style="     ">targetRatio</span>
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
+target_ratio
+</td>
+<td style="text-align:left;width: 6cm; border-left:1px solid;border-right:1px solid;">
 </td>
 </tr>
 <tr>

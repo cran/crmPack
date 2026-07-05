@@ -785,6 +785,10 @@ Inf
 <h3>Use of placebo</h3>
 <p>Placebo will not be administered in the trial.</p>
 </div>
+<div id="backfill-cohorts" class="section level3">
+<h3>Backfill cohorts</h3>
+<p>No backfill cohorts at all will be opened.</p>
+</div>
 <div id="dose-recommendation" class="section level3">
 <h3>Dose recommendation</h3>
 <p>The dose recommended for the next cohort will be chosen in the
@@ -1117,10 +1121,10 @@ toxicity range of 0.2 to 0.35 (inclusive) will be selected.</li>
 </div>
 <div id="class-coverage" class="section level2">
 <h2>Class coverage</h2>
-<p><code>crmPack</code> defines 125 classes. Custom
-<code>knit_print</code> methods exist for 92 of them. Of the remaining
-33 classes, 22 are virtual classes that will never be directly
-instantiated by end users. That leaves 11 classes for which
+<p><code>crmPack</code> defines 160 classes. Custom
+<code>knit_print</code> methods exist for 110 of them. Of the remaining
+50 classes, 27 are virtual classes that will never be directly
+instantiated by end users. That leaves 23 classes for which
 <code>knit_print</code> methods may be useful. These classes are listed
 below.</p>
 <table>
@@ -1131,37 +1135,73 @@ below.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">DualSimulationsSummary</td>
-</tr>
-<tr class="even">
-<td align="left">NextBestEWOC</td>
-</tr>
-<tr class="odd">
-<td align="left">Simulations</td>
-</tr>
-<tr class="even">
-<td align="left">StoppingExternal</td>
-</tr>
-<tr class="odd">
-<td align="left">DualSimulations</td>
+<td align="left">HierarchicalSimulations</td>
 </tr>
 <tr class="even">
 <td align="left">GeneralSimulations</td>
 </tr>
 <tr class="odd">
+<td align="left">Simulations</td>
+</tr>
+<tr class="even">
+<td align="left">ComboSimulations</td>
+</tr>
+<tr class="odd">
+<td align="left">HierarchicalDesign</td>
+</tr>
+<tr class="even">
+<td align="left">ArmConditionAny</td>
+</tr>
+<tr class="odd">
+<td align="left">ArmConditionAll</td>
+</tr>
+<tr class="even">
+<td align="left">McmcOptions</td>
+</tr>
+<tr class="odd">
+<td align="left">HierarchicalSamples</td>
+</tr>
+<tr class="even">
+<td align="left">IncrementsMaxToxProb</td>
+</tr>
+<tr class="odd">
+<td align="left">StoppingExternal</td>
+</tr>
+<tr class="even">
+<td align="left">ArmFinishedCondition</td>
+</tr>
+<tr class="odd">
 <td align="left">Samples</td>
 </tr>
 <tr class="even">
-<td align="left">DASimulations</td>
+<td align="left">DesignArm</td>
 </tr>
 <tr class="odd">
-<td align="left">IncrementsMaxToxProb</td>
+<td align="left">HierarchicalData</td>
+</tr>
+<tr class="even">
+<td align="left">DualSimulationsSummary</td>
+</tr>
+<tr class="odd">
+<td align="left">DualSimulations</td>
 </tr>
 <tr class="even">
 <td align="left">EffFlexi</td>
 </tr>
 <tr class="odd">
-<td align="left">McmcOptions</td>
+<td align="left">NoArmCondition</td>
+</tr>
+<tr class="even">
+<td align="left">DASimulations</td>
+</tr>
+<tr class="odd">
+<td align="left">ArmMinDoseCondition</td>
+</tr>
+<tr class="even">
+<td align="left">ArmConditionList</td>
+</tr>
+<tr class="odd">
+<td align="left">NextBestEWOC</td>
 </tr>
 </tbody>
 </table>
