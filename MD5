@@ -1,6 +1,6 @@
-882740c1ad98ae66ce48fa3a40b0a2f4 *DESCRIPTION
+99a8b4522090b7e61b1333179f8c5ad8 *DESCRIPTION
 a51cffcf42e94d9e216491426af72fdf *NAMESPACE
-f458f72df41a4756965f4d5c9a427b55 *NEWS.md
+0c6234211fea5b9f0b81631e9224a572 *NEWS.md
 ce6f4cbc0e5b2a77cfd5cc318d4d44c2 *R/Backfill-class.R
 a54f60c258eddf4dd9fe7b6c217cc28c *R/Backfill-methods.R
 f054269aa8bf45c9f41c56a5dd8d0809 *R/Backfill-validity.R
@@ -64,7 +64,7 @@ d8891afa559de8db4778d26eff5ebb9e *R/logger.R
 68d3b6e7299bd635a579a03d702bb581 *R/mcmc.R
 b56ff2b193ecba52f9ec7f3b10cca008 *R/utils-pipe.R
 49e4e3119a20b80b988430dc7f9cc13d *R/utils.R
-76778176e69a0e9db32c8dd83a6641f5 *build/partial.rdb
+44bd175592f35adffb2fa27a50e91e42 *build/partial.rdb
 8a164692a5a0bb9ee5829c894949cc6b *build/vignette.rds
 a7307852642c7b613eea2e4165179ef7 *inst/CITATION
 3cb79ca3d8bc8482564df48dee8a9a23 *inst/REFERENCES.bib
@@ -599,9 +599,9 @@ d9aa7c2cec7d1f3a114ccb6431932624 *tests/testthat/test-fromQuantiles.R
 403deef4e16915aa577a2dd72c649cf3 *tests/testthat/test-helpers_backfill.R
 1e0f93f07104195c06865958d04111d5 *tests/testthat/test-helpers_covr.R
 acf8626c98d9a687beda893ca173cb7b *tests/testthat/test-helpers_data.R
-cff32ece476734ae19200843a86887a6 *tests/testthat/test-helpers_design.R
+8418ee827fe3907081f3cbf824e15f4b *tests/testthat/test-helpers_design.R
 ea13dc79fc5a12a2b28495a8ba28df59 *tests/testthat/test-helpers_jags.R
-4427b7f3a2f19b95c553f47e6351f4ca *tests/testthat/test-helpers_knitr.R
+25bf90aa765c07489c0e799db21a6fd5 *tests/testthat/test-helpers_knitr.R
 42e68c0ccd9c321f01404ddcfb06fa79 *tests/testthat/test-helpers_knitr_Backfill.R
 896af418681638692db2ed95d916326f *tests/testthat/test-helpers_knitr_Design.R
 3a65f80d53baaf41d349c57453cf0392 *tests/testthat/test-helpers_knitr_GeneralModel.R
@@ -614,7 +614,7 @@ e7c0ad98293086a260ef288084699681 *tests/testthat/test-helpers_knitr_Stopping.R
 8677abf049a112751061ccfa2f3bea3f *tests/testthat/test-helpers_rules.R
 cc35d8dae4affbac13c0040d14697960 *tests/testthat/test-helpers_samples.R
 b9403ead3282cab7cbd3181351ec8b8c *tests/testthat/test-logger.R
-413b1224ed61e40a8d7b4bb3cd3baa14 *tests/testthat/test-mcmc.R
+afcb53f231b7117b83763f5ea730a040 *tests/testthat/test-mcmc.R
 66a0e7ab997b1a5ac225db6e7068f40b *tests/testthat/test-sas-results-part-1.R
 ec0c2e24d320bc05a18130ea0642ba0b *tests/testthat/test-sas-results-part-2.R
 28b1a12de0c6c59d7bd0e8662ee76ca1 *tests/testthat/test-utils.R
