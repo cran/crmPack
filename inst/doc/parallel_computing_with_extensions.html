@@ -753,52 +753,53 @@ processing, followed by 5 scenarios utilizing parallel computing.</p>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>early_scenario <span class="ot">&lt;-</span> <span class="fu">scenario_setup</span>(<span class="fl">0.05</span>, <span class="fl">0.3</span>, <span class="dv">700</span>)</span>
 <span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>toxic_scenario <span class="ot">&lt;-</span> <span class="fu">scenario_setup</span>(<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="sc">-</span><span class="dv">300</span>)</span>
 <span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>peak_scenario <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>    dose,</span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>    <span class="at">scenario =</span> <span class="fu">cbind</span>(emptydata<span class="sc">@</span>doseGrid, <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">0.05</span>, <span class="dv">11</span>), <span class="fu">rep</span>(<span class="fl">0.80</span>, <span class="dv">8</span>)))) {</span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  scenario[<span class="fu">match</span>(dose, scenario[, <span class="dv">1</span>]), <span class="dv">2</span>]</span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>}</span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co"># Helper function that outputs the elapsed time.</span></span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>report_time <span class="ot">&lt;-</span> <span class="cf">function</span>(report_text) {</span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>  <span class="fu">cat</span>(</span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">Sys.time</span>(), <span class="at">usetz =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>    report_text,</span>
-<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>    <span class="st">&quot;done - elapsed time from start:&quot;</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;mins&quot;</span>), <span class="at">digits =</span> <span class="dv">1</span>),</span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>    <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>  )</span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>}</span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a></span>
-<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co"># Helper function that simulates a specific truth.</span></span>
-<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>get_oc <span class="ot">&lt;-</span> <span class="cf">function</span>(truth) {</span>
-<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>  <span class="fu">simulate</span>(</span>
-<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>    my_design,</span>
-<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>    <span class="at">args =</span> <span class="cn">NULL</span>,</span>
-<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>    <span class="at">truth =</span> truth,</span>
-<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>    <span class="at">nsim =</span> my_nsim,</span>
-<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>    <span class="at">mcmcOptions =</span> my_options,</span>
-<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a>    <span class="at">parallel =</span> do_parallel,</span>
-<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a>    <span class="at">nCores =</span> parallelly<span class="sc">::</span><span class="fu">availableCores</span>()</span>
-<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a>  )</span>
-<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a>}</span>
-<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co"># get operation characteristics without utilizing parallel computing for</span></span>
-<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co"># selected truth (to reduce the run time).</span></span>
-<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a>time_no_parallel <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
-<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">format</span>(<span class="fu">Sys.time</span>(), <span class="at">usetz =</span> <span class="cn">TRUE</span>), <span class="st">&quot;start&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a>  my_nsim <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a>  do_parallel <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a></span>
-<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a>  safe <span class="ot">&lt;-</span> <span class="fu">get_oc</span>(safe_scenario)</span>
-<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a></span>
-<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a>  <span class="fu">report_time</span>(<span class="st">&quot;safe (single core processing)&quot;</span>)</span>
-<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a></span>
-<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a>  late <span class="ot">&lt;-</span> <span class="fu">get_oc</span>(late_scenario)</span>
-<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a></span>
-<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a>  <span class="fu">report_time</span>(<span class="st">&quot;late (single core processing)&quot;</span>)</span>
-<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a>})</span></code></pre></div>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  dose,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="at">scenario =</span> <span class="fu">cbind</span>(emptydata<span class="sc">@</span>doseGrid, <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">0.05</span>, <span class="dv">11</span>), <span class="fu">rep</span>(<span class="fl">0.80</span>, <span class="dv">8</span>)))</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>) {</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  scenario[<span class="fu">match</span>(dose, scenario[, <span class="dv">1</span>]), <span class="dv">2</span>]</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>}</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co"># Helper function that outputs the elapsed time.</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>report_time <span class="ot">&lt;-</span> <span class="cf">function</span>(report_text) {</span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  <span class="fu">cat</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">Sys.time</span>(), <span class="at">usetz =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>    report_text,</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>    <span class="st">&quot;done - elapsed time from start:&quot;</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;mins&quot;</span>), <span class="at">digits =</span> <span class="dv">1</span>),</span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>    <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>  )</span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>}</span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co"># Helper function that simulates a specific truth.</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>get_oc <span class="ot">&lt;-</span> <span class="cf">function</span>(truth) {</span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>  <span class="fu">simulate</span>(</span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>    my_design,</span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>    <span class="at">args =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>    <span class="at">truth =</span> truth,</span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>    <span class="at">nsim =</span> my_nsim,</span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a>    <span class="at">mcmcOptions =</span> my_options,</span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a>    <span class="at">parallel =</span> do_parallel,</span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a>    <span class="at">nCores =</span> parallelly<span class="sc">::</span><span class="fu">availableCores</span>()</span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a>  )</span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a>}</span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co"># get operation characteristics without utilizing parallel computing for</span></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co"># selected truth (to reduce the run time).</span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a>time_no_parallel <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">format</span>(<span class="fu">Sys.time</span>(), <span class="at">usetz =</span> <span class="cn">TRUE</span>), <span class="st">&quot;start&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a>  my_nsim <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a>  do_parallel <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a>  safe <span class="ot">&lt;-</span> <span class="fu">get_oc</span>(safe_scenario)</span>
+<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a></span>
+<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a>  <span class="fu">report_time</span>(<span class="st">&quot;safe (single core processing)&quot;</span>)</span>
+<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a>  late <span class="ot">&lt;-</span> <span class="fu">get_oc</span>(late_scenario)</span>
+<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a>  <span class="fu">report_time</span>(<span class="st">&quot;late (single core processing)&quot;</span>)</span>
+<span id="cb7-61"><a href="#cb7-61" tabindex="-1"></a>})</span></code></pre></div>
 <p>When simulations with single core processing are running successful,
 the full operation characteristics utilizing parallel computing can be
 derived.</p>

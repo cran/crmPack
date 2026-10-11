@@ -85,6 +85,8 @@ LogisticIndepBeta
 LogisticLogNormal
 LogisticLogNormalMixture
 LogisticLogNormalOrdinal
+MCSE
+MCSEs
 MTD
 MaxPermittedDose
 McmcOptions
@@ -139,6 +141,7 @@ Warne
 WinBUGS
 YJ
 Yeung
+affine
 al
 amongst
 analyse
@@ -230,6 +233,7 @@ nsim
 oneparameter
 oneparameterInverse
 onwards
+operatorname
 optimisation
 parallelization
 pharmacodynamic
@@ -273,6 +277,7 @@ tox
 traceplots
 truthy
 unpooled
+unrounded
 useLogDose
 useRW
 vectorial

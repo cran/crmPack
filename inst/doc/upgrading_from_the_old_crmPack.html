@@ -1482,10 +1482,10 @@ of a fixed model’s parameters values.</p>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># given a particular models and samples.</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Every single dose corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dose</span>(<span class="fl">0.3</span>, my_model, my_samples)</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  [1]  1.34841076  0.11025416  0.86730537  1.53660845  1.20567406  0.83567002</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  [7]  1.64091143  2.28460821  4.52450730  1.44885220  1.58322190  0.02608328</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; [13]  1.21766897  0.39543888  1.28366789  0.73875076 19.61886830  0.60780362</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [19]  0.05915204  1.29433795</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  [1] 5.764816e-01 1.003141e+00 1.090389e+00 1.152964e+00 1.834854e-01</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  [6] 1.892888e+00 6.623943e-03 2.120591e+00 1.107195e+00 7.848503e-05</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; [11] 9.280628e-01 2.527625e+01 4.582232e-01 1.494800e+01 1.449023e+00</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [16] 2.533996e-01 3.334492e+00 1.409196e+00 1.488667e-01 5.061865e-01</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># True dose-DLT relationship.</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
@@ -1501,19 +1501,18 @@ of a fixed model’s parameters values.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Toxicity probabilities for a given dose (equal to 10), model and samples.</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># Every single probability value corresponds to one particular sample in `my_samples`.</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">prob</span>(<span class="dv">10</span>, my_model, my_samples)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [1] 0.93817478 0.22611044 0.99172210 0.73879550 0.86176537 0.02110999</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  [7] 0.78785107 0.66024799 0.16678261 0.89131170 0.99387321 0.78392448</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; [13] 0.87738055 0.95835853 0.92685442 0.74505590 0.36538941 0.93118090</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [19] 0.83881343 0.98010014</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># toxicity probability, according to the model chosen and given a fixed values</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>true_prob_fun <span class="ot">&lt;-</span> <span class="fu">probFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">true_prob_fun</span>(<span class="dv">10</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; [1] 0.8179597</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [1] 0.7323336 0.9701552 0.9847560 0.9874946 0.8199989 0.9802354 0.3041193</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  [8] 0.8648901 0.9499393 0.6888586 0.9701999 0.4253856 0.7725674 0.3538183</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; [15] 0.7739564 0.9489853 0.5819845 0.9890029 0.8117047 0.6546124</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># True DLT-dose relationship.</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># Say that -0.8 and 1 are the true values for models parameters alpha0 and alpha1 respectively.</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># The `true_prob_fun` takes one argument (the dose) and computes the corresponding</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co"># toxicity probability, according to the model chosen and given a fixed values</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># of the model&#39;s parameters.</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>true_prob_fun <span class="ot">&lt;-</span> <span class="fu">probFunction</span>(my_model, <span class="at">alpha0 =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">alpha1 =</span> <span class="dv">1</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">true_prob_fun</span>(<span class="dv">10</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; [1] 0.8179597</span></span></code></pre></div>
 </div>
 </div>
 <div id="new-random-number-generator-settings-for-the-mcmc" class="section level2">

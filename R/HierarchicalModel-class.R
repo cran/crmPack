@@ -48,7 +48,9 @@ h_hierarchical_model_type <- function(model) {
 #' @description `r lifecycle::badge("experimental")`
 #'
 #' Returns the parameter reference syntax that may be used for a model in the
-#' `exchangeable_parameters` argument of [HierarchicalModel()].
+#' `exchangeable_parameters` argument of [HierarchicalModel()]. Combination
+#' models additionally support `"eta"`, which pools the arm-specific interaction
+#' parameters (or their logarithms when `log_normal_eta = TRUE`).
 #'
 #' @param model (`GeneralModel`)\cr arm-specific model object.
 #'
@@ -57,12 +59,13 @@ h_hierarchical_model_type <- function(model) {
 #' @keywords internal
 h_hierarchical_supported_refs <- function(model) {
   if (is(model, "TwoDrugsCombo")) {
-    return(as.character(unlist(lapply(
+    single_model_refs <- as.character(unlist(lapply(
       seq_along(model@single_models),
       function(index) {
         paste0(model@single_models[[index]]@sample, "[", index, "]")
       }
-    ))))
+    )))
+    return(c(single_model_refs, "eta"))
   }
 
   if (h_hierarchical_is_single_model(model)) {
@@ -129,6 +132,19 @@ h_hierarchical_parse_ref <- function(model, arm_name, ref) {
   }
 
   if (type == "combo") {
+    if (identical(ref, "eta")) {
+      return(list(
+        kind = if (model@log_normal_eta) "log_eta" else "eta",
+        index = NA_integer_,
+        latent = h_hierarchical_reference_stochastic_node(
+          model = model,
+          arm_name = arm_name,
+          ref = ref
+        ),
+        sample = paste0("eta_", safe_arm)
+      ))
+    }
+
     m <- regexec("^(.+)\\[([0-9]+)\\]$", ref)
     capture <- regmatches(ref, m)[[1L]]
     if (length(capture) == 3L) {
@@ -175,6 +191,10 @@ h_hierarchical_reference_expr <- function(model, arm_name, ref) {
 
   if (h_hierarchical_is_single_model(model)) {
     return(as.name(paste0(ref, "_", safe_arm)))
+  }
+
+  if (is(model, "TwoDrugsCombo") && identical(ref, "eta")) {
+    return(as.name(paste0("eta_", safe_arm)))
   }
 
   m <- regexec("^(.+)\\[([0-9]+)\\]$", ref)
@@ -509,6 +529,18 @@ h_hierarchical_pool_hyperprior_specs <- function(
   )
 }
 
+#' Name a Non-Centered Hypermean Node
+#'
+#' @param pool_name (`string`)\cr hierarchical pool name.
+#'
+#' @return A character scalar naming the pool's standard-normal hypermean node.
+#'
+#' @keywords internal
+#' @noRd
+h_hierarchical_noncentered_mu_node <- function(pool_name) {
+  paste0("z_mu_", h_hierarchical_safe_name(pool_name))
+}
+
 #' Get Pool-Specific Hyperprior Lines
 #'
 #' @param pool_name (`string`)\cr pool name.
@@ -520,16 +552,19 @@ h_hierarchical_pool_hyperprior_specs <- function(
 h_hierarchical_pool_hyperprior_lines <- function(pool_name) {
   safe_pool <- h_hierarchical_safe_name(pool_name)
   mu_name <- paste0("mu_", safe_pool)
+  mu_z_name <- h_hierarchical_noncentered_mu_node(pool_name)
   tau_name <- paste0("tau_", safe_pool)
 
   c(
+    paste0(mu_z_name, " ~ dnorm(0, 1)"),
     paste0(
       mu_name,
-      " ~ dnorm(",
+      " <- ",
       mu_name,
-      "_mean, pow(",
+      "_mean + ",
       mu_name,
-      "_sd, -2))"
+      "_sd * ",
+      mu_z_name
     ),
     paste0(
       tau_name,
@@ -565,6 +600,24 @@ h_hierarchical_indexed_node_info <- function(node) {
     stop("Correlated pool nodes must use scalar integer indices.")
   }
   list(root = as.character(expr[[2L]]), index = as.integer(index))
+}
+
+#' Name a Non-Centered Standard-Normal Node
+#'
+#' @param node (`string`)\cr namespaced latent node to reparameterize.
+#'
+#' @return A character scalar naming the corresponding standard-normal node.
+#'
+#' @keywords internal
+#' @noRd
+h_hierarchical_noncentered_node <- function(node) {
+  expr <- parse(text = node)[[1L]]
+  if (is.symbol(expr)) {
+    return(paste0(as.character(expr), "_z"))
+  }
+
+  node_info <- h_hierarchical_indexed_node_info(node)
+  paste0(node_info$root, "_z[", node_info$index, "]")
 }
 
 #' Build a Lookup of Pools Used in Correlated Blocks
@@ -721,6 +774,10 @@ h_hierarchical_filter_pooled_specs <- function(
         specs <- specs[!names(specs) %in% remove_names]
       }
     }
+    if ("eta" %in% pooled_refs) {
+      remove_names <- paste0(c("eta_gamma", "eta_tau"), "_", safe_arm)
+      specs <- specs[!names(specs) %in% remove_names]
+    }
   }
 
   specs
@@ -774,7 +831,10 @@ h_hierarchical_compile_datamodel <- function(models_to_arms) {
 #'
 #' Builds the prior part of a hierarchical JAGS model. Unpooled parameters keep
 #' their arm-specific fixed priors, while pooled parameters are linked through
-#' exchangeable normal distributions with simple hyperpriors.
+#' exchangeable normal distributions with simple hyperpriors. The hierarchy is
+#' generated in non-centered form using standard-normal nodes and affine
+#' transformations; correlated pairs use the analytic bivariate Cholesky
+#' factor.
 #'
 #' @param models_to_arms (`list`)\cr named arm-specific models.
 #' @param parameter_pools (`list`)\cr exchangeable parameter specification from
@@ -862,8 +922,6 @@ h_hierarchical_compile_priormodel <- function(
     first_pool <- parameter_pools[[first_pool_name]]
     second_pool <- parameter_pools[[second_pool_name]]
     safe_correlation <- h_hierarchical_safe_name(correlation_name)
-    mu_vector <- paste0("mu_", safe_correlation, "_corr")
-    prec_matrix <- paste0("prec_", safe_correlation, "_corr")
     rho_name <- paste0("rho_", safe_correlation)
     rho_lower <- paste0(rho_name, "_lower")
     rho_upper <- paste0(rho_name, "_upper")
@@ -906,59 +964,44 @@ h_hierarchical_compile_priormodel <- function(
         hyper_lines,
         paste0(
           first_node$root,
-          "[1:2] ~ dmnorm(",
-          mu_vector,
-          "[], ",
-          prec_matrix,
-          "[,])"
+          "_z[1] ~ dnorm(0, 1)"
+        ),
+        paste0(
+          first_node$root,
+          "_z[2] ~ dnorm(0, 1)"
+        ),
+        paste0(
+          first_node$root,
+          "[1] <- ",
+          first_mu,
+          " + ",
+          first_tau,
+          " * ",
+          first_node$root,
+          "_z[1]"
+        ),
+        paste0(
+          first_node$root,
+          "[2] <- ",
+          second_mu,
+          " + ",
+          second_tau,
+          " * (",
+          rho_name,
+          " * ",
+          first_node$root,
+          "_z[1] + sqrt(1 - pow(",
+          rho_name,
+          ", 2)) * ",
+          first_node$root,
+          "_z[2])"
         )
       )
     }
 
-    first_ref_info <- h_hierarchical_parse_ref(
-      models_to_arms[[names(first_pool)[1L]]],
-      names(first_pool)[1L],
-      first_pool[[1L]]
-    )
-    second_ref_info <- h_hierarchical_parse_ref(
-      models_to_arms[[names(second_pool)[1L]]],
-      names(second_pool)[1L],
-      second_pool[[1L]]
-    )
     hyper_lines <- c(
       hyper_lines,
-      paste0(mu_vector, "[1] <- ", first_mu),
-      paste0(mu_vector, "[2] <- ", second_mu),
       paste0(rho_name, " ~ dunif(", rho_lower, ", ", rho_upper, ")"),
-      paste0(
-        prec_matrix,
-        "[1, 1] <- 1 / (pow(",
-        first_tau,
-        ", 2) * (1 - pow(",
-        rho_name,
-        ", 2)))"
-      ),
-      paste0(
-        prec_matrix,
-        "[2, 2] <- 1 / (pow(",
-        second_tau,
-        ", 2) * (1 - pow(",
-        rho_name,
-        ", 2)))"
-      ),
-      paste0(
-        prec_matrix,
-        "[1, 2] <- -",
-        rho_name,
-        " / (",
-        first_tau,
-        " * ",
-        second_tau,
-        " * (1 - pow(",
-        rho_name,
-        ", 2)))"
-      ),
-      paste0(prec_matrix, "[2, 1] <- ", prec_matrix, "[1, 2]"),
       h_hierarchical_pool_hyperprior_lines(pool_name = first_pool_name),
       h_hierarchical_pool_hyperprior_lines(pool_name = second_pool_name)
     )
@@ -977,19 +1020,13 @@ h_hierarchical_compile_priormodel <- function(
       next
     }
     members <- parameter_pools[[pool_name]]
-    first_arm <- names(members)[1L]
-    first_ref <- members[[1L]]
-    first_info <- h_hierarchical_parse_ref(
-      models_to_arms[[first_arm]],
-      first_arm,
-      first_ref
-    )
     safe_pool <- h_hierarchical_safe_name(pool_name)
     mu_name <- paste0("mu_", safe_pool)
     tau_name <- paste0("tau_", safe_pool)
 
-    # Each pooled arm-level latent parameter gets an exchangeable normal prior
-    # centered on the pool-specific mean and SD.
+    # Each pooled arm-level latent parameter is an affine transformation of a
+    # standard-normal node. This avoids the funnel geometry of the centered
+    # hierarchy while preserving the same marginal prior.
     hyper_lines <- c(
       hyper_lines,
       vapply(
@@ -1003,12 +1040,15 @@ h_hierarchical_compile_priormodel <- function(
             arm_ref
           )
           paste0(
+            h_hierarchical_noncentered_node(arm_info$latent),
+            " ~ dnorm(0, 1)\n",
             arm_info$latent,
-            " ~ dnorm(",
+            " <- ",
             mu_name,
-            ", pow(",
+            " + ",
             tau_name,
-            ", -2))"
+            " * ",
+            h_hierarchical_noncentered_node(arm_info$latent)
           )
         },
         character(1L)
@@ -1141,7 +1181,9 @@ h_hierarchical_compile_modelspecs <- function(
 #' @description `r lifecycle::badge("experimental")`
 #'
 #' Wraps the per-arm `init` functions and renames their outputs so they match
-#' the dynamically generated hierarchical JAGS variable names.
+#' the dynamically generated hierarchical JAGS variable names. Initial values
+#' for pooled latent parameters are omitted because those nodes are
+#' deterministic under the non-centered parameterization.
 #'
 #' @param models_to_arms (`list`)\cr named arm-specific models.
 #' @param parameter_pools (`list`)\cr exchangeable parameter specification from
@@ -1159,6 +1201,28 @@ h_hierarchical_compile_init <- function(
   parameter_pools,
   pool_correlations = list()
 ) {
+  pooled_map <- h_hierarchical_make_pool_map(parameter_pools)
+  pooled_roots <- lapply(names(models_to_arms), function(arm_name) {
+    model <- models_to_arms[[arm_name]]
+    model_refs <- h_hierarchical_supported_refs(model)
+    pool_names <- h_hierarchical_pool_names(
+      arm_name = arm_name,
+      refs = model_refs,
+      pooled_map = pooled_map
+    )
+    nodes <- h_hierarchical_pooled_nodes(
+      model = model,
+      arm_name = arm_name,
+      refs = model_refs,
+      pool_names = pool_names
+    )
+    unique(unlist(lapply(
+      nodes,
+      function(node) h_hierarchical_root_symbols(parse(text = node)[[1L]])
+    )))
+  })
+  names(pooled_roots) <- names(models_to_arms)
+
   function(arms) {
     assert_list(arms, any.missing = FALSE)
 
@@ -1170,13 +1234,16 @@ h_hierarchical_compile_init <- function(
 
       # Hierarchical compilation prefixes arm-local initial values by arm.
       for (init_name in names(arm_inits)) {
-        init[[paste0(init_name, "_", safe_arm)]] <- arm_inits[[init_name]]
+        namespaced_name <- paste0(init_name, "_", safe_arm)
+        if (!namespaced_name %in% pooled_roots[[arm_name]]) {
+          init[[namespaced_name]] <- arm_inits[[init_name]]
+        }
       }
     }
 
     for (pool_name in names(parameter_pools)) {
       safe_pool <- h_hierarchical_safe_name(pool_name)
-      init[[paste0("mu_", safe_pool)]] <- 0
+      init[[h_hierarchical_noncentered_mu_node(pool_name)]] <- 0
       init[[paste0("tau_", safe_pool)]] <- 0.5
     }
     for (correlation_name in names(pool_correlations)) {
@@ -1202,7 +1269,9 @@ h_hierarchical_compile_init <- function(
 #'
 #' @details The class currently stores the structural pieces from the design
 #'   prototype as a named list of arm-specific models and a named list of
-#'   exchangeable parameter pools used to dynamically compile a joint JAGS model.
+#'   exchangeable parameter pools used to dynamically compile a joint JAGS
+#'   model. Exchangeable normal priors and their hypermeans use a non-centered
+#'   parameterization.
 #'
 #' @slot models_to_arms (`list`)\cr named list of arm-specific models. Each
 #'   entry must be either a compatible single-agent binary outcome
@@ -1243,7 +1312,10 @@ h_hierarchical_compile_init <- function(
 #'   which parameters are exchangeable across arms. This will be
 #'   used to define the hierarchical structure of the model. Each
 #'   list entry contains the arms as names and the parameters to be shared
-#'   as a string.
+#'   as a string. For [`TwoDrugsCombo`] arms, `"eta"` refers to the
+#'   arm-specific interaction parameter. A one-member pool is permitted so that
+#'   a hierarchical marginal prior can be used even when only one combination
+#'   arm is present.
 #' @param pool_correlations optional named list pairing exactly two scalar
 #'   entries from `exchangeable_parameters` into a correlated bivariate
 #'   hierarchy. Each pair must refer to indices 1 and 2 of the same latent

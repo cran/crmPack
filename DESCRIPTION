@@ -1,6 +1,6 @@
 Package: crmPack
 Title: Object-Oriented Implementation of Dose Escalation Designs
-Version: 2.2.1
+Version: 2.3.0
 Authors@R: c(
     person("Daniel", "Sabanés Bové", , "daniel.sabanes_bove@rconis.com", role = c("aut", "cre"), 
            comment = c(ORCID = "0000-0002-0176-9239")),
@@ -40,7 +40,7 @@ Description: Implements a wide range of dose escalation
 License: GPL (>= 2)
 URL: https://docs.crmpack.org/
 BugReports: https://github.com/openpharma/crmPack/issues
-Depends: ggplot2 (>= 3.0.0), graphics, R (>= 4.1.0)
+Depends: ggplot2 (>= 3.2.0), graphics, R (>= 4.1.0)
 Imports: checkmate (>= 2.2.0), dplyr, futile.logger, GenSA, gridExtra,
         kableExtra, knitr, lifecycle, magrittr, methods, mvtnorm,
         parallel, parallelly, Rdpack, rjags, rlang, survival, tibble,
@@ -48,7 +48,7 @@ Imports: checkmate (>= 2.2.0), dplyr, futile.logger, GenSA, gridExtra,
 Suggests: bookdown, broom, covr, data.tree, DiagrammeR, ggmcmc, quarto
         (>= 1.4), rmarkdown, stringr, testthat (>= 3.0.0), tidyr,
         vdiffr, withr
-VignetteBuilder: knitr, quarto
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
@@ -79,9 +79,9 @@ Collate: 'Backfill-validity.R' 'CrmPackClass-class.R'
         'helpers_knitr_SafetyWindow.R' 'helpers_knitr_Stopping.R'
         'helpers_model.R' 'helpers_samples.R' 'helpers_simulations.R'
         'utils-pipe.R' 'utils.R'
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 NeedsCompilation: no
-Packaged: 2026-07-27 13:22:47 UTC; daniel
+Packaged: 2026-10-11 14:42:20 UTC; daniel
 Author: Daniel Sabanés Bové [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-0176-9239>),
   Wai Yin Yeung [aut],
@@ -106,4 +106,4 @@ Author: Daniel Sabanés Bové [aut, cre] (ORCID:
   RPACT GmbH [cph, fnd]
 Maintainer: Daniel Sabanés Bové <daniel.sabanes_bove@rconis.com>
 Repository: CRAN
-Date/Publication: 2026-07-27 14:10:02 UTC
+Date/Publication: 2026-10-11 15:20:02 UTC

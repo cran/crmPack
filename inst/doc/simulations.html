@@ -442,6 +442,75 @@ appropriately (step, samples, nsim).</p>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="at">mcmcOptions =</span> options,</span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span></span>
 <span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>)</span></code></pre></div>
+<p>Alternatively we can also use <code>examine()</code> to look at
+possible trial outcomes. Each cohort is reached assuming no additional
+DLTs in earlier cohorts. <code>DLTs</code> is the hypothetical number of
+additional DLTs among the current cohort and patients from earlier
+cohorts whose DLT windows are still open at the next decision. Thus it
+can exceed the cohort size.</p>
+<p><code>DLT_scenario</code> identifies the allocation scenario:
+<code>&quot;no additional DLTs&quot;</code>, <code>&quot;late DLTs&quot;</code>
+(earlier-enrolled eligible patients at their available follow-up times),
+or <code>&quot;early DLTs&quot;</code> (later-enrolled eligible patients with
+early event times). See <code>?examine</code> for the timing
+details.</p>
+<p><code>cohort</code> indexes the current cohort, continuing any
+indices already present in the design data. <code>dose</code> is that
+cohort’s dose. <code>DLT_cohorts</code> lists the cohort indices of the
+additional hypothetical DLTs, separated by commas and sorted. For
+example, <code>&quot;1, 2, 2&quot;</code> means one DLT in cohort 1 and two in
+cohort 2; <code>&quot;&quot;</code> means no additional DLTs.
+<code>DLT_time</code> lists their corresponding onset times, relative to
+the start of each patient’s cohort, in the same order. Previously
+observed DLTs are excluded from both columns.</p>
+<p>Each hypothetical scenario requires an MCMC fit.
+<code>maxNoIncrement</code> limits the number of consecutive unchanged
+dose recommendations on the zero-DLT path (default: 100); reaching this
+limit produces a warning.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">321</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>examineTable <span class="ot">&lt;-</span> <span class="fu">examine</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  design,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">mcmcOptions =</span> options</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>examineTable</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;    cohort       DLT_scenario dose DLTs   DLT_cohorts           DLT_time</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 1       1 no additional DLTs    8    0                                 </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 2       1          late DLTs    8    1             1                 21</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 3       1         early DLTs    8    1             1                 15</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 4       1          late DLTs    8    2          1, 1             21, 21</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 5       1         early DLTs    8    2          1, 1              8, 15</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 6       1          late DLTs    8    3       1, 1, 1         21, 21, 21</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 7       1         early DLTs    8    3       1, 1, 1           1, 8, 15</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 8       2 no additional DLTs   36    0                                 </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 9       2          late DLTs   36    1             1                 42</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 10      2         early DLTs   36    1             2                 15</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; 11      2          late DLTs   36    2          1, 1             42, 42</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; 12      2         early DLTs   36    2          2, 2              8, 15</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; 13      2          late DLTs   36    3       1, 1, 2         42, 42, 21</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; 14      2         early DLTs   36    3       2, 2, 2           1, 8, 15</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; 15      2          late DLTs   36    4    1, 1, 2, 2     42, 42, 21, 21</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; 16      2         early DLTs   36    4    1, 2, 2, 2       22, 1, 8, 15</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; 17      2          late DLTs   36    5 1, 1, 2, 2, 2 42, 42, 21, 21, 21</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; 18      2         early DLTs   36    5 1, 1, 2, 2, 2   22, 22, 1, 8, 15</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;    nextDose  stop increment</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; 1        36 FALSE       350</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; 2        48 FALSE       500</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; 3        38 FALSE       375</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt; 4        20 FALSE       150</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt; 5        14 FALSE        75</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt; 6        12 FALSE        50</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; 7        10 FALSE        25</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt; 8        50 FALSE        39</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; 9        32 FALSE       -11</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; 10       24 FALSE       -33</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; 11       30 FALSE       -17</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; 12       28 FALSE       -22</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; 13       16 FALSE       -56</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; 14       22 FALSE       -39</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; 15       14 FALSE       -61</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; 16       26 FALSE       -28</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; 17       16 FALSE       -56</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt; 18       14 FALSE       -61</span></span></code></pre></div>
 </div>
 
 

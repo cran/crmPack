@@ -163,6 +163,14 @@ test_that("scenario-HierarchicalDesign handles arms that are not yet open", {
 
 test_that("scenario-HierarchicalDesign returns next_best probabilities for empty combo arms", {
   comparison_setup <- local_comparison_decider_hierarchical_design()
+  prior_text <- gsub(
+    "\\s+",
+    "",
+    paste(
+      deparse(body(comparison_setup$design@model@priormodel)),
+      collapse = "\n"
+    )
+  )
 
   result <- scenario(
     comparison_setup$design,
@@ -180,4 +188,10 @@ test_that("scenario-HierarchicalDesign returns next_best probabilities for empty
     c("compound1", "compound2", "target_prob", "overdose_prob", "not_eligible")
   )
   expect_equal(result$next_dose$B, result$next_best$B$value)
+  expect_match(
+    prior_text,
+    "eta_B<-mu_eta\\+tau_eta\\*eta_B_z"
+  )
+  expect_match(prior_text, "eta_B_z~dnorm\\(0,1\\)")
+  expect_false(grepl("eta_gamma_B", prior_text, fixed = TRUE))
 })
